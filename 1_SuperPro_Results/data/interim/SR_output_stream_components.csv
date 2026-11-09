@@ -1,0 +1,248 @@
+source_report,source_section,source_row,stream_block_start_row,stream_column,stream_name,source,destination,component,kg_per_batch,broad_process_area,output_category
+SR,3. STREAM DETAILS,453,441,17,Vent-1,P-04,OUTPUT,Biomass,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,454,441,17,Vent-1,P-04,OUTPUT,Carb. Dioxide,0.05,review_needed,other_output
+SR,3. STREAM DETAILS,455,441,17,Vent-1,P-04,OUTPUT,Impurities,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,456,441,17,Vent-1,P-04,OUTPUT,Media,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,457,441,17,Vent-1,P-04,OUTPUT,Nitrogen,0.07,review_needed,other_output
+SR,3. STREAM DETAILS,458,441,17,Vent-1,P-04,OUTPUT,Oxygen,0.02,review_needed,other_output
+SR,3. STREAM DETAILS,459,441,17,Vent-1,P-04,OUTPUT,WFI,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,475,463,12,Vent-2,P-05,OUTPUT,Biomass,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,476,463,12,Vent-2,P-05,OUTPUT,Carb. Dioxide,0.26,review_needed,other_output
+SR,3. STREAM DETAILS,477,463,12,Vent-2,P-05,OUTPUT,Impurities,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,478,463,12,Vent-2,P-05,OUTPUT,Media,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,479,463,12,Vent-2,P-05,OUTPUT,Nitrogen,0.4,review_needed,other_output
+SR,3. STREAM DETAILS,480,463,12,Vent-2,P-05,OUTPUT,Oxygen,0.12,review_needed,other_output
+SR,3. STREAM DETAILS,481,463,12,Vent-2,P-05,OUTPUT,WFI,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,497,485,12,Vent-5,P-06,OUTPUT,Media,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,498,485,12,Vent-5,P-06,OUTPUT,Nitrogen,0.32,review_needed,other_output
+SR,3. STREAM DETAILS,499,485,12,Vent-5,P-06,OUTPUT,Oxygen,0.1,review_needed,other_output
+SR,3. STREAM DETAILS,500,485,12,Vent-5,P-06,OUTPUT,WFI,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,516,504,17,Vent-3,P-09,OUTPUT,Carb. Dioxide,51.29,review_needed,other_output
+SR,3. STREAM DETAILS,517,504,17,Vent-3,P-09,OUTPUT,Media,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,518,504,17,Vent-3,P-09,OUTPUT,Nitrogen,1370.52,review_needed,other_output
+SR,3. STREAM DETAILS,519,504,17,Vent-3,P-09,OUTPUT,Oxygen,355.37,review_needed,other_output
+SR,3. STREAM DETAILS,520,504,17,Vent-3,P-09,OUTPUT,WFI,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,536,524,12,Vent-6,P-08,OUTPUT,Biomass,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,537,524,12,Vent-6,P-08,OUTPUT,Impurities,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,538,524,12,Vent-6,P-08,OUTPUT,mAb,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,539,524,12,Vent-6,P-08,OUTPUT,Media,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,540,524,12,Vent-6,P-08,OUTPUT,Nitrogen,0.32,review_needed,other_output
+SR,3. STREAM DETAILS,541,524,12,Vent-6,P-08,OUTPUT,Oxygen,0.1,review_needed,other_output
+SR,3. STREAM DETAILS,542,524,12,Vent-6,P-08,OUTPUT,WFI,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,558,546,17,S-143,P-13,OUTPUT,Biomass,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,559,546,17,S-143,P-13,OUTPUT,Impurities,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,560,546,17,S-143,P-13,OUTPUT,mAb,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,561,546,17,S-143,P-13,OUTPUT,Media,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,562,546,17,S-143,P-13,OUTPUT,WFI,99.47,review_needed,other_output
+SR,3. STREAM DETAILS,578,566,8,S-125,P-14,OUTPUT,Biomass,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,579,566,8,S-125,P-14,OUTPUT,Impurities,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,580,566,8,S-125,P-14,OUTPUT,mAb,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,581,566,8,S-125,P-14,OUTPUT,Media,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,582,566,8,S-125,P-14,OUTPUT,Nitrogen,0.87,review_needed,other_output
+SR,3. STREAM DETAILS,583,566,8,S-125,P-14,OUTPUT,Oxygen,0.26,review_needed,other_output
+SR,3. STREAM DETAILS,584,566,8,S-125,P-14,OUTPUT,WFI,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,578,566,17,S-115,P-11,OUTPUT,Biomass,12.83,review_needed,other_output
+SR,3. STREAM DETAILS,579,566,17,S-115,P-11,OUTPUT,Impurities,0.12,review_needed,other_output
+SR,3. STREAM DETAILS,580,566,17,S-115,P-11,OUTPUT,mAb,0.18,review_needed,other_output
+SR,3. STREAM DETAILS,581,566,17,S-115,P-11,OUTPUT,Media,0.04,review_needed,other_output
+SR,3. STREAM DETAILS,582,566,17,S-115,P-11,OUTPUT,Nitrogen,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,583,566,17,S-115,P-11,OUTPUT,Oxygen,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,584,566,17,S-115,P-11,OUTPUT,WFI,79.1,review_needed,other_output
+SR,3. STREAM DETAILS,600,588,5,S-154,P-17,OUTPUT,Impurities,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,601,588,5,S-154,P-17,OUTPUT,mAb,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,602,588,5,S-154,P-17,OUTPUT,Media,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,603,588,5,S-154,P-17,OUTPUT,Nitrogen,0.78,review_needed,other_output
+SR,3. STREAM DETAILS,604,588,5,S-154,P-17,OUTPUT,Oxygen,0.24,review_needed,other_output
+SR,3. STREAM DETAILS,605,588,5,S-154,P-17,OUTPUT,Sodium Chloride,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,606,588,5,S-154,P-17,OUTPUT,TRIS Base,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,607,588,5,S-154,P-17,OUTPUT,TRIS HCl,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,608,588,5,S-154,P-17,OUTPUT,WFI,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,600,588,17,S-172,P-18Ba,OUTPUT,Impurities,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,601,588,17,S-172,P-18Ba,OUTPUT,mAb,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,602,588,17,S-172,P-18Ba,OUTPUT,Media,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,603,588,17,S-172,P-18Ba,OUTPUT,Nitrogen,0.49,review_needed,other_output
+SR,3. STREAM DETAILS,604,588,17,S-172,P-18Ba,OUTPUT,Oxygen,0.15,review_needed,other_output
+SR,3. STREAM DETAILS,605,588,17,S-172,P-18Ba,OUTPUT,Sodium Chloride,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,606,588,17,S-172,P-18Ba,OUTPUT,TRIS Base,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,607,588,17,S-172,P-18Ba,OUTPUT,TRIS HCl,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,608,588,17,S-172,P-18Ba,OUTPUT,WFI,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,624,612,12,S-177,P-18Ea,OUTPUT,Nitrogen,0.59,review_needed,other_output
+SR,3. STREAM DETAILS,625,612,12,S-177,P-18Ea,OUTPUT,Oxygen,0.18,review_needed,other_output
+SR,3. STREAM DETAILS,626,612,12,S-177,P-18Ea,OUTPUT,Polysorbate 80,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,627,612,12,S-177,P-18Ea,OUTPUT,Sodium Chloride,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,628,612,12,S-177,P-18Ea,OUTPUT,TRIS Base,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,629,612,12,S-177,P-18Ea,OUTPUT,TRIS HCl,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,630,612,12,S-177,P-18Ea,OUTPUT,WFI,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,646,634,8,S-176,P-18Da,OUTPUT,Acetic-Acid,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,647,634,8,S-176,P-18Da,OUTPUT,Nitrogen,0.49,review_needed,other_output
+SR,3. STREAM DETAILS,648,634,8,S-176,P-18Da,OUTPUT,Oxygen,0.15,review_needed,other_output
+SR,3. STREAM DETAILS,649,634,8,S-176,P-18Da,OUTPUT,Sodium Chloride,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,650,634,8,S-176,P-18Da,OUTPUT,TRIS Base,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,651,634,8,S-176,P-18Da,OUTPUT,TRIS HCl,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,652,634,8,S-176,P-18Da,OUTPUT,WFI,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,689,677,12,S-111,P-18,OUTPUT,Acetic-Acid,13.51,review_needed,other_output
+SR,3. STREAM DETAILS,690,677,12,S-111,P-18,OUTPUT,Impurities,0.92,review_needed,other_output
+SR,3. STREAM DETAILS,691,677,12,S-111,P-18,OUTPUT,mAb,0.27,review_needed,other_output
+SR,3. STREAM DETAILS,692,677,12,S-111,P-18,OUTPUT,Media,1.2,review_needed,other_output
+SR,3. STREAM DETAILS,693,677,12,S-111,P-18,OUTPUT,Polysorbate 80,0.65,review_needed,other_output
+SR,3. STREAM DETAILS,694,677,12,S-111,P-18,OUTPUT,Sodium Chloride,17.29,review_needed,other_output
+SR,3. STREAM DETAILS,695,677,12,S-111,P-18,OUTPUT,Sodium Hydroxid,6.47,review_needed,other_output
+SR,3. STREAM DETAILS,696,677,12,S-111,P-18,OUTPUT,TRIS Base,6.9,review_needed,other_output
+SR,3. STREAM DETAILS,697,677,12,S-111,P-18,OUTPUT,TRIS HCl,13.32,review_needed,other_output
+SR,3. STREAM DETAILS,698,677,12,S-111,P-18,OUTPUT,WFI,2940.07,review_needed,other_output
+SR,3. STREAM DETAILS,714,702,17,S-156,P-18Fa,OUTPUT,Nitrogen,0.29,review_needed,other_output
+SR,3. STREAM DETAILS,715,702,17,S-156,P-18Fa,OUTPUT,Oxygen,0.09,review_needed,other_output
+SR,3. STREAM DETAILS,716,702,17,S-156,P-18Fa,OUTPUT,Polysorbate 80,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,717,702,17,S-156,P-18Fa,OUTPUT,Sodium Chloride,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,718,702,17,S-156,P-18Fa,OUTPUT,Sodium Hydroxid,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,719,702,17,S-156,P-18Fa,OUTPUT,TRIS Base,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,720,702,17,S-156,P-18Fa,OUTPUT,WFI,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,759,747,5,S-165,P-19,OUTPUT,Acetic-Acid,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,760,747,5,S-165,P-19,OUTPUT,HEPES,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,761,747,5,S-165,P-19,OUTPUT,Impurities,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,762,747,5,S-165,P-19,OUTPUT,mAb,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,763,747,5,S-165,P-19,OUTPUT,Nitrogen,0.25,review_needed,other_output
+SR,3. STREAM DETAILS,764,747,5,S-165,P-19,OUTPUT,Oxygen,0.07,review_needed,other_output
+SR,3. STREAM DETAILS,765,747,5,S-165,P-19,OUTPUT,Sodium Chloride,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,766,747,5,S-165,P-19,OUTPUT,Sodium Hydroxid,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,767,747,5,S-165,P-19,OUTPUT,WFI,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,783,771,17,S-164,P-18Aa,OUTPUT,HEPES,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,784,771,17,S-164,P-18Aa,OUTPUT,Nitrogen,0.15,review_needed,other_output
+SR,3. STREAM DETAILS,785,771,17,S-164,P-18Aa,OUTPUT,Oxygen,0.04,review_needed,other_output
+SR,3. STREAM DETAILS,786,771,17,S-164,P-18Aa,OUTPUT,Sodium Chloride,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,787,771,17,S-164,P-18Aa,OUTPUT,Sodium Hydroxid,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,788,771,17,S-164,P-18Aa,OUTPUT,TRIS Base,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,789,771,17,S-164,P-18Aa,OUTPUT,WFI,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,825,813,12,S-159,P-20,OUTPUT,Acetic-Acid,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,826,813,12,S-159,P-20,OUTPUT,HEPES,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,827,813,12,S-159,P-20,OUTPUT,Impurities,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,828,813,12,S-159,P-20,OUTPUT,Sodium Chloride,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,829,813,12,S-159,P-20,OUTPUT,Sodium Hydroxid,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,830,813,12,S-159,P-20,OUTPUT,TRIS Base,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,831,813,12,S-159,P-20,OUTPUT,WFI,49.74,review_needed,other_output
+SR,3. STREAM DETAILS,825,813,17,S-147,P-20,OUTPUT,Acetic-Acid,13.39,review_needed,other_output
+SR,3. STREAM DETAILS,826,813,17,S-147,P-20,OUTPUT,HEPES,2.58,review_needed,other_output
+SR,3. STREAM DETAILS,827,813,17,S-147,P-20,OUTPUT,Impurities,0.02,review_needed,other_output
+SR,3. STREAM DETAILS,828,813,17,S-147,P-20,OUTPUT,Sodium Chloride,21.11,review_needed,other_output
+SR,3. STREAM DETAILS,829,813,17,S-147,P-20,OUTPUT,Sodium Hydroxid,0.22,review_needed,other_output
+SR,3. STREAM DETAILS,830,813,17,S-147,P-20,OUTPUT,TRIS Base,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,831,813,17,S-147,P-20,OUTPUT,WFI,661.21,review_needed,other_output
+SR,3. STREAM DETAILS,847,835,5,S-161,P-15,OUTPUT,HEPES,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,848,835,5,S-161,P-15,OUTPUT,Sodium Chloride,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,849,835,5,S-161,P-15,OUTPUT,Sodium Hydroxid,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,850,835,5,S-161,P-15,OUTPUT,TRIS Base,0.51,review_needed,other_output
+SR,3. STREAM DETAILS,851,835,5,S-161,P-15,OUTPUT,WFI,161.75,review_needed,other_output
+SR,3. STREAM DETAILS,867,855,17,AQ Waste-5,P-21,OUTPUT,Acetic-Acid,0.12,review_needed,process_waste_output
+SR,3. STREAM DETAILS,868,855,17,AQ Waste-5,P-21,OUTPUT,HEPES,5.36,review_needed,process_waste_output
+SR,3. STREAM DETAILS,869,855,17,AQ Waste-5,P-21,OUTPUT,Impurities,0.01,review_needed,process_waste_output
+SR,3. STREAM DETAILS,870,855,17,AQ Waste-5,P-21,OUTPUT,mAb,0.31,review_needed,process_waste_output
+SR,3. STREAM DETAILS,871,855,17,AQ Waste-5,P-21,OUTPUT,Polysorbate 80,0.27,review_needed,process_waste_output
+SR,3. STREAM DETAILS,872,855,17,AQ Waste-5,P-21,OUTPUT,Sodium Chloride,43.74,review_needed,process_waste_output
+SR,3. STREAM DETAILS,873,855,17,AQ Waste-5,P-21,OUTPUT,Sodium Hydroxid,87.45,review_needed,process_waste_output
+SR,3. STREAM DETAILS,874,855,17,AQ Waste-5,P-21,OUTPUT,WFI,1962.68,review_needed,process_waste_output
+SR,3. STREAM DETAILS,890,878,8,S-163,P-24,OUTPUT,HEPES,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,891,878,8,S-163,P-24,OUTPUT,Nitrogen,0.12,review_needed,other_output
+SR,3. STREAM DETAILS,892,878,8,S-163,P-24,OUTPUT,Oxygen,0.04,review_needed,other_output
+SR,3. STREAM DETAILS,893,878,8,S-163,P-24,OUTPUT,Polysorbate 80,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,894,878,8,S-163,P-24,OUTPUT,Sodium Chloride,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,895,878,8,S-163,P-24,OUTPUT,Sodium Hydroxid,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,896,878,8,S-163,P-24,OUTPUT,WFI,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,890,878,17,S-166,P-21Ba,OUTPUT,HEPES,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,891,878,17,S-166,P-21Ba,OUTPUT,Nitrogen,0.63,review_needed,other_output
+SR,3. STREAM DETAILS,892,878,17,S-166,P-21Ba,OUTPUT,Oxygen,0.19,review_needed,other_output
+SR,3. STREAM DETAILS,893,878,17,S-166,P-21Ba,OUTPUT,Polysorbate 80,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,894,878,17,S-166,P-21Ba,OUTPUT,Sodium Chloride,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,895,878,17,S-166,P-21Ba,OUTPUT,Sodium Hydroxid,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,896,878,17,S-166,P-21Ba,OUTPUT,WFI,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,912,900,17,S-139,P-23a,OUTPUT,HEPES,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,913,900,17,S-139,P-23a,OUTPUT,KCl,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,914,900,17,S-139,P-23a,OUTPUT,KH2PO4,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,915,900,17,S-139,P-23a,OUTPUT,Na2HPO4,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,916,900,17,S-139,P-23a,OUTPUT,Nitrogen,0.35,review_needed,other_output
+SR,3. STREAM DETAILS,917,900,17,S-139,P-23a,OUTPUT,Oxygen,0.11,review_needed,other_output
+SR,3. STREAM DETAILS,918,900,17,S-139,P-23a,OUTPUT,Sodium Chloride,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,919,900,17,S-139,P-23a,OUTPUT,Sodium Hydroxid,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,920,900,17,S-139,P-23a,OUTPUT,WFI,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,936,924,12,S-180,P-21Aa,OUTPUT,KCl,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,937,924,12,S-180,P-21Aa,OUTPUT,KH2PO4,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,938,924,12,S-180,P-21Aa,OUTPUT,Na2HPO4,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,939,924,12,S-180,P-21Aa,OUTPUT,Nitrogen,0.41,review_needed,other_output
+SR,3. STREAM DETAILS,940,924,12,S-180,P-21Aa,OUTPUT,Oxygen,0.12,review_needed,other_output
+SR,3. STREAM DETAILS,941,924,12,S-180,P-21Aa,OUTPUT,Sodium Chloride,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,942,924,12,S-180,P-21Aa,OUTPUT,Sodium Hydroxid,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,943,924,12,S-180,P-21Aa,OUTPUT,WFI,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,959,947,8,S-168,P-22,OUTPUT,HEPES,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,960,947,8,S-168,P-22,OUTPUT,Impurities,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,961,947,8,S-168,P-22,OUTPUT,KCl,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,962,947,8,S-168,P-22,OUTPUT,KH2PO4,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,963,947,8,S-168,P-22,OUTPUT,mAb,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,964,947,8,S-168,P-22,OUTPUT,Na2HPO4,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,965,947,8,S-168,P-22,OUTPUT,Nitrogen,0.28,review_needed,other_output
+SR,3. STREAM DETAILS,966,947,8,S-168,P-22,OUTPUT,Oxygen,0.08,review_needed,other_output
+SR,3. STREAM DETAILS,967,947,8,S-168,P-22,OUTPUT,Sodium Chloride,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,968,947,8,S-168,P-22,OUTPUT,Sodium Hydroxid,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,969,947,8,S-168,P-22,OUTPUT,WFI,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1006,994,5,S-128,P-23,OUTPUT,HEPES,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1007,994,5,S-128,P-23,OUTPUT,Impurities,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1008,994,5,S-128,P-23,OUTPUT,KCl,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1009,994,5,S-128,P-23,OUTPUT,KH2PO4,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1010,994,5,S-128,P-23,OUTPUT,Na2HPO4,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1011,994,5,S-128,P-23,OUTPUT,Nitrogen,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1012,994,5,S-128,P-23,OUTPUT,Oxygen,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1013,994,5,S-128,P-23,OUTPUT,Sodium Chloride,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1014,994,5,S-128,P-23,OUTPUT,Sodium Hydroxid,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1015,994,5,S-128,P-23,OUTPUT,Sodium Phosphat,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1016,994,5,S-128,P-23,OUTPUT,WFI,49.74,review_needed,other_output
+SR,3. STREAM DETAILS,1006,994,8,S-136,P-23,OUTPUT,HEPES,1.93,review_needed,other_output
+SR,3. STREAM DETAILS,1007,994,8,S-136,P-23,OUTPUT,Impurities,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1008,994,8,S-136,P-23,OUTPUT,KCl,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1009,994,8,S-136,P-23,OUTPUT,KH2PO4,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1010,994,8,S-136,P-23,OUTPUT,Na2HPO4,0.34,review_needed,other_output
+SR,3. STREAM DETAILS,1011,994,8,S-136,P-23,OUTPUT,Nitrogen,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1012,994,8,S-136,P-23,OUTPUT,Oxygen,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1013,994,8,S-136,P-23,OUTPUT,Sodium Chloride,18.24,review_needed,other_output
+SR,3. STREAM DETAILS,1014,994,8,S-136,P-23,OUTPUT,Sodium Hydroxid,0.16,review_needed,other_output
+SR,3. STREAM DETAILS,1015,994,8,S-136,P-23,OUTPUT,Sodium Phosphat,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1016,994,8,S-136,P-23,OUTPUT,WFI,609.48,review_needed,other_output
+SR,3. STREAM DETAILS,1006,994,17,S-158,P-12Aa,OUTPUT,HEPES,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1007,994,17,S-158,P-12Aa,OUTPUT,Impurities,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1008,994,17,S-158,P-12Aa,OUTPUT,KCl,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1009,994,17,S-158,P-12Aa,OUTPUT,KH2PO4,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1010,994,17,S-158,P-12Aa,OUTPUT,Na2HPO4,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1011,994,17,S-158,P-12Aa,OUTPUT,Nitrogen,0.05,review_needed,other_output
+SR,3. STREAM DETAILS,1012,994,17,S-158,P-12Aa,OUTPUT,Oxygen,0.01,review_needed,other_output
+SR,3. STREAM DETAILS,1013,994,17,S-158,P-12Aa,OUTPUT,Sodium Chloride,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1014,994,17,S-158,P-12Aa,OUTPUT,Sodium Hydroxid,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1015,994,17,S-158,P-12Aa,OUTPUT,Sodium Phosphat,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1016,994,17,S-158,P-12Aa,OUTPUT,WFI,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1032,1020,17,S-162,P-12,OUTPUT,HEPES,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1033,1020,17,S-162,P-12,OUTPUT,Impurities,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1034,1020,17,S-162,P-12,OUTPUT,KCl,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1035,1020,17,S-162,P-12,OUTPUT,KH2PO4,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1036,1020,17,S-162,P-12,OUTPUT,mAb,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1037,1020,17,S-162,P-12,OUTPUT,Na2HPO4,0.39,review_needed,other_output
+SR,3. STREAM DETAILS,1038,1020,17,S-162,P-12,OUTPUT,Sodium Chloride,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1039,1020,17,S-162,P-12,OUTPUT,Sodium Hydroxid,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1040,1020,17,S-162,P-12,OUTPUT,Sodium Phosphat,0.08,review_needed,other_output
+SR,3. STREAM DETAILS,1041,1020,17,S-162,P-12,OUTPUT,WFI,53.68,review_needed,other_output
+SR,3. STREAM DETAILS,1057,1045,8,S-133,P-28,OUTPUT,HEPES,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1058,1045,8,S-133,P-28,OUTPUT,Impurities,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1059,1045,8,S-133,P-28,OUTPUT,KCl,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1060,1045,8,S-133,P-28,OUTPUT,KH2PO4,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1061,1045,8,S-133,P-28,OUTPUT,mAb,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1062,1045,8,S-133,P-28,OUTPUT,Na2HPO4,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1063,1045,8,S-133,P-28,OUTPUT,Nitrogen,0.07,review_needed,other_output
+SR,3. STREAM DETAILS,1064,1045,8,S-133,P-28,OUTPUT,Oxygen,0.02,review_needed,other_output
+SR,3. STREAM DETAILS,1065,1045,8,S-133,P-28,OUTPUT,Sodium Chloride,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1066,1045,8,S-133,P-28,OUTPUT,Sodium Hydroxid,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1067,1045,8,S-133,P-28,OUTPUT,Sodium Phosphat,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1068,1045,8,S-133,P-28,OUTPUT,WFI,0.0,review_needed,other_output
+SR,3. STREAM DETAILS,1084,1072,8,Product,P-27,OUTPUT,HEPES,0.0,review_needed,product_output
+SR,3. STREAM DETAILS,1085,1072,8,Product,P-27,OUTPUT,Impurities,0.0,review_needed,product_output
+SR,3. STREAM DETAILS,1086,1072,8,Product,P-27,OUTPUT,KCl,0.0,review_needed,product_output
+SR,3. STREAM DETAILS,1087,1072,8,Product,P-27,OUTPUT,KH2PO4,0.0,review_needed,product_output
+SR,3. STREAM DETAILS,1088,1072,8,Product,P-27,OUTPUT,mAb,4.65,review_needed,product_output
+SR,3. STREAM DETAILS,1089,1072,8,Product,P-27,OUTPUT,Na2HPO4,0.08,review_needed,product_output
+SR,3. STREAM DETAILS,1090,1072,8,Product,P-27,OUTPUT,Sodium Chloride,0.64,review_needed,product_output
+SR,3. STREAM DETAILS,1091,1072,8,Product,P-27,OUTPUT,Sodium Hydroxid,0.0,review_needed,product_output
+SR,3. STREAM DETAILS,1092,1072,8,Product,P-27,OUTPUT,WFI,76.1,review_needed,product_output

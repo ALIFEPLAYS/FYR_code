@@ -1,0 +1,514 @@
+{
+  "metadata": {
+    "dataset_name": "Future policy and market scenarios for the biopharmaceutical waste-routing MILP",
+    "version": "1.1.0",
+    "created_date": "2026-07-21",
+    "geography": "United Kingdom",
+    "model_type": "single-period MILP",
+    "base_parameter_file": "MILP_params.json",
+    "purpose": "Test focused policy, market and technology changes against the current central-carbon-value optimum while retaining a separate private-cost reference for constraint definitions.",
+    "application_rule": "Use BASE_CURRENT_POLICY as the reporting and percentage-change baseline. Apply one scenario family at a time. Carbon-cap and residual-waste-cap cases are solved as minimum-private-cost constrained policy cases; other families retain the central lifecycle carbon value unless explicitly stated.",
+    "price_year_rule": "Convert real 2020 and real 2025 carbon values to the optimisation model's common price year before adding them to nominal operating costs.",
+    "comparison_rule": "All reported deltas are calculated against BASE_CURRENT_POLICY, not against the private-cost constraint reference."
+  },
+  "base_case": {
+    "scenario_id": "REFERENCE_PRIVATE_COST_2026",
+    "description": "Constraint reference only: private-cost optimisation with grid electricity forced, no lifecycle carbon value and current 2026 waste-policy parameters. It is not the reporting comparison baseline.",
+    "settings": {
+      "lifecycle_carbon_value": "CARBON_VALUE_NONE",
+      "carbon_cap": "CARBON_CAP_NONE",
+      "landfill_tax": "LANDFILL_TAX_CURRENT",
+      "efw_uk_ets": "EFW_ETS_NONE",
+      "residual_waste_policy": "RESIDUAL_WASTE_CAP_NONE",
+      "recyclate_market": "RECYCLATE_PRICE_CURRENT",
+      "local_mains_water_availability": "MAINS_WATER_NORMAL",
+      "industrial_electricity_conditions": "ELECTRICITY_CURRENT_2026"
+    }
+  },
+  "scenario_families": {
+    "lifecycle_carbon_value": {
+      "description": "Internalises the societal value of decision-dependent life-cycle GHG emissions in the objective.",
+      "goal": "Test whether routing, water reuse, transport or electricity decisions change when climate damages are valued alongside cash cost.",
+      "model_application": {
+        "type": "objective_addition",
+        "formula": "carbon_cost_gbp = net_lifecycle_gwp_kgco2e / 1000 * carbon_value_gbp_per_tco2e",
+        "unit": "GBP_2020_per_tCO2e"
+      },
+      "source": {
+        "name": "DESNZ, Valuation of greenhouse gas emissions for policy appraisal and evaluation",
+        "url": "https://www.gov.uk/government/publications/valuing-greenhouse-gas-emissions-in-policy-appraisal/valuation-of-greenhouse-gas-emissions-for-policy-appraisal-and-evaluation"
+      },
+      "scenarios": {
+        "CARBON_VALUE_NONE": {
+          "description": "Private-cost optimisation with no lifecycle carbon value.",
+          "carbon_value_gbp_per_tco2e": 0.0,
+          "basis": "reference_case"
+        },
+        "CARBON_VALUE_LOW_2026": {
+          "description": "Official low 2026 appraisal sensitivity.",
+          "carbon_value_gbp_per_tco2e": 132.0,
+          "basis": "official"
+        },
+        "CARBON_VALUE_CENTRAL_2026": {
+          "description": "Official central target-consistent 2026 appraisal value.",
+          "carbon_value_gbp_per_tco2e": 264.0,
+          "basis": "official"
+        },
+        "CARBON_VALUE_HIGH_2026": {
+          "description": "Official high 2026 appraisal sensitivity.",
+          "carbon_value_gbp_per_tco2e": 396.0,
+          "basis": "official"
+        }
+      }
+    },
+    "carbon_cap": {
+      "description": "Constrains annual net life-cycle GWP relative to the unconstrained BASE_2026 solution.",
+      "goal": "Compare explicit emissions-cap policy with the central carbon-value optimum, without applying both policy instruments simultaneously.",
+      "model_application": {
+        "type": "system_constraint",
+        "formula": "net_lifecycle_gwp_kgco2e_per_year <= BASE_2026_gwp_kgco2e_per_year * cap_multiplier",
+        "baseline": "cost-minimum BASE_2026 net lifecycle GWP",
+        "optimisation_objective": "minimum annual private network cost subject to the GWP cap (lifecycle carbon value set to zero for this family)",
+        "comparison_baseline": "BASE_CURRENT_POLICY"
+      },
+      "source": [
+        {
+          "name": "Science Based Targets initiative, 2026 Absolute Contraction Approach update",
+          "url": "https://sciencebasedtargets.org/news/the-sbti-updates-the-absolute-contraction-approach-to-improve-consistency-and-implementation-while-maintaining-net-zero-ambition"
+        },
+        {
+          "name": "Science Based Targets initiative, explanation of the 4.2% annual 1.5C contraction rate",
+          "url": "https://sciencebasedtargets.org/news/understand-science-based-targets-methods-climate-action",
+          "note": "Applied only as a model-boundary proxy, not as an SBTi-validated corporate target."
+        }
+      ],
+      "scenarios": {
+        "CARBON_CAP_NONE": {
+          "description": "No GWP constraint.",
+          "cap_multiplier": null,
+          "basis": "reference_case"
+        },
+        "CARBON_CAP_PARIS_PROXY_2030": {
+          "description": "Single-period 2030 snapshot using 4.2% linear annual contraction from a 2026 baseline.",
+          "cap_multiplier": 0.832,
+          "required_reduction_fraction": 0.168,
+          "basis": "research_based_proxy"
+        },
+        "CARBON_CAP_PARIS_PROXY_2035": {
+          "description": "Single-period 2035 snapshot using 4.2% linear annual contraction from a 2026 baseline.",
+          "cap_multiplier": 0.622,
+          "required_reduction_fraction": 0.378,
+          "basis": "research_based_proxy"
+        },
+        "CARBON_CAP_STRINGENT_50": {
+          "description": "Stress test requiring a 50% reduction from BASE_2026 GWP.",
+          "cap_multiplier": 0.5,
+          "required_reduction_fraction": 0.5,
+          "basis": "modelling_sensitivity"
+        }
+      }
+    },
+    "landfill_tax": {
+      "description": "Varies the standard-rate Landfill Tax applied to pharmaceutical SUT plastics while retaining the underlying landfill gate fee.",
+      "goal": "Test how stronger disposal taxation shifts material from landfill toward EfW or recycling.",
+      "model_application": {
+        "type": "route_cost_override",
+        "route": "landfill_all",
+        "formula": "total_landfill_cost = loaded_current_landfill_cost - current_tax + scenario_tax; this preserves the model's converted gate-fee component",
+        "base_parameter_path": "landfill_disposal_cost"
+      },
+      "source": [
+        {
+          "name": "HMRC, Landfill Tax rates from 1 April 2026",
+          "url": "https://www.gov.uk/government/publications/landfill-tax-rates-for-2026-to-2027/landfill-tax-increase-in-rates-from-1-april-2026"
+        },
+        {
+          "name": "WRAP, UK Gate Fees Report 2024-25",
+          "url": "https://www.wrap.ngo/resources/report/uk-gate-fees-report-2024-25"
+        }
+      ],
+      "scenarios": {
+        "LANDFILL_TAX_NONE": {
+          "description": "Counterfactual with no Landfill Tax; the underlying WRAP gate-fee component is retained and converted to nominal 2026 GBP.",
+          "landfill_tax_gbp_per_tonne": 0.0,
+          "total_landfill_cost_gbp_per_tonne": 26.572,
+          "basis": "counterfactual",
+          "gate_fee_component_gbp_2026_per_tonne": 26.572
+        },
+        "LANDFILL_TAX_CURRENT": {
+          "description": "Current standard-rate tax from April 2026, added to the converted underlying gate-fee component.",
+          "landfill_tax_gbp_per_tonne": 130.75,
+          "total_landfill_cost_gbp_per_tonne": 157.322,
+          "basis": "official_current_policy",
+          "gate_fee_component_gbp_2026_per_tonne": 26.572
+        },
+        "LANDFILL_TAX_HIGH": {
+          "description": "Future-policy stress test at twice the current standard-rate tax, added to the converted underlying gate-fee component.",
+          "landfill_tax_gbp_per_tonne": 261.5,
+          "total_landfill_cost_gbp_per_tonne": 288.072,
+          "basis": "modelling_sensitivity",
+          "gate_fee_component_gbp_2026_per_tonne": 26.572
+        }
+      }
+    },
+    "efw_uk_ets": {
+      "description": "Adds the cost of UK ETS allowances to gross fossil CO2 emitted by plastic Energy-from-Waste treatment.",
+      "goal": "Test the planned 2028 expansion of the UK ETS and its potential to make recycling more competitive than EfW.",
+      "model_application": {
+        "type": "route_cost_addition",
+        "route": "incineration_efw_heat_electricity",
+        "formula": "ets_cost_gbp = sum(efw_input_tonnes[polymer] * efw_gross_fossil_stack_tco2_per_tonne_input[polymer] * allowance_value_gbp_per_tco2e * pass_through_fraction)",
+        "required_parameter": "efw_gross_fossil_stack_tco2_per_tonne_input",
+        "boundary_rule": "Use gross fossil stack CO2, not net EfW LCA GWP after energy credits."
+      },
+      "source": [
+        {
+          "name": "UK ETS Authority, scope expansion to waste",
+          "url": "https://www.gov.uk/government/consultations/uk-emissions-trading-scheme-scope-expansion-waste"
+        },
+        {
+          "name": "DESNZ, Traded carbon values used for modelling purposes 2025",
+          "url": "https://www.gov.uk/government/publications/traded-carbon-values-used-for-modelling-purposes-2025/traded-carbon-values-used-for-modelling-purposes-2025"
+        }
+      ],
+      "scenarios": {
+        "EFW_ETS_NONE": {
+          "description": "Current MRV-only reference with no allowance cost passed through.",
+          "allowance_value_gbp_per_tco2e": 0.0,
+          "pass_through_fraction": 0.0,
+          "basis": "current_reference"
+        },
+        "EFW_ETS_2028_CENTRAL": {
+          "description": "Central 2028 allowance-cost scenario with full marginal cost pass-through.",
+          "allowance_value_gbp_per_tco2e": 40.0,
+          "pass_through_fraction": 1.0,
+          "price_basis": "real_2025_GBP",
+          "basis": "official_modelling_value_plus_pass_through_assumption"
+        },
+        "EFW_ETS_2035_CENTRAL": {
+          "description": "Longer-term central 2035 allowance-cost scenario with full marginal cost pass-through.",
+          "allowance_value_gbp_per_tco2e": 70.0,
+          "pass_through_fraction": 1.0,
+          "price_basis": "real_2025_GBP",
+          "basis": "official_modelling_value_plus_pass_through_assumption"
+        }
+      }
+    },
+    "residual_waste_policy": {
+      "description": "Caps combined landfill and EfW mass relative to BASE_2026 residual disposal.",
+      "goal": "Compare an explicit residual-disposal constraint with the central carbon-value optimum, without stacking the central carbon value onto the cap.",
+      "model_application": {
+        "type": "system_constraint",
+        "formula": "route_mass['landfill_all'] + route_mass['incineration_efw_heat_electricity'] <= BASE_2026_residual_disposal_mass * cap_multiplier",
+        "optimisation_objective": "minimum annual private network cost subject to the residual-disposal cap (lifecycle carbon value set to zero for this family)",
+        "comparison_baseline": "BASE_CURRENT_POLICY"
+      },
+      "source": {
+        "name": "Defra, Residual waste reduction Environment Act target delivery plan",
+        "url": "https://www.gov.uk/government/publications/residual-waste-reduction-environment-act-target-delivery-plan/residual-waste-reduction-environment-act-target-delivery-plan"
+      },
+      "scenarios": {
+        "RESIDUAL_WASTE_CAP_NONE": {
+          "description": "No additional residual-disposal constraint.",
+          "cap_multiplier": null,
+          "basis": "reference_case"
+        },
+        "RESIDUAL_WASTE_CAP_2030_PROXY": {
+          "description": "Site-level proxy for the approximately 24% national residual-waste reduction expected by 2030.",
+          "cap_multiplier": 0.76,
+          "required_reduction_fraction": 0.24,
+          "basis": "official_target_translated_to_model_proxy"
+        },
+        "RESIDUAL_WASTE_CAP_2042_PROXY": {
+          "description": "Site-level proxy for the approximately 50% national residual-waste reduction target by 2042.",
+          "cap_multiplier": 0.5,
+          "required_reduction_fraction": 0.5,
+          "basis": "official_target_translated_to_model_proxy"
+        }
+      }
+    },
+    "recyclate_market": {
+      "description": "Varies the market value received for saleable recycled LDPE, LLDPE and PP output.",
+      "goal": "Test whether weak or strong recyclate markets materially alter the cost-optimal routing decision.",
+      "model_application": {
+        "type": "product_value_multiplier",
+        "base_parameter_paths": [
+          "recycled_ldpe_output_value",
+          "recycled_pp_output_value"
+        ],
+        "applies_to_polymers": [
+          "LDPE",
+          "LLDPE",
+          "PP"
+        ],
+        "tpe_multiplier": 1.0
+      },
+      "source": {
+        "name": "OPIS, EU recycled plastic market reporting",
+        "url": "https://www.opis.com/resources/energy-market-news-from-opis/eu-recycled-plastic-market-battled-weak-demand-low-cost-virgin-prices-in-june/",
+        "note": "The multipliers are transparent sensitivities around the sourced June 2026 prices, reflecting observed market volatility rather than forecasts."
+      },
+      "scenarios": {
+        "RECYCLATE_PRICE_LOW": {
+          "description": "Weak-demand market with polyolefin recyclate prices 25% below the current values.",
+          "product_value_multiplier": 0.75,
+          "basis": "market_sensitivity"
+        },
+        "RECYCLATE_PRICE_CURRENT": {
+          "description": "Current sourced recyclate output values from MILP_params.json.",
+          "product_value_multiplier": 1.0,
+          "basis": "current_market_reference"
+        },
+        "RECYCLATE_PRICE_HIGH": {
+          "description": "Tight-supply or strong-demand market with polyolefin recyclate prices 25% above current values.",
+          "product_value_multiplier": 1.25,
+          "basis": "market_sensitivity"
+        }
+      }
+    },
+    "local_mains_water_availability": {
+      "description": "Constrains the mains water that a local water-resource zone can reliably supply to an industrial site.",
+      "goal": "Test whether local water scarcity or drought restrictions drive water reuse, production relocation or lower site utilisation.",
+      "model_application": {
+        "type": "site_constraint",
+        "formula": "mains_water_supplied_m3[site] <= BASE_2026_mains_water_requirement_m3[site] * supply_fraction[site]",
+        "includes": [
+          "utility_water",
+          "mains_water_feed_to_WFI_generation"
+        ],
+        "excludes": [
+          "internally_reused_treated_water"
+        ]
+      },
+      "source": [
+        {
+          "name": "Environment Agency, water resources planning guideline",
+          "url": "https://www.gov.uk/government/publications/water-resources-planning-guideline/water-resources-planning-guideline"
+        },
+        {
+          "name": "Environment Agency, National Framework for Water Resources",
+          "url": "https://www.gov.uk/government/publications/national-framework-for-water-resources-2025-water-for-growth-nature-and-a-resilient-future"
+        }
+      ],
+      "scenarios": {
+        "MAINS_WATER_NORMAL": {
+          "description": "All sites can purchase their full BASE_2026 mains-water requirement.",
+          "supply_fraction_by_site": {
+            "Oxford": 1.0,
+            "Cambridge": 1.0,
+            "Slough": 1.0
+          },
+          "basis": "reference_case"
+        },
+        "MAINS_WATER_OXFORD_CONSTRAINED": {
+          "description": "Oxford faces a 25% local mains-water supply reduction; other sites remain unconstrained.",
+          "supply_fraction_by_site": {
+            "Oxford": 0.75,
+            "Cambridge": 1.0,
+            "Slough": 1.0
+          },
+          "basis": "site_stress_test"
+        },
+        "MAINS_WATER_CAMBRIDGE_CONSTRAINED": {
+          "description": "Cambridge faces a 25% local mains-water supply reduction; other sites remain unconstrained.",
+          "supply_fraction_by_site": {
+            "Oxford": 1.0,
+            "Cambridge": 0.75,
+            "Slough": 1.0
+          },
+          "basis": "site_stress_test"
+        },
+        "MAINS_WATER_SLOUGH_CONSTRAINED": {
+          "description": "Slough faces a 25% local mains-water supply reduction; other sites remain unconstrained.",
+          "supply_fraction_by_site": {
+            "Oxford": 1.0,
+            "Cambridge": 1.0,
+            "Slough": 0.75
+          },
+          "basis": "site_stress_test"
+        },
+        "MAINS_WATER_SEVERE_REGIONAL": {
+          "description": "Severe regional stress with only 50% of BASE_2026 mains-water availability at all sites.",
+          "supply_fraction_by_site": {
+            "Oxford": 0.5,
+            "Cambridge": 0.5,
+            "Slough": 0.5
+          },
+          "basis": "severe_stress_test"
+        }
+      }
+    },
+    "industrial_electricity_conditions": {
+      "description": "Varies source-specific delivered electricity costs while preserving the loaded grid and wind LCIA factors. No electricity scenario silently changes plastic-route LCIA factors.",
+      "goal": "Test grid-price exposure, conditional BICS bill support and an illustrative renewable cPPA premium without assuming that a cPPA is automatically cheaper than conventional supply.",
+      "model_application": {
+        "type": "source_specific_cost_override",
+        "cost_formula": "Apply each scenario cost rule only to the listed electricity source(s); retain all other loaded source costs.",
+        "gwp_rule": "Retain the loaded grid and wind LCIA factors. A price scenario does not change GWP unless it changes the optimiser-selected electricity mix.",
+        "availability_rule": "Do not force grid or wind selection. The optimiser remains free to choose any source available in the loaded model.",
+        "autoclave_rule": "Keep autoclave route cost and LCIA coefficients on their validated central basis; electricity-market scenarios do not rewrite embedded plastic route factors.",
+        "relevance_rule": "A scenario may change cost without changing GWP or decisions. If the central optimum already selects wind, a grid-only price shock may correctly have no effect."
+      },
+      "source": [
+        {
+          "name": "DESNZ, Quarterly Energy Prices June 2026",
+          "url": "https://www.gov.uk/government/statistics/quarterly-energy-prices-june-2026"
+        },
+        {
+          "name": "BEIS, Quarterly Energy Prices December 2022",
+          "url": "https://www.gov.uk/government/statistics/quarterly-energy-prices-december-2022"
+        },
+        {
+          "name": "UK Government, British Industrial Competitiveness Scheme",
+          "url": "https://www.gov.uk/government/consultations/british-industrial-competitiveness-scheme-consultation-on-scheme-eligibility-and-approach"
+        },
+        {
+          "name": "UK Government, Corporate Power Purchase Agreements",
+          "url": "https://www.gov.uk/government/calls-for-evidence/corporate-power-purchase-agreements"
+        }
+      ],
+      "scenarios": {
+        "ELECTRICITY_LOADED_BASELINE": {
+          "description": "Loaded source-specific electricity prices from MILP_params.json; no override.",
+          "cost_rule": {
+            "type": "loaded_baseline"
+          },
+          "target_sources": [],
+          "basis": "reporting_baseline_setting"
+        },
+        "ELECTRICITY_PRICE_SHOCK": {
+          "description": "Grid-only high-price stress case based on the observed Q3 2022 manufacturing price plus the 2026/27 levy. The wind/cPPA price remains at its loaded value.",
+          "cost_rule": {
+            "type": "absolute_gbp_per_kwh",
+            "value": 0.21811
+          },
+          "target_sources": [
+            "grid"
+          ],
+          "force_source": false,
+          "basis": "historical_market_stress"
+        },
+        "ELECTRICITY_BICS_2027_CENTRAL": {
+          "description": "Conditional BICS case using the midpoint £37.5/MWh reduction. The model assumes the eligible bill reduction passes through to both conventional grid supply and sleeved renewable supply; eligibility and site-level qualifying shares remain conditional.",
+          "cost_rule": {
+            "type": "subtract_gbp_per_kwh_from_loaded",
+            "value": 0.0375,
+            "floor": 0.0
+          },
+          "target_sources": [
+            "grid",
+            "wind"
+          ],
+          "force_source": false,
+          "eligibility": "conditional_on_final_scheme_rules, eligible SIC/HS products, electricity-intensity test and site qualifying share",
+          "basis": "official_35_to_40_gbp_per_mwh_range_midpoint_with_explicit_pass_through_assumption"
+        },
+        "ELECTRICITY_RENEWABLE_CPPA": {
+          "description": "Illustrative sleeved renewable cPPA priced at a 5% premium to the loaded conventional grid price. This tests contract cost uncertainty and does not assume that renewable procurement is cheaper. Grid and wind remain available to the optimiser.",
+          "cost_rule": {
+            "type": "grid_price_multiplier",
+            "value": 1.05
+          },
+          "target_sources": [
+            "wind"
+          ],
+          "force_source": false,
+          "availability": "conditional_on_contract, creditworthiness, volume, term and project supply",
+          "basis": "transparent_modelling_assumption_not_a_market_quote"
+        }
+      }
+    },
+    "CHEMICAL_RECYCLING_STRAP_HYPOTHETICAL": {
+      "availability": "hypothetical_external_shared_facility",
+      "paper_scenario": "Scenario 2: one PE-selective solvent wash with saleable PE and EVOH outputs",
+      "parameter_basis": "per_kg_of_each_polymer_input_routed",
+      "selection_coupling": {
+        "rule": "LLDPE and EVOH originating from the same eligible multilayer-film stream must use the same route-selection decision",
+        "note": "The optimiser retains the actual LLDPE and EVOH masses already present in the inventory."
+      },
+      "shared_processing_cost": {
+        "gross_paper_opex_gbp_per_kg_polymer_input": 0.359594,
+        "paper_feedstock_purchase_gbp_per_kg_input": 0.037302,
+        "recommended_system_processing_cost_gbp_per_kg_input": 0.322292,
+        "recommended_basis": "Gross paper OPEX excluding the feedstock purchase transfer, because the integrated optimisation already owns the waste and separately receives the recyclate-value credit.",
+        "transport_included": false,
+        "decontamination_included": false
+      },
+      "polymer_parameters": {
+        "LLDPE": {
+          "recovery_fraction": 1.0,
+          "residual_to_efw_fraction": 0.0,
+          "recyclate_value_gbp_per_kg_output": 0.895255,
+          "paper_gwp": {
+            "virgin_polymer_kgco2e_per_kg": 2.09,
+            "strap_process_kgco2e_per_kg": 0.88,
+            "strap_to_virgin_ratio": 0.421053
+          },
+          "optimiser_gwp_proxy": {
+            "current_mechanical_route_kgco2e_per_kg_input": 0.996954,
+            "strap_route_kgco2e_per_kg_input": 1.002898,
+            "change_vs_current_kgco2e_per_kg_input": 0.005944
+          },
+          "optimiser_cost": {
+            "current_mechanical_route_gbp_per_kg_input": -0.4788,
+            "strap_route_gbp_per_kg_input": -0.572963,
+            "saving_vs_current_gbp_per_kg_input": 0.094163
+          }
+        },
+        "EVOH": {
+          "recovery_fraction": 1.0,
+          "residual_to_efw_fraction": 0.0,
+          "recyclate_value_gbp_per_kg_output": 5.968368,
+          "paper_gwp": {
+            "virgin_polymer_kgco2e_per_kg": 7.3,
+            "strap_process_kgco2e_per_kg": 1.09,
+            "strap_to_virgin_ratio": 0.149315
+          },
+          "optimiser_gwp_proxy": {
+            "current_mechanical_route_kgco2e_per_kg_input": 5.209754,
+            "strap_route_kgco2e_per_kg_input": 0.422291,
+            "change_vs_current_kgco2e_per_kg_input": -4.787464
+          },
+          "optimiser_cost": {
+            "current_mechanical_route_gbp_per_kg_input": 0.121,
+            "strap_route_gbp_per_kg_input": -5.646076,
+            "saving_vs_current_gbp_per_kg_input": 5.767076
+          }
+        }
+      },
+      "facility_context": {
+        "paper_reference_capacity_tonnes_per_year": 5000,
+        "paper_minimum_economic_scale_tonnes_per_year": 3030,
+        "paper_tci_gbp_million_at_reference_capacity": 22.754402,
+        "model_treatment": "Do not charge the TCI unless the optimisation explicitly includes construction of a dedicated STRAP plant. For the hypothetical route, treat it as an external shared facility."
+      },
+      "source": {
+        "paper": "Recycling of Single-Use Multilayer Plastics for Biomanufacturing\nwith Solvent-Targeted Recovery and Precipitation",
+        "doi": "DOI: 10.1021/acssuschemeng.5c06479",
+        "journal": "ACS Sustainable Chemistry & Engineering 2025 13 (40), 16930-16945"
+      },
+      "transport": {
+        "distance_km_by_location": {
+          "Oxford": 125.0,
+          "Cambridge": 145.0,
+          "Slough": 155.0
+        },
+        "basis": "Explicit hypothetical one-way distances to a representative shared Midlands facility, retained from the prior thesis scenario code. No facility or measured route is asserted; treat as a scenario assumption."
+      }
+    }
+  },
+  "reporting_baseline": {
+    "scenario_id": "BASE_CURRENT_POLICY",
+    "description": "Current model optimum using loaded 2026 parameters and the central lifecycle carbon value. All scenario deltas are reported against this case.",
+    "settings": {
+      "lifecycle_carbon_value": "CARBON_VALUE_CENTRAL_2026",
+      "carbon_cap": "CARBON_CAP_NONE",
+      "landfill_tax": "LANDFILL_TAX_CURRENT",
+      "efw_uk_ets": "EFW_ETS_NONE",
+      "residual_waste_policy": "RESIDUAL_WASTE_CAP_NONE",
+      "recyclate_market": "RECYCLATE_PRICE_CURRENT",
+      "local_mains_water_availability": "MAINS_WATER_NORMAL",
+      "industrial_electricity_conditions": "ELECTRICITY_LOADED_BASELINE"
+    }
+  }
+}

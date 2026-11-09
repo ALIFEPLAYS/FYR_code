@@ -1,6 +1,8 @@
 {
   "folders": [
-    { "name": "With LCA - Ahmed", "path": "with_LCA" },
-    { "name": "Without LCA - Alfie", "path": "without_LCA" }
+    { "name": "1. SuperPro Results", "path": "1_SuperPro_Results" },
+    { "name": "2. LCA", "path": "2_LCA" },
+    { "name": "3. Old Sequential Supply Chain + MILP", "path": "3_Sequential_Supply_Chain_MILP" },
+    { "name": "4. Joint MILP", "path": "4_Joint_MILP" }
   ]
 }

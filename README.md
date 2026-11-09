@@ -1,20 +1,52 @@
-# Joint MILP: with and without LCA
+# FYR: SuperPro, LCA and supply-chain optimisation
 
-Two versions are kept in separate, self-contained project layouts:
+The project has four main sections, shown in the same order on GitHub and in VS Code.
 
-| Section | Model | Entry point |
-| --- | --- | --- |
-| [With LCA — Ahmed's version](with_LCA/README.md) | Joint manufacturing and industrial-symbiosis optimisation with economic cost plus life-cycle carbon valuation, and environmental reporting | `with_LCA/Joint_MILP/run_joint_milp.py` |
-| [Without LCA — Alfie's version](without_LCA/README.md) | Alfie's original economic-only joint MILP; environmental impacts do not enter the objective | `without_LCA/MILP/code/testjoint.py` |
+```text
+1_SuperPro_Results/
+  rawSP_reports/          Original SuperPro reports and process file
+  notebooks/             Extraction notebook source, with saved outputs cleared
+  data/                  Processed results, intermediate tables and templates
+2_LCA/
+  lca_pipeline/          Life-cycle inventory and impact calculations
+  parameters/            LCA settings
+  outputs/               Local generated route factors (not uploaded)
+3_Sequential_Supply_Chain_MILP/
+  mAb_SupplyChain_model/  Old first-stage manufacturing/supply-chain model
+  MILP/                  Old second-stage IS model and numerical analyses
+  parameters/            Shared economic, eligibility and scenario settings
+4_Joint_MILP/
+  without_LCA/           Alfie's original economic-only joint model
+  with_LCA/              Ahmed's joint model with carbon valuation and LCA reporting
+  with_PB/               Reserved for a joint planetary-boundary model
+```
 
-Alfie's original `testjoint.py` has been moved unchanged into the second section. Ahmed's model and its supporting source and foreground inputs have been copied unchanged into the first. [SOURCE_MANIFEST.json](SOURCE_MANIFEST.json) records source commits and file hashes.
+| Section | Start here |
+| --- | --- |
+| 1. SuperPro results | [Reports, extraction and data vintages](1_SuperPro_Results/README.md) |
+| 2. LCA | [Validate inputs and generate route factors](2_LCA/README.md) |
+| 3. Old sequential supply chain + MILP | [Run the original two-stage workflow](3_Sequential_Supply_Chain_MILP/README.md) |
+| 4. Joint MILP | [Choose a joint-model variant](4_Joint_MILP/README.md) |
 
-These versions have different formulations: Ahmed's run fixes site and assigned-line capacity after an upstream solve, while Alfie's code decides sites and batches jointly. Their output differences therefore cannot be attributed solely to including LCA. See each section's README for setup and input requirements.
+## Setup and VS Code
 
-## Open in VS Code
+Open `FYR_code.code-workspace` for the four main Explorer sections. Create one Python environment at the repository root and share it across the workflows:
 
-Open `FYR_code.code-workspace` to see both sections side by side. Each section has its own requirements and results directories. Run commands from the section directory specified in its README.
+```sh
+python -m venv .venv
+.venv/bin/python -m pip install -r requirements.txt
+```
 
-## Data boundary
+Python 3.11 or newer is recommended. HiGHS is used for Ahmed's joint model; Alfie's original solver interface uses GAMS/CPLEX. Each section documents its commands. Run the examples from the repository root.
 
-Generated results, Python environments and licensed ecoinvent-derived route-factor workbooks are excluded. Both versions currently read that workbook: the economic-only version uses physical inventory quantities rather than impact factors. Supply your own permitted workbook or generate it through the included LCA pipeline. Neither a GitHub download nor this repository supplies an ecoinvent licence.
+## Shared inputs and model scope
+
+Foreground manufacturing inputs live once in section 1, LCA generation and settings in section 2, and common optimisation inputs in section 3. `project_paths.py` connects those locations. Each workflow writes its own local results directory.
+
+The joint variants currently have different formulations. Ahmed's version fixes sites and assigned-line capacity after an upstream solve; Alfie's version decides sites and batches jointly. Differences between their results cannot be attributed solely to LCA. The `with_PB` folder is a planned variant, with no solver or PB budgets implemented yet.
+
+Alfie's `testjoint.py` is preserved byte for byte. Its new `run_without_lca.py` launcher adapts paths to shared inputs. The missing `itemised_costs_20261026.csv` is still required for that variant; older dated inputs are kept under section 1 without substituting one automatically.
+
+Generated model outputs, environments and ecoinvent-derived route-factor workbooks remain excluded from Git. Supply or generate a permitted workbook at `2_LCA/outputs/master_lca_route_factor_database_ecoinvent_3_12.xlsx`, or set `IS_LCA_ROUTE_FACTOR_FILE` to a local path. The economic-only model still uses physical inventory from this workbook, although it does not optimise LCA impacts.
+
+[SOURCE_MANIFEST.json](SOURCE_MANIFEST.json) records source provenance and packaged file hashes. The original project outside this checkout is preserved.

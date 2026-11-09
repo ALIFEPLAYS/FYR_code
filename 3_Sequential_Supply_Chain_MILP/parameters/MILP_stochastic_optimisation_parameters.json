@@ -1,0 +1,1294 @@
+{
+  "schema_version": "5.0-source-informed-triangular-qmc",
+  "analysis_purpose": "Sampling-based optimisation under bounded uncertainty: use a scrambled Sobol low-discrepancy sequence to cover the joint uncertainty space, solve the deterministic industrial-symbiosis MILP independently at every realization, and report the empirical range of optimal decisions and outcomes. No Sobol sensitivity indices are calculated. The JSON uncertainty_range entries are authoritative for the stochastic/QMC run; OAT registry search ranges are not used as stochastic bounds.",
+  "terminology": {
+    "recommended_thesis_name": "Sobol quasi-Monte-Carlo solution-space assessment under parametric uncertainty",
+    "acceptable_short_name": "sampling-based optimisation under uncertainty",
+    "do_not_call": "variance-based global sensitivity analysis unless actual Sobol indices are being estimated",
+    "not_two_stage_stochastic_programming": "There is no scenario-independent first-stage design shared across all uncertainty realizations in this package. Each sampled realization is re-optimised independently.",
+    "sobol_meaning": "Sobol refers to the low-discrepancy sampling sequence, not to Sobol sensitivity indices.",
+    "probability_warning": "Triangular distributions use the live nominal value as mode and source-informed or explicitly assumed bounds. These are judgement-based epistemic measures, not empirically calibrated real-world probabilities."
+  },
+  "parameter_selection_principles": [
+    "Do not sample mathematically redundant global and polymer-specific multipliers for the same quantity in the same ensemble.",
+    "Use polymer-specific recovery and recyclate values because the decision problem is polymer-specific.",
+    "Use one total-plastic uncertainty plus a compositional closure block rather than independent polymer masses and independent shares.",
+    "Exclude route-outage and polymer-not-accepted ensembles from the final uncertainty run; prioritise recovery, composition, market, process and environmental uncertainty that directly affects the optimisation trade-offs.",
+    "Keep vehicle type endogenous: diesel vs battery-electric HGV is an optimiser decision to report, while payload and service cost are uncertain inputs.",
+    "Never sample payload above the loaded physical maximum; the previous +25% payload upper range was not physically defensible."
+  ],
+  "analysis": {
+    "registry_parameter_ids": [
+      "grid_electricity_price_multiplier",
+      "electricity_lcia_multiplier__grid__gwp",
+      "electricity_lcia_multiplier__wind__gwp",
+      "electricity_lcia_multiplier__grid__fossil_resource_use",
+      "electricity_lcia_multiplier__wind__fossil_resource_use",
+      "electricity_lcia_multiplier__grid__water_scarcity",
+      "electricity_lcia_multiplier__wind__water_scarcity",
+      "electricity_demand_per_batch",
+      "autoclave_energy_demand",
+      "total_plastic_waste_per_batch",
+      "manufacturing_throughput",
+      "low_to_high_batch_ratio",
+      "utility_water_demand_per_batch",
+      "wastewater_generation_per_batch",
+      "achievable_water_reuse_fraction",
+      "recovery_fraction__LDPE",
+      "recyclate_value__LDPE",
+      "recyclate_quality_value_capture__LDPE",
+      "substitution_efficiency__LDPE",
+      "avoided_virgin_credit_multiplier__LDPE",
+      "recovery_fraction__LLDPE",
+      "recyclate_value__LLDPE",
+      "recyclate_quality_value_capture__LLDPE",
+      "substitution_efficiency__LLDPE",
+      "avoided_virgin_credit_multiplier__LLDPE",
+      "recovery_fraction__PP",
+      "recyclate_value__PP",
+      "recyclate_quality_value_capture__PP",
+      "substitution_efficiency__PP",
+      "avoided_virgin_credit_multiplier__PP",
+      "recovery_fraction__TPE",
+      "recyclate_value__TPE",
+      "recyclate_quality_value_capture__TPE",
+      "substitution_efficiency__TPE",
+      "avoided_virgin_credit_multiplier__TPE",
+      "recycling_capacity_fraction__mechanical_recycling_polyolefins",
+      "recycling_capacity_fraction__mechanical_recycling_tpe_tubing",
+      "vehicle_payload__diesel_articulated_hgv",
+      "vehicle_payload__battery_electric_articulated_hgv",
+      "transport_cost__diesel_articulated_hgv",
+      "transport_cost__battery_electric_articulated_hgv",
+      "landfill_gate_fee",
+      "efw_gate_fee",
+      "recycling_gate_fee",
+      "lifecycle_carbon_value",
+      "wastewater_treatment_annualised_capex",
+      "wastewater_treatment_opex"
+    ],
+    "custom_parameter_ids": [
+      "composition_weight__EVOH",
+      "composition_weight__LDPE",
+      "composition_weight__LLDPE",
+      "composition_weight__PP",
+      "composition_weight__TPE",
+      "distance_multiplier__landfill_all",
+      "distance_multiplier__incineration_efw_heat_electricity",
+      "distance_multiplier__mechanical_recycling_polyolefins",
+      "distance_multiplier__mechanical_recycling_tpe_tubing",
+      "biomass_steam_efficiency"
+    ],
+    "default_sampling": {
+      "sequence": "scrambled Sobol low-discrepancy sequence",
+      "measure": "triangular inverse-CDF marginals with live nominal modes and stated bounds",
+      "default_base_power": 11,
+      "default_base_samples": 2048,
+      "seed": 104729,
+      "nested_power_of_two_design": "A single 2^11 run is analysed retrospectively at prefixes 2^5, 2^6, ..., 2^11 for sample-size stability. No additional optimisation runs are needed for convergence assessment.",
+      "default_total_milp_solves_including_central_reference": 2049
+    },
+    "cppa_price_rule": "shared_grid_price_multiplier",
+    "cppa_price_rule_note": "Scale the 2026 nominal cPPA tariff by the same sampled DESNZ Reference delivered-price-path multiplier as the grid tariff; no independent premium is sampled.",
+    "convergence_reporting": {
+      "central_regime_definition": "The macro decision regime selected by the central deterministic MILP at nominal parameter values.",
+      "central_regime_share_definition": "At each nested Sobol prefix, the number of feasible sampled realizations whose optimal macro regime exactly matches the central deterministic regime divided by the number of feasible realizations in that prefix.",
+      "sample_sizes_reported": [
+        32,
+        64,
+        128,
+        256,
+        512,
+        1024,
+        2048
+      ],
+      "stability_metrics": [
+        "central regime share (%)",
+        "change from previous nested sample size (percentage points)",
+        "absolute difference from the final 2048-sample share (percentage points)",
+        "number of distinct macro regimes discovered",
+        "KPI 5th percentile, median and 95th percentile"
+      ],
+      "interpretation": "Nested scrambled-Sobol diagnostics describe the declared triangular uncertainty measures; they are not iid binomial confidence intervals or empirically calibrated event probabilities."
+    },
+    "bound_validation": {
+      "json_is_authoritative": true,
+      "zero_rule": "Every selected continuous Sobol dimension must have a strictly positive lower bound. Zero is reserved for explicit outage/stress cases, which are excluded from this final run.",
+      "range_tier": "plausible operating/market uncertainty; extreme boundary-search values remain in the separate OAT analysis",
+      "runner_behaviour": "The runner fails before sampling if a selected positive continuous parameter resolves to a lower bound <= 0."
+    }
+  },
+  "parameters": {
+    "grid_electricity_price_multiplier": {
+      "classification": "primary_market_uncertainty",
+      "uncertainty_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.8983168238953056,
+        "high_factor": 1.0163519861910597
+      },
+      "boundary_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.5,
+        "high_factor": 1.75
+      },
+      "range_basis": "The DESNZ EEP Annex M Reference annual delivered-price pathway in the electricity-decarbonisation module is divided by its 2026 value of GBP 182.71/MWh. Its 2026-2040 low is 2029 (GBP 164.131/MWh; multiplier 0.898317) and high is 2040 (GBP 185.698/MWh; multiplier 1.016352). Both grid and cPPA tariffs scale from their unchanged 2026 nominal values by the same sampled multiplier, preserving 2026 parity. This triangular time-path stress envelope is not a probability distribution for 2026 price uncertainty.",
+      "hard_bounds": {
+        "low": 1e-06
+      },
+      "source_detail": {
+        "source": "DESNZ Energy and Emissions Projections 2024–2050, Annex M Reference annual delivered-price path in electricity_decarbonisation_simulation/outputs/annual_inputs_2026_2050.csv",
+        "url": "https://www.gov.uk/government/publications/energy-and-emissions-projections-2024-to-2050",
+        "reference_wholesale_2026_gbp_per_mwh": 82.7940351879402,
+        "fixed_delivered_adder_2026_gbp_per_mwh": 99.9159648120598,
+        "nominal_delivered_2026_gbp_per_mwh": 182.71,
+        "low_year": 2029,
+        "high_year": 2040,
+        "low_delivered_2026_gbp_per_mwh": 164.1314668939113,
+        "high_delivered_2026_gbp_per_mwh": 185.69767139696853,
+        "interpretation": "Time-path envelope for the primary 2026-2040 study; not observed 2026 tariff variation. cPPA shares the multiplier and starts at its unchanged 2026 nominal tariff."
+      }
+    },
+    "electricity_lcia_multiplier__grid__gwp": {
+      "classification": "primary_lcia_factor_uncertainty",
+      "uncertainty_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 1.0,
+        "high_factor": 1.313775775621422
+      },
+      "boundary_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.5,
+        "high_factor": 1.5
+      },
+      "range_basis": "2026 NESO FES2025 ES1 pathway spread applied as a relative generation-mix change to the canonical ecoinvent GB medium-voltage grid factor. Holistic Transition is the nominal mode/lower endpoint (0.272552 kg CO2e/kWh); Falling Behind is the upper endpoint (0.358072 kg CO2e/kWh). The canonical high-voltage component is multiplied by each pathway's generation-score ratio to Holistic Transition, while its voltage bridge remains fixed. This is a conditional triangular sampling assumption, not a forecast probability or an absolute NESO grid LCA estimate.",
+      "hard_bounds": {
+        "low": 1e-06
+      },
+      "affects_optimisation": true,
+      "source_detail": {
+        "source": "NESO FES2025 electricity supply data table ES1 v006; model technology LCA factor map and voltage bridge",
+        "url": "https://www.neso.energy/data-portal/future-energy-scenario-electricity-supply-data-table-es1/electricity_supply_data_table_es1_2025",
+        "year": 2026,
+        "raw_mapped_pathways_kg_co2e_per_kwh": {
+          "Holistic Transition": 0.0827735516925564,
+          "Electric Engagement": 0.08428386911637051,
+          "Hydrogen Evolution": 0.08762933027981469,
+          "Falling Behind": 0.1069507216176424
+        },
+        "anchored_pathways_kg_co2e_per_kwh": {
+          "Holistic Transition": 0.27255187790889085,
+          "Electric Engagement": 0.2778942158931021,
+          "Hydrogen Evolution": 0.289727876795349,
+          "Falling Behind": 0.3580720547968282
+        },
+        "canonical_high_voltage_kg_co2e_per_kwh": 0.2645758144419988,
+        "fixed_voltage_bridge_kg_co2e_per_kwh": 0.007976063466892058,
+        "canonical_milp_grid_kg_co2e_per_kwh": 0.2725518779088908,
+        "lower_pathway": "Holistic Transition",
+        "lower_kg_co2e_per_kwh": 0.27255187790889085,
+        "upper_pathway": "Falling Behind",
+        "upper_kg_co2e_per_kwh": 0.3580720547968282,
+        "nominal_mode": "current ecoinvent-based master MILP grid factor"
+      }
+    },
+    "electricity_lcia_multiplier__grid__fossil_resource_use": {
+      "classification": "primary_lcia_factor_uncertainty",
+      "uncertainty_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.8,
+        "high_factor": 1.2
+      },
+      "boundary_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.5,
+        "high_factor": 1.5
+      },
+      "range_basis": "±20% factor uncertainty around the currently mapped electricity LCIA coefficient. GWP factors can alter the cost-plus-carbon optimisation; fossil-resource and water factors alter reported outcomes only.",
+      "hard_bounds": {
+        "low": 1e-06
+      },
+      "affects_optimisation": false
+    },
+    "electricity_lcia_multiplier__grid__water_scarcity": {
+      "classification": "primary_lcia_factor_uncertainty",
+      "uncertainty_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.8,
+        "high_factor": 1.2
+      },
+      "boundary_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.5,
+        "high_factor": 1.5
+      },
+      "range_basis": "±20% factor uncertainty around the currently mapped electricity LCIA coefficient. GWP factors can alter the cost-plus-carbon optimisation; fossil-resource and water factors alter reported outcomes only.",
+      "hard_bounds": {
+        "low": 1e-06
+      },
+      "affects_optimisation": false
+    },
+    "electricity_lcia_multiplier__wind__gwp": {
+      "classification": "primary_lcia_factor_uncertainty",
+      "uncertainty_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.8,
+        "high_factor": 1.2
+      },
+      "boundary_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.5,
+        "high_factor": 1.5
+      },
+      "range_basis": "±20% factor uncertainty around the currently mapped electricity LCIA coefficient. GWP factors can alter the cost-plus-carbon optimisation; fossil-resource and water factors alter reported outcomes only.",
+      "hard_bounds": {
+        "low": 1e-06
+      },
+      "affects_optimisation": true
+    },
+    "electricity_lcia_multiplier__wind__fossil_resource_use": {
+      "classification": "primary_lcia_factor_uncertainty",
+      "uncertainty_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.8,
+        "high_factor": 1.2
+      },
+      "boundary_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.5,
+        "high_factor": 1.5
+      },
+      "range_basis": "±20% factor uncertainty around the currently mapped electricity LCIA coefficient. GWP factors can alter the cost-plus-carbon optimisation; fossil-resource and water factors alter reported outcomes only.",
+      "hard_bounds": {
+        "low": 1e-06
+      },
+      "affects_optimisation": false
+    },
+    "electricity_lcia_multiplier__wind__water_scarcity": {
+      "classification": "primary_lcia_factor_uncertainty",
+      "uncertainty_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.8,
+        "high_factor": 1.2
+      },
+      "boundary_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.5,
+        "high_factor": 1.5
+      },
+      "range_basis": "±20% factor uncertainty around the currently mapped electricity LCIA coefficient. GWP factors can alter the cost-plus-carbon optimisation; fossil-resource and water factors alter reported outcomes only.",
+      "hard_bounds": {
+        "low": 1e-06
+      },
+      "affects_optimisation": false
+    },
+    "electricity_demand_per_batch": {
+      "classification": "primary_process_uncertainty",
+      "uncertainty_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.85,
+        "high_factor": 1.15
+      },
+      "boundary_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.5,
+        "high_factor": 1.5
+      },
+      "range_basis": "±15% around the SuperPro-derived per-batch electricity demand to represent normal process/demand variability rather than a stress test.",
+      "hard_bounds": {
+        "low": 1e-06
+      }
+    },
+    "recovery_fraction__LDPE": {
+      "classification": "primary_plastics_process_uncertainty",
+      "uncertainty_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.75,
+        "high_factor": 1.15
+      },
+      "boundary_range": {
+        "mode": "absolute",
+        "low": 0.0,
+        "high": 1.0
+      },
+      "range_basis": "Polymer-specific recovery uncertainty around the loaded central mechanical-recycling yield. The physical fraction is hard-bounded to [0,1] and rejection is recalculated as 1-recovery.",
+      "hard_bounds": {
+        "low": 0.0001,
+        "high": 1.0
+      }
+    },
+    "recyclate_value__LDPE": {
+      "classification": "primary_plastics_market_uncertainty",
+      "uncertainty_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.6,
+        "high_factor": 1.4
+      },
+      "boundary_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.0,
+        "high_factor": 2.5
+      },
+      "range_basis": "60–140% of the loaded polymer-specific recyclate value to represent substantial secondary-material market volatility without an extreme near-zero price stress.",
+      "hard_bounds": {
+        "low": 1e-06
+      }
+    },
+    "recyclate_quality_value_capture__LDPE": {
+      "classification": "primary_recyclate_quality_uncertainty",
+      "uncertainty_range": {
+        "mode": "absolute",
+        "low": 0.75,
+        "high": 1.0
+      },
+      "boundary_range": {
+        "mode": "absolute",
+        "low": 0.0,
+        "high": 1.0
+      },
+      "range_basis": "75–100% of quoted recyclate value is realised, representing quality/contract deductions while excluding route non-operation.",
+      "hard_bounds": {
+        "low": 0.0001,
+        "high": 1.0
+      }
+    },
+    "substitution_efficiency__LDPE": {
+      "classification": "primary_recyclate_quality_uncertainty",
+      "uncertainty_range": {
+        "mode": "absolute",
+        "low": 0.75,
+        "high": 1.0
+      },
+      "boundary_range": {
+        "mode": "absolute",
+        "low": 0.0,
+        "high": 1.0
+      },
+      "range_basis": "75–100% functional substitution of virgin polymer by recovered material, allowing a realistic quality penalty without compounding an extreme credit reduction.",
+      "hard_bounds": {
+        "low": 0.0001,
+        "high": 1.0
+      }
+    },
+    "avoided_virgin_credit_multiplier__LDPE": {
+      "classification": "primary_plastics_lcia_uncertainty",
+      "uncertainty_range": {
+        "mode": "absolute",
+        "low": 0.85,
+        "high": 1.15
+      },
+      "boundary_range": {
+        "mode": "absolute",
+        "low": 0.5,
+        "high": 1.5
+      },
+      "range_basis": "±15% uncertainty around the mapped avoided virgin-production LCIA factor. Kept tighter than substitution efficiency to avoid compounding two very broad uncertainties on the same credit mechanism.",
+      "hard_bounds": {
+        "low": 0.0001
+      }
+    },
+    "recovery_fraction__LLDPE": {
+      "classification": "primary_plastics_process_uncertainty",
+      "uncertainty_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.75,
+        "high_factor": 1.15
+      },
+      "boundary_range": {
+        "mode": "absolute",
+        "low": 0.0,
+        "high": 1.0
+      },
+      "range_basis": "Polymer-specific recovery uncertainty around the loaded central mechanical-recycling yield. The physical fraction is hard-bounded to [0,1] and rejection is recalculated as 1-recovery.",
+      "hard_bounds": {
+        "low": 0.0001,
+        "high": 1.0
+      }
+    },
+    "recyclate_value__LLDPE": {
+      "classification": "primary_plastics_market_uncertainty",
+      "uncertainty_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.6,
+        "high_factor": 1.4
+      },
+      "boundary_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.0,
+        "high_factor": 2.5
+      },
+      "range_basis": "60–140% of the loaded polymer-specific recyclate value to represent substantial secondary-material market volatility without an extreme near-zero price stress.",
+      "hard_bounds": {
+        "low": 1e-06
+      }
+    },
+    "recyclate_quality_value_capture__LLDPE": {
+      "classification": "primary_recyclate_quality_uncertainty",
+      "uncertainty_range": {
+        "mode": "absolute",
+        "low": 0.75,
+        "high": 1.0
+      },
+      "boundary_range": {
+        "mode": "absolute",
+        "low": 0.0,
+        "high": 1.0
+      },
+      "range_basis": "75–100% of quoted recyclate value is realised, representing quality/contract deductions while excluding route non-operation.",
+      "hard_bounds": {
+        "low": 0.0001,
+        "high": 1.0
+      }
+    },
+    "substitution_efficiency__LLDPE": {
+      "classification": "primary_recyclate_quality_uncertainty",
+      "uncertainty_range": {
+        "mode": "absolute",
+        "low": 0.75,
+        "high": 1.0
+      },
+      "boundary_range": {
+        "mode": "absolute",
+        "low": 0.0,
+        "high": 1.0
+      },
+      "range_basis": "75–100% functional substitution of virgin polymer by recovered material, allowing a realistic quality penalty without compounding an extreme credit reduction.",
+      "hard_bounds": {
+        "low": 0.0001,
+        "high": 1.0
+      }
+    },
+    "avoided_virgin_credit_multiplier__LLDPE": {
+      "classification": "primary_plastics_lcia_uncertainty",
+      "uncertainty_range": {
+        "mode": "absolute",
+        "low": 0.85,
+        "high": 1.15
+      },
+      "boundary_range": {
+        "mode": "absolute",
+        "low": 0.5,
+        "high": 1.5
+      },
+      "range_basis": "±15% uncertainty around the mapped avoided virgin-production LCIA factor. Kept tighter than substitution efficiency to avoid compounding two very broad uncertainties on the same credit mechanism.",
+      "hard_bounds": {
+        "low": 0.0001
+      }
+    },
+    "recovery_fraction__PP": {
+      "classification": "primary_plastics_process_uncertainty",
+      "uncertainty_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.75,
+        "high_factor": 1.15
+      },
+      "boundary_range": {
+        "mode": "absolute",
+        "low": 0.0,
+        "high": 1.0
+      },
+      "range_basis": "Polymer-specific recovery uncertainty around the loaded central mechanical-recycling yield. The physical fraction is hard-bounded to [0,1] and rejection is recalculated as 1-recovery.",
+      "hard_bounds": {
+        "low": 0.0001,
+        "high": 1.0
+      }
+    },
+    "recyclate_value__PP": {
+      "classification": "primary_plastics_market_uncertainty",
+      "uncertainty_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.6,
+        "high_factor": 1.4
+      },
+      "boundary_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.0,
+        "high_factor": 2.5
+      },
+      "range_basis": "60–140% of the loaded polymer-specific recyclate value to represent substantial secondary-material market volatility without an extreme near-zero price stress.",
+      "hard_bounds": {
+        "low": 1e-06
+      }
+    },
+    "recyclate_quality_value_capture__PP": {
+      "classification": "primary_recyclate_quality_uncertainty",
+      "uncertainty_range": {
+        "mode": "absolute",
+        "low": 0.75,
+        "high": 1.0
+      },
+      "boundary_range": {
+        "mode": "absolute",
+        "low": 0.0,
+        "high": 1.0
+      },
+      "range_basis": "75–100% of quoted recyclate value is realised, representing quality/contract deductions while excluding route non-operation.",
+      "hard_bounds": {
+        "low": 0.0001,
+        "high": 1.0
+      }
+    },
+    "substitution_efficiency__PP": {
+      "classification": "primary_recyclate_quality_uncertainty",
+      "uncertainty_range": {
+        "mode": "absolute",
+        "low": 0.75,
+        "high": 1.0
+      },
+      "boundary_range": {
+        "mode": "absolute",
+        "low": 0.0,
+        "high": 1.0
+      },
+      "range_basis": "75–100% functional substitution of virgin polymer by recovered material, allowing a realistic quality penalty without compounding an extreme credit reduction.",
+      "hard_bounds": {
+        "low": 0.0001,
+        "high": 1.0
+      }
+    },
+    "avoided_virgin_credit_multiplier__PP": {
+      "classification": "primary_plastics_lcia_uncertainty",
+      "uncertainty_range": {
+        "mode": "absolute",
+        "low": 0.85,
+        "high": 1.15
+      },
+      "boundary_range": {
+        "mode": "absolute",
+        "low": 0.5,
+        "high": 1.5
+      },
+      "range_basis": "±15% uncertainty around the mapped avoided virgin-production LCIA factor. Kept tighter than substitution efficiency to avoid compounding two very broad uncertainties on the same credit mechanism.",
+      "hard_bounds": {
+        "low": 0.0001
+      }
+    },
+    "recovery_fraction__TPE": {
+      "classification": "primary_plastics_process_uncertainty",
+      "uncertainty_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.75,
+        "high_factor": 1.15
+      },
+      "boundary_range": {
+        "mode": "absolute",
+        "low": 0.0,
+        "high": 1.0
+      },
+      "range_basis": "Polymer-specific recovery uncertainty around the loaded central mechanical-recycling yield. The physical fraction is hard-bounded to [0,1] and rejection is recalculated as 1-recovery.",
+      "hard_bounds": {
+        "low": 0.0001,
+        "high": 1.0
+      }
+    },
+    "recyclate_value__TPE": {
+      "classification": "primary_plastics_market_uncertainty",
+      "uncertainty_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.6,
+        "high_factor": 1.4
+      },
+      "boundary_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.0,
+        "high_factor": 2.5
+      },
+      "range_basis": "60–140% of the loaded polymer-specific recyclate value to represent substantial secondary-material market volatility without an extreme near-zero price stress.",
+      "hard_bounds": {
+        "low": 1e-06
+      }
+    },
+    "recyclate_quality_value_capture__TPE": {
+      "classification": "primary_recyclate_quality_uncertainty",
+      "uncertainty_range": {
+        "mode": "absolute",
+        "low": 0.75,
+        "high": 1.0
+      },
+      "boundary_range": {
+        "mode": "absolute",
+        "low": 0.0,
+        "high": 1.0
+      },
+      "range_basis": "75–100% of quoted recyclate value is realised, representing quality/contract deductions while excluding route non-operation.",
+      "hard_bounds": {
+        "low": 0.0001,
+        "high": 1.0
+      }
+    },
+    "substitution_efficiency__TPE": {
+      "classification": "primary_recyclate_quality_uncertainty",
+      "uncertainty_range": {
+        "mode": "absolute",
+        "low": 0.75,
+        "high": 1.0
+      },
+      "boundary_range": {
+        "mode": "absolute",
+        "low": 0.0,
+        "high": 1.0
+      },
+      "range_basis": "75–100% functional substitution of virgin polymer by recovered material, allowing a realistic quality penalty without compounding an extreme credit reduction.",
+      "hard_bounds": {
+        "low": 0.0001,
+        "high": 1.0
+      }
+    },
+    "avoided_virgin_credit_multiplier__TPE": {
+      "classification": "primary_plastics_lcia_uncertainty",
+      "uncertainty_range": {
+        "mode": "absolute",
+        "low": 0.85,
+        "high": 1.15
+      },
+      "boundary_range": {
+        "mode": "absolute",
+        "low": 0.5,
+        "high": 1.5
+      },
+      "range_basis": "±15% uncertainty around the mapped avoided virgin-production LCIA factor. Kept tighter than substitution efficiency to avoid compounding two very broad uncertainties on the same credit mechanism.",
+      "hard_bounds": {
+        "low": 0.0001
+      }
+    },
+    "autoclave_energy_demand": {
+      "classification": "primary_plastics_process_uncertainty",
+      "uncertainty_range": {
+        "mode": "absolute",
+        "low": 0.2,
+        "high": 1.4
+      },
+      "boundary_range": {
+        "mode": "absolute",
+        "low": 0.0,
+        "high": 2.0
+      },
+      "range_basis": "Existing thesis low/central/high assumption: 0.2/0.8/1.4 kWh per kg plastic. This is one of the strongest directly evidenced modelling ranges.",
+      "hard_bounds": {
+        "low": 0.0001
+      }
+    },
+    "total_plastic_waste_per_batch": {
+      "classification": "material_inventory_uncertainty",
+      "uncertainty_range": {
+        "mode": "absolute",
+        "low": 320.1754850007902,
+        "high": 960.4850530000001
+      },
+      "boundary_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.35,
+        "high_factor": 1.5
+      },
+      "range_basis": "Lower: Reiners hybrid SUT 360 kg at 2,000 L, conservatively scaled to 1,000 L by treating half the mass as volume-sensitive (factor 0.75), then adding the reported 16% packaging and the current model mix-weighted defect factor 1.0222716635 once. Mode: current model 873.16823 kg/1,000 L batch, already including embedded packaging and defects. Upper: live model estimate plus a 10% buffer. Different SUT architectures and the partial scaling rule are epistemic envelope assumptions, not a measured 1,000 L distribution.",
+      "hard_bounds": {
+        "low": 1e-06
+      },
+      "source_detail": {
+        "source": "Reiners et al. (2026), Figure 2 and Methods Model B; validated current SUT inventory",
+        "url": "https://doi.org/10.1002/bit.70297",
+        "reiners_hybrid_sut_consumables_kg_per_2000_l": 360.0,
+        "reiners_full_sut_consumables_kg_per_2000_l": 822.0,
+        "reiners_packaging_fraction": 0.16,
+        "assumed_volume_sensitive_mass_fraction": 0.5,
+        "assumed_1000_l_scaling_factor": 0.75,
+        "model_mix_weighted_defect_factor": 1.0222716634763418,
+        "model_cultibag_defect_rate": 0.11,
+        "model_flexel_defect_rate": 0.02,
+        "validated_model_kg_per_1000_l_batch": 873.16823,
+        "upper_buffer_fraction": 0.1,
+        "double_counting_note": "The central inventory includes packaging in assembly masses and explicit defects; packaging and defects are added only to the literature-derived lower bound."
+      }
+    },
+    "manufacturing_throughput": {
+      "classification": "process_throughput_uncertainty",
+      "uncertainty_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.9,
+        "high_factor": 1.1
+      },
+      "boundary_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.5,
+        "high_factor": 1.5
+      },
+      "range_basis": "±10% around the validated annual production plan. The runner applies throughput before the low/high-site allocation ratio so total throughput remains coherent; larger excursions are capacity stress scenarios.",
+      "hard_bounds": {
+        "low": 1e-06
+      }
+    },
+    "low_to_high_batch_ratio": {
+      "classification": "site_allocation_uncertainty",
+      "uncertainty_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.8,
+        "high_factor": 1.2
+      },
+      "boundary_range": {
+        "mode": "absolute",
+        "low": 0.05,
+        "high": 1.0
+      },
+      "range_basis": "Central allocation is 205/328 ≈ 0.625 in the validated model. The final QMC varies this ratio by ±20% (approximately 0.50–0.75 at the current central case), preserving a meaningful low/high production structure without sampling near-degenerate 0 or 1 allocation extremes.",
+      "hard_bounds": {
+        "low": 0.25,
+        "high": 0.95
+      }
+    },
+    "utility_water_demand_per_batch": {
+      "classification": "water_process_uncertainty",
+      "uncertainty_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.75,
+        "high_factor": 1.25
+      },
+      "boundary_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.25,
+        "high_factor": 2.0
+      },
+      "range_basis": "±25% around eligible non-contact utility-water demand. This retains meaningful process-water uncertainty while moving the earlier 50–150% exploratory interval to dedicated stress testing.",
+      "hard_bounds": {
+        "low": 1e-06
+      }
+    },
+    "wastewater_generation_per_batch": {
+      "classification": "water_process_uncertainty",
+      "uncertainty_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.9,
+        "high_factor": 1.1
+      },
+      "boundary_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.5,
+        "high_factor": 1.5
+      },
+      "range_basis": "±10% around process-model wastewater generation. Wider joint excursions with throughput and site allocation would primarily test installed WWT capacity rather than normal process uncertainty.",
+      "hard_bounds": {
+        "low": 1e-06
+      }
+    },
+    "achievable_water_reuse_fraction": {
+      "classification": "water_recovery_uncertainty",
+      "uncertainty_range": {
+        "mode": "absolute",
+        "low": 0.5,
+        "high": 1.0
+      },
+      "boundary_range": {
+        "mode": "absolute",
+        "low": 0.0,
+        "high": 1.0
+      },
+      "range_basis": "50–100% treated-water recovery. This spans materially degraded through full recovery while excluding zero/non-operation, which is a structural route-availability condition rather than continuous uncertainty.",
+      "hard_bounds": {
+        "low": 0.0001,
+        "high": 1.0
+      }
+    },
+    "recycling_capacity_fraction__mechanical_recycling_polyolefins": {
+      "classification": "network_capacity_uncertainty",
+      "uncertainty_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.75,
+        "high_factor": 1.25
+      },
+      "boundary_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.0,
+        "high_factor": 2.0
+      },
+      "range_basis": "75–125% of central contracted/operational route capacity. The interval represents throughput availability around normal operation; complete outage/zero capacity is deliberately excluded from the continuous QMC ensemble.",
+      "hard_bounds": {
+        "low": 0.05
+      }
+    },
+    "recycling_capacity_fraction__mechanical_recycling_tpe_tubing": {
+      "classification": "network_capacity_uncertainty",
+      "uncertainty_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.75,
+        "high_factor": 1.25
+      },
+      "boundary_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.0,
+        "high_factor": 2.0
+      },
+      "range_basis": "75–125% of central contracted/operational route capacity. The interval represents throughput availability around normal operation; complete outage/zero capacity is deliberately excluded from the continuous QMC ensemble.",
+      "hard_bounds": {
+        "low": 0.05
+      }
+    },
+    "vehicle_payload__diesel_articulated_hgv": {
+      "classification": "transport_operational_uncertainty",
+      "uncertainty_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.75,
+        "high_factor": 1.0
+      },
+      "boundary_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.5,
+        "high_factor": 1.0
+      },
+      "range_basis": "Realised loading can be below the modelled maximum payload, but sampling above the vehicle maximum would be physically inconsistent. The previous +25% upper payload range is therefore removed. Payload is realised loading relative to rated maximum and therefore never exceeds the loaded maximum or approaches zero in normal operation.",
+      "hard_bounds": {
+        "low": 0.05
+      }
+    },
+    "vehicle_payload__battery_electric_articulated_hgv": {
+      "classification": "transport_operational_uncertainty",
+      "uncertainty_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.75,
+        "high_factor": 1.0
+      },
+      "boundary_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.5,
+        "high_factor": 1.0
+      },
+      "range_basis": "Realised loading can be below the modelled maximum payload, but sampling above the vehicle maximum would be physically inconsistent. The previous +25% upper payload range is therefore removed. Payload is realised loading relative to rated maximum and therefore never exceeds the loaded maximum or approaches zero in normal operation.",
+      "hard_bounds": {
+        "low": 0.05
+      }
+    },
+    "transport_cost__diesel_articulated_hgv": {
+      "classification": "transport_market_uncertainty",
+      "uncertainty_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.85,
+        "high_factor": 1.15
+      },
+      "boundary_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.5,
+        "high_factor": 1.75
+      },
+      "range_basis": "±15% around the current all-in diesel HGV service rate.",
+      "hard_bounds": {
+        "low": 1e-06
+      }
+    },
+    "transport_cost__battery_electric_articulated_hgv": {
+      "classification": "transport_market_and_technology_uncertainty",
+      "uncertainty_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.8,
+        "high_factor": 1.3
+      },
+      "boundary_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.5,
+        "high_factor": 2.0
+      },
+      "range_basis": "80–130% of the loaded BEV HGV service rate. The wider asymmetric range reflects less mature haulage pricing and charging/logistics assumptions without treating service non-availability as continuous cost uncertainty.",
+      "hard_bounds": {
+        "low": 1e-06
+      }
+    },
+    "landfill_gate_fee": {
+      "classification": "market_fee_uncertainty",
+      "uncertainty_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.9,
+        "high_factor": 1.1
+      },
+      "boundary_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.5,
+        "high_factor": 2.0
+      },
+      "range_basis": "±10% around the loaded all-in landfill gate fee plus tax; larger policy-driven shifts are better treated as scenarios.",
+      "hard_bounds": {
+        "low": 1e-06
+      }
+    },
+    "efw_gate_fee": {
+      "classification": "market_fee_uncertainty",
+      "uncertainty_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.9,
+        "high_factor": 1.1
+      },
+      "boundary_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.5,
+        "high_factor": 2.0
+      },
+      "range_basis": "±10% around the loaded EfW gate fee to represent normal market/site variability; larger shifts are scenario-level changes.",
+      "hard_bounds": {
+        "low": 1e-06
+      }
+    },
+    "recycling_gate_fee": {
+      "classification": "market_fee_uncertainty",
+      "uncertainty_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.8,
+        "high_factor": 1.2
+      },
+      "boundary_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.0,
+        "high_factor": 2.0
+      },
+      "range_basis": "±20% around the mechanical-recycling handling proxy because pharmaceutical-plastic service pricing is less certain than landfill/EfW tariffs.",
+      "hard_bounds": {
+        "low": 1e-06
+      }
+    },
+    "lifecycle_carbon_value": {
+      "classification": "policy_value_uncertainty",
+      "uncertainty_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.5,
+        "high_factor": 1.5
+      },
+      "boundary_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.0,
+        "high_factor": 2.0
+      },
+      "range_basis": "Uses the thesis low/central/high structure: 0.5×/1.0×/1.5× the central lifecycle carbon value (approximately £132/£264/£396 per tCO2e when the loaded central value is £264/t).",
+      "hard_bounds": {
+        "low": 1e-06
+      },
+      "interpretation_note": "This is an uncertainty/stress range on an exogenous policy valuation, not a claim that the policy value is probabilistically distributed."
+    },
+    "wastewater_treatment_annualised_capex": {
+      "classification": "water_technology_cost_uncertainty",
+      "uncertainty_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.6,
+        "high_factor": 1.4
+      },
+      "boundary_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.25,
+        "high_factor": 2.0
+      },
+      "range_basis": "60–140% of the annualised wastewater-reuse CAPEX proxy because the estimate is scaled rather than a site-specific vendor quotation.",
+      "hard_bounds": {
+        "low": 1e-06
+      }
+    },
+    "wastewater_treatment_opex": {
+      "classification": "water_technology_cost_uncertainty",
+      "uncertainty_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.7,
+        "high_factor": 1.3
+      },
+      "boundary_range": {
+        "mode": "nominal_multiplier",
+        "low_factor": 0.25,
+        "high_factor": 2.0
+      },
+      "range_basis": "70–130% of the wastewater-treatment OPEX proxy to reflect chemicals, energy, maintenance and site-specific operation.",
+      "hard_bounds": {
+        "low": 1e-06
+      }
+    }
+  },
+  "custom_parameters": {
+    "composition_weight__EVOH": {
+      "kind": "composition_weight",
+      "polymer": "EVOH",
+      "label": "SUT composition relative weight: EVOH",
+      "group": "material_composition",
+      "unit": "× central relative composition",
+      "central": 1.0,
+      "uncertainty_range": {
+        "mode": "absolute",
+        "low": 0.8,
+        "high": 1.2
+      },
+      "hard_bounds": {
+        "low": 0.05,
+        "high": 5.0
+      },
+      "classification": "polymer_composition_uncertainty",
+      "range_basis": "Relative composition weight varied from 0.80–1.20 around the loaded polymer mass; all polymer masses are subsequently renormalised so total sampled plastic mass closes exactly.",
+      "interpretation_note": "The sampled value is a relative compositional weight, not a direct mass fraction. The runner renormalises all six polymer masses to sum exactly to the sampled total plastic waste."
+    },
+    "composition_weight__LDPE": {
+      "kind": "composition_weight",
+      "polymer": "LDPE",
+      "label": "SUT composition relative weight: LDPE",
+      "group": "material_composition",
+      "unit": "× central relative composition",
+      "central": 1.0,
+      "uncertainty_range": {
+        "mode": "absolute",
+        "low": 0.8,
+        "high": 1.2
+      },
+      "hard_bounds": {
+        "low": 0.05,
+        "high": 5.0
+      },
+      "classification": "polymer_composition_uncertainty",
+      "range_basis": "Relative composition weight varied from 0.80–1.20 around the loaded polymer mass; all polymer masses are subsequently renormalised so total sampled plastic mass closes exactly.",
+      "interpretation_note": "The sampled value is a relative compositional weight, not a direct mass fraction. The runner renormalises all six polymer masses to sum exactly to the sampled total plastic waste."
+    },
+    "composition_weight__LLDPE": {
+      "kind": "composition_weight",
+      "polymer": "LLDPE",
+      "label": "SUT composition relative weight: LLDPE",
+      "group": "material_composition",
+      "unit": "× central relative composition",
+      "central": 1.0,
+      "uncertainty_range": {
+        "mode": "absolute",
+        "low": 0.8,
+        "high": 1.2
+      },
+      "hard_bounds": {
+        "low": 0.05,
+        "high": 5.0
+      },
+      "classification": "polymer_composition_uncertainty",
+      "range_basis": "Relative composition weight varied from 0.80–1.20 around the loaded polymer mass; all polymer masses are subsequently renormalised so total sampled plastic mass closes exactly.",
+      "interpretation_note": "The sampled value is a relative compositional weight, not a direct mass fraction. The runner renormalises all six polymer masses to sum exactly to the sampled total plastic waste."
+    },
+    "composition_weight__PP": {
+      "kind": "composition_weight",
+      "polymer": "PP",
+      "label": "SUT composition relative weight: PP",
+      "group": "material_composition",
+      "unit": "× central relative composition",
+      "central": 1.0,
+      "uncertainty_range": {
+        "mode": "absolute",
+        "low": 0.8,
+        "high": 1.2
+      },
+      "hard_bounds": {
+        "low": 0.05,
+        "high": 5.0
+      },
+      "classification": "polymer_composition_uncertainty",
+      "range_basis": "Relative composition weight varied from 0.80–1.20 around the loaded polymer mass; all polymer masses are subsequently renormalised so total sampled plastic mass closes exactly.",
+      "interpretation_note": "The sampled value is a relative compositional weight, not a direct mass fraction. The runner renormalises all six polymer masses to sum exactly to the sampled total plastic waste."
+    },
+    "composition_weight__TPE": {
+      "kind": "composition_weight",
+      "polymer": "TPE",
+      "label": "SUT composition relative weight: TPE",
+      "group": "material_composition",
+      "unit": "× central relative composition",
+      "central": 1.0,
+      "uncertainty_range": {
+        "mode": "absolute",
+        "low": 0.8,
+        "high": 1.2
+      },
+      "hard_bounds": {
+        "low": 0.05,
+        "high": 5.0
+      },
+      "classification": "polymer_composition_uncertainty",
+      "range_basis": "Relative composition weight varied from 0.80–1.20 around the loaded polymer mass; all polymer masses are subsequently renormalised so total sampled plastic mass closes exactly.",
+      "interpretation_note": "The sampled value is a relative compositional weight, not a direct mass fraction. The runner renormalises all six polymer masses to sum exactly to the sampled total plastic waste."
+    },
+    "distance_multiplier__landfill_all": {
+      "kind": "route_distance_multiplier",
+      "target_route": "landfill_all",
+      "label": "Landfill distance",
+      "group": "transport",
+      "unit": "× current one-way route distance",
+      "central": 1.0,
+      "uncertainty_range": {
+        "mode": "absolute",
+        "low": 0.9,
+        "high": 1.1
+      },
+      "hard_bounds": {
+        "low": 0.05
+      },
+      "classification": "network_geography_uncertainty",
+      "range_basis": "Route-specific distance multiplier of 0.90–1.10 around the loaded geography; no zero-distance endpoint is sampled."
+    },
+    "distance_multiplier__incineration_efw_heat_electricity": {
+      "kind": "route_distance_multiplier",
+      "target_route": "incineration_efw_heat_electricity",
+      "label": "EfW distance",
+      "group": "transport",
+      "unit": "× current one-way route distance",
+      "central": 1.0,
+      "uncertainty_range": {
+        "mode": "absolute",
+        "low": 0.9,
+        "high": 1.1
+      },
+      "hard_bounds": {
+        "low": 0.05
+      },
+      "classification": "network_geography_uncertainty",
+      "range_basis": "Route-specific distance multiplier of 0.90–1.10 around the loaded geography; no zero-distance endpoint is sampled."
+    },
+    "distance_multiplier__mechanical_recycling_polyolefins": {
+      "kind": "route_distance_multiplier",
+      "target_route": "mechanical_recycling_polyolefins",
+      "label": "Polyolefin-recycler distance",
+      "group": "transport",
+      "unit": "× current one-way route distance",
+      "central": 1.0,
+      "uncertainty_range": {
+        "mode": "absolute",
+        "low": 0.8,
+        "high": 1.3
+      },
+      "hard_bounds": {
+        "low": 0.05
+      },
+      "classification": "network_geography_uncertainty",
+      "range_basis": "Route-specific specialist-recycler distance multiplier of 0.80–1.30 around the loaded geography; no zero-distance endpoint is sampled."
+    },
+    "distance_multiplier__mechanical_recycling_tpe_tubing": {
+      "kind": "route_distance_multiplier",
+      "target_route": "mechanical_recycling_tpe_tubing",
+      "label": "TPE-recycler distance",
+      "group": "transport",
+      "unit": "× current one-way route distance",
+      "central": 1.0,
+      "uncertainty_range": {
+        "mode": "absolute",
+        "low": 0.8,
+        "high": 1.3
+      },
+      "hard_bounds": {
+        "low": 0.05
+      },
+      "classification": "network_geography_uncertainty",
+      "range_basis": "Route-specific specialist-recycler distance multiplier of 0.80–1.30 around the loaded geography; no zero-distance endpoint is sampled."
+    },
+    "biomass_steam_efficiency": {
+      "kind": "biomass_steam_efficiency",
+      "label": "AD biomethane to useful external steam efficiency",
+      "group": "biomass",
+      "unit": "fraction of biomethane fuel energy",
+      "central": 0.85,
+      "uncertainty_range": {
+        "mode": "absolute",
+        "low": 0.8,
+        "high": 0.96
+      },
+      "hard_bounds": {
+        "low": 0.01,
+        "high": 1.0
+      },
+      "classification": "biomass_energy_conversion_uncertainty",
+      "range_basis": "UK government Energy Technology List boiler briefing reports 80–96% net efficiency at full load for industrial steam boilers; the model’s 85% mode is the existing illustrative SEAI assumption. This is a transferred engineering range for biomethane-to-useful-steam conversion, not a measured efficiency for this residue or an offtake probability.",
+      "source_url": "https://assets.publishing.service.gov.uk/media/6669b1a043c77d8616f76068/TIL_Boilers_April_2020.pdf",
+      "interpretation_note": "Only the useful-steam displaced-service credit and useful heat quantity scale with efficiency. The AD/digestate inventory, gas-supply route, gas credit, feedstock mass, biomethane yield, RER steam activity and route costs remain fixed; absent a qualified external offtaker, this credit is conditional."
+    }
+  },
+  "endogenous_decisions_to_report": [
+    "low-batch manufacturing location",
+    "renewable electricity share",
+    "eligible-water reuse share",
+    "plastic routing by polymer",
+    "landfill/EfW/mechanical-recycling tonnage shares",
+    "diesel vs battery-electric HGV vehicle-km share"
+  ],
+  "outputs_to_report": [
+    "annual cost",
+    "GWP",
+    "fossil-resource use",
+    "water-scarcity impact",
+    "reconstructed cost + lifecycle-carbon-value objective",
+    "feasibility",
+    "detailed decision signature",
+    "macro decision regime"
+  ],
+  "visualisation": {
+    "decision_landscapes": [
+      {
+        "name": "electricity",
+        "title": "Electricity-procurement decision landscape",
+        "x": "renewable_cppa_premium",
+        "y": "electricity_demand_per_batch",
+        "z": "lifecycle_carbon_value",
+        "colour": "decision__wind_share",
+        "colour_label": "Wind electricity selected",
+        "elev": 22,
+        "azim": -55
+      },
+      {
+        "name": "ldpe_recycling",
+        "title": "LDPE recycling decision landscape",
+        "x": "recovery_fraction__LDPE",
+        "y": "recyclate_value__LDPE",
+        "z": "avoided_virgin_credit_multiplier__LDPE",
+        "colour": "decision__route_share__mechanical_recycling_polyolefins",
+        "colour_label": "Total plastic routed to polyolefin recycling",
+        "elev": 24,
+        "azim": -50
+      },
+      {
+        "name": "water_reuse",
+        "title": "Water-reuse decision landscape",
+        "x": "utility_water_demand_per_batch",
+        "y": "wastewater_generation_per_batch",
+        "z": "achievable_water_reuse_fraction",
+        "colour": "decision__water_reuse_share",
+        "colour_label": "Eligible water reused",
+        "elev": 23,
+        "azim": -58
+      },
+      {
+        "name": "transport",
+        "title": "HGV-mode decision landscape",
+        "x": "vehicle_payload__diesel_articulated_hgv",
+        "y": "transport_cost__battery_electric_articulated_hgv",
+        "z": "electricity_lcia_multiplier__grid__gwp",
+        "colour": "decision__bev_vehicle_km_share",
+        "colour_label": "Battery-electric HGV vehicle-km",
+        "elev": 24,
+        "azim": -55
+      }
+    ],
+    "feasibility_landscapes": [
+      {
+        "name": "wastewater_capacity_operability",
+        "title": "Wastewater-treatment capacity operability under joint uncertainty",
+        "x": "manufacturing_throughput",
+        "y": "wastewater_generation_per_batch",
+        "z": "low_to_high_batch_ratio",
+        "colour": "precheck__best_wwt_capacity_utilisation",
+        "colour_label": "Best achievable WWT capacity utilisation",
+        "elev": 23,
+        "azim": -55,
+        "interpretation": "Feasible points are coloured by the lowest maximum installed WWT-capacity utilisation achievable over the endogenous low-batch-site assignment. Genuine infeasible MILP realizations are black x markers."
+      },
+      {
+        "name": "plastics_network_loading",
+        "title": "Plastic-network loading and feasibility",
+        "x": "manufacturing_throughput",
+        "y": "total_plastic_waste_per_batch",
+        "z": "recycling_capacity_fraction__mechanical_recycling_polyolefins",
+        "colour": "decision__route_share__mechanical_recycling_polyolefins",
+        "colour_label": "Plastic routed to polyolefin recycling",
+        "elev": 24,
+        "azim": -52,
+        "interpretation": "Shows whether infeasibility clusters with high material loading/low recycling capacity while retaining the feasible decision response."
+      }
+    ]
+  },
+  "audit_notes": {
+    "excluded_redundant_parameters": {
+      "mechanical_recycling_recovery_multiplier__all": "Excluded because polymer-specific recovery fractions are sampled.",
+      "recyclate_market_value_multiplier__all": "Excluded because polymer-specific recyclate values are sampled.",
+      "polymer_mass_per_batch__*": "Excluded because total plastic + a closure-preserving composition block is used.",
+      "polymer_composition_share__*": "Replaced with relative composition weights and exact closure to avoid order-dependent independent share perturbations.",
+      "all_waste_transport_distance_multiplier and recycling_transport_distance_multiplier": "Replaced with non-overlapping route-specific distance multipliers.",
+      "vehicle_type": "Not an uncertain input; retained as an endogenous optimiser decision."
+    },
+    "excluded_structural_stress_tests": "Recycler outage and polymer-not-accepted stress ensembles are intentionally excluded from the final Sobol solution-space run. Computational effort is concentrated on joint uncertainty in recovery, polymer composition, process demand, route economics, transport, electricity, water and LCIA factors.",
+    "critical_range_resolution_fix": "The final runner resolves all 48 registry-backed stochastic dimensions from this JSON uncertainty_range block around the live central value. Earlier drafts inadvertently retained the OAT registry low/high ranges for registry-backed parameters; those OAT ranges are not used by this version.",
+    "fixed_capacity_interpretation": "Installed wastewater-treatment capacity remains fixed in the MILP. Therefore some joint combinations of throughput, batch allocation and wastewater generation can still be genuinely infeasible. Those cases are retained and visualised; the bounds have been narrowed so the QMC ensemble represents plausible uncertainty rather than an implicit severe capacity stress test."
+  }
+}

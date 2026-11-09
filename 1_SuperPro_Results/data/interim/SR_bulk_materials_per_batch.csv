@@ -1,0 +1,17 @@
+source_report,source_section,source_row,flow_name_superpro,direction,flow_category,amount_per_batch,unit_per_batch,amount_per_year,unit_per_year,amount_per_kg_mp,unit_per_kg_mp,include_in_brightway_candidate,brightway_mapping_candidate,notes
+SR,2.2 BULK MATERIALS (Entire Process),34,Air,input,process_material,1785.44,kg/batch,216038.0,kg/year,383.74,kg/kg MP,review,,Entire process bulk material from SR.
+SR,2.2 BULK MATERIALS (Entire Process),35,Biomass,input,process_material,0.01,kg/batch,1.0,kg/year,0.0,kg/kg MP,review,,Entire process bulk material from SR.
+SR,2.2 BULK MATERIALS (Entire Process),36,C-1 EL Buffer,input,process_material,540.39,kg/batch,65388.0,kg/year,116.15,kg/kg MP,review,,Entire process bulk material from SR.
+SR,2.2 BULK MATERIALS (Entire Process),37,C-1 EQ Buffer,input,process_material,555.21,kg/batch,67180.0,kg/year,119.33,kg/kg MP,review,,Entire process bulk material from SR.
+SR,2.2 BULK MATERIALS (Entire Process),38,C-1 RinseBuffer,input,process_material,336.69,kg/batch,40739.0,kg/year,72.36,kg/kg MP,review,,Entire process bulk material from SR.
+SR,2.2 BULK MATERIALS (Entire Process),39,C-1 StoreBuffer,input,process_material,162.26,kg/batch,19634.0,kg/year,34.87,kg/kg MP,review,,Entire process bulk material from SR.
+SR,2.2 BULK MATERIALS (Entire Process),40,C-1 Wash Buffer,input,process_material,649.04,kg/batch,78534.0,kg/year,139.5,kg/kg MP,review,,Entire process bulk material from SR.
+SR,2.2 BULK MATERIALS (Entire Process),41,C-2 EQ Buffer,input,process_material,1646.02,kg/batch,199168.0,kg/year,353.78,kg/kg MP,review,,Entire process bulk material from SR.
+SR,2.2 BULK MATERIALS (Entire Process),42,C-2 Regen Buffe,input,process_material,696.03,kg/batch,84219.0,kg/year,149.6,kg/kg MP,review,,Entire process bulk material from SR.
+SR,2.2 BULK MATERIALS (Entire Process),43,C-3 EQ Buffer,input,process_material,54.15,kg/batch,6552.0,kg/year,11.64,kg/kg MP,review,,Entire process bulk material from SR.
+SR,2.2 BULK MATERIALS (Entire Process),44,H3PO4 (5% w/w),input,process_material,315.0,kg/batch,38115.0,kg/year,67.7,kg/kg MP,review,,Entire process bulk material from SR.
+SR,2.2 BULK MATERIALS (Entire Process),45,Media,input,process_material,75.12,kg/batch,9090.0,kg/year,16.15,kg/kg MP,review,,Entire process bulk material from SR.
+SR,2.2 BULK MATERIALS (Entire Process),46,NaOH (0.5 M),input,process_material,636.23,kg/batch,76984.0,kg/year,136.75,kg/kg MP,review,,Entire process bulk material from SR.
+SR,2.2 BULK MATERIALS (Entire Process),47,PBS,input,process_material,384.47,kg/batch,46520.0,kg/year,82.63,kg/kg MP,review,,Entire process bulk material from SR.
+SR,2.2 BULK MATERIALS (Entire Process),48,Polysorbate 80,input,process_material,0.27,kg/batch,33.0,kg/year,0.06,kg/kg MP,review,,Entire process bulk material from SR.
+SR,2.2 BULK MATERIALS (Entire Process),49,WFI,input,process_material,5305.94,kg/batch,642019.0,kg/year,1140.41,kg/kg MP,review,,Entire process bulk material from SR.
