@@ -1,0 +1,9 @@
+{
+  "biomethane_to_useful_steam_efficiency": 0.85,
+  "biomethane_ncv_mj_per_m3": 36.0,
+  "heat_counterfactual": "Uncapped external useful steam displaces the scored RER market for heat, from steam, in chemical industry; gas-supply credit is removed, not stacked",
+  "cost_counterfactual": "Both options use the same external AD and bundled collection charge; incremental delivery and steam purchase costs are unquantified and set to zero in this screening case",
+  "status": "Prospective scenario assumption, not a documented offtake contract or measured residue assay",
+  "efficiency_source": "SEAI biomass boiler implementation guide; 85% illustrative conversion, not measured at these sites",
+  "lca_source": "current_canonical_lca.xlsx stage-level Brightway/ecoinvent factors"
+}

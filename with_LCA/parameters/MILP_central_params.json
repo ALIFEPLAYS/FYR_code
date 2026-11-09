@@ -1,0 +1,659 @@
+{
+  "metadata": {
+    "dataset_name": "Industrial symbiosis external parameters",
+    "dataset_purpose": "External economic parameters for the biopharmaceutical industrial symbiosis waste-routing optimisation model.",
+    "version": "0.1.0",
+    "created_date": "2026-07-20",
+    "geography": "United Kingdom",
+    "currency": "GBP",
+    "currency_basis": "Nominal GBP 2026 for central model coefficients; historical and foreign-currency values retain explicit conversion audits.",
+    "default_mass_unit": "metric_tonne",
+    "default_cost_unit": "GBP_per_tonne"
+  },
+  "recycling_costs": {
+    "plastic_reprocessing_costs": {
+      "LDPE": {
+        "value": 436.86,
+        "unit": "GBP_per_tonne_input",
+        "price_basis": "nominal_GBP_2026",
+        "requires_additional_currency_or_price_year_conversion": false,
+        "description": "Volk et al. average regranulation cost, escalated from EUR2019 and converted to nominal GBP at the documented 2026 convention."
+      },
+      "LLDPE": {
+        "value": 436.86,
+        "unit": "GBP_per_tonne_input",
+        "price_basis": "nominal_GBP_2026",
+        "requires_additional_currency_or_price_year_conversion": false,
+        "description": "Volk et al. average regranulation cost, escalated from EUR2019 and converted to nominal GBP at the documented 2026 convention."
+      },
+      "PP": {
+        "value": 436.86,
+        "unit": "GBP_per_tonne_input",
+        "price_basis": "nominal_GBP_2026",
+        "requires_additional_currency_or_price_year_conversion": false,
+        "description": "Volk et al. average regranulation cost, escalated from EUR2019 and converted to nominal GBP at the documented 2026 convention."
+      },
+      "TPE": {
+        "value": 436.86,
+        "unit": "GBP_per_tonne_input",
+        "price_basis": "nominal_GBP_2026",
+        "requires_additional_currency_or_price_year_conversion": false,
+        "description": "Volk et al. average regranulation cost, escalated from EUR2019 and converted to nominal GBP at the documented 2026 convention; applied provisionally to the existing TPE recycling proxy."
+      },
+      "source": "Volk et al. (2021), average regranulation cost inferred from Plasticker (2019) price differences",
+      "reference": "https://doi.org/10.1111/jiec.13145"
+    },
+    "volk_regranulation_cost_conversion": {
+      "MECH_RECYCLING_COST_ORIGINAL_EUR2019_PER_T": 400.0,
+      "original_value_eur_per_kg": 0.4,
+      "original_currency": "EUR",
+      "original_cost_year": 2019,
+      "original_price_data_year": 2019,
+      "source": "Volk et al. (2021); average of Plasticker (2019) regranulate-versus-bale price differences",
+      "source_reference": "https://doi.org/10.1111/jiec.13145",
+      "inflation_index": "Eurostat German all-items HICP, ECOICOP ver.2, 2025=100",
+      "inflation_source_dataset": "prc_hicp_ainr (2019 annual average) and prc_hicp_minr (2026 monthly index)",
+      "inflation_source_reference": "https://ec.europa.eu/eurostat/databrowser/view/prc_hicp_ainr/default/table?lang=en",
+      "hicp_2019_annual_average_index_2025_eq_100": 79.95,
+      "hicp_2026_price_level_month": "2026-08",
+      "hicp_2026_august_index_2025_eq_100": 103.36,
+      "inflation_multiplier_2019_to_2026_august": 1.292808005003127,
+      "resulting_cost_eur2026_august_per_t": 517.123202001251,
+      "fx_rate_gbp_per_eur": 0.84478,
+      "fx_source": "European Central Bank euro foreign exchange reference rate",
+      "fx_date": "2026-10-12",
+      "fx_source_reference": "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html",
+      "unrounded_result_gbp2026_per_t": 436.855338586617,
+      "MECH_RECYCLING_COST_GBP2026_PER_T": 436.86,
+      "central_parameter_status": "already_escalated_and_converted_to_nominal_GBP_2026_do_not_convert_again",
+      "rounding_rule": "Round the calculated GBP/t result to the nearest penny for the central model coefficient.",
+      "model_application": "Applied once per tonne of incoming plastic assigned to an eligible mechanical-recycling route; recyclate sale revenue remains a separate recovered-output term."
+    }
+  },
+  "recycled_ldpe_output_value": {
+    "LDPE": 740.0,
+    "LLDPE": 740.0,
+    "unit": "GBP_per_tonne_output",
+    "description": "June 2026 market value of grey recycled LDPE pellets, applied to saleable LDPE and LLDPE recycling output.",
+    "source": "OPIS — EU Recycled Plastic Market, converted using the HMRC July 2026 EUR/GBP exchange rate",
+    "reference": [
+      "https://www.opis.com/resources/energy-market-news-from-opis/eu-recycled-plastic-market-battled-weak-demand-low-cost-virgin-prices-in-june/",
+      "https://www.trade-tariff.service.gov.uk/exchange_rates/view/2026-7"
+    ]
+  },
+  "recycled_pp_output_value": {
+    "PP": 835.0,
+    "unit": "GBP_per_tonne_output",
+    "description": "June 2026 market value of black recycled polypropylene pellets, applied to saleable PP recycling output.",
+    "source": "Oil Price Information Service (OPIS) — EU Recycled Plastic Market, converted using the HMRC July 2026 EUR/GBP exchange rate",
+    "reference": [
+      "https://www.opis.com/resources/energy-market-news-from-opis/eu-recycled-plastic-market-battled-weak-demand-low-cost-virgin-prices-in-june/",
+      "https://www.trade-tariff.service.gov.uk/exchange_rates/view/2026-7"
+    ]
+  },
+  "recycled_tpe_output_value": {
+    "TPE": 1200.0,
+    "unit": "GBP_per_tonne_output",
+    "description": "Market value of clean, segregated natural or translucent recycled TPE output from autoclaved Sartorius single-use tubing.",
+    "source": "Natural/colourless TPE-SEBS recyclate listing, supported by Sartorius C-Flex 374 tubing specifications",
+    "reference": [
+      "https://www.plastech.biz/en/b2b-marketplace/TPE-SEBS-transparent-soft-regrind-105935",
+      "https://shop.sartorius.com/gb/p/single-use-assemblies/M_Single_use_Assemblies",
+      "https://www.trade-tariff.service.gov.uk/exchange_rates/view/2026-7"
+    ]
+  },
+  "landfill_disposal_cost": {
+    "EVOH": 157.0,
+    "LDPE": 157.0,
+    "LLDPE": 157.0,
+    "Other": 157.0,
+    "PP": 157.0,
+    "TPE": 157.0,
+    "unit": "GBP_per_tonne_input",
+    "description": "Non-hazardous landfill cost calculated as the £26/t median gate fee plus the £130.75/t standard UK Landfill Tax, giving £156.75/t and rounded to £157/t. Excludes transport to the landfill facility.",
+    "source": "Waste and Resources Action Programme (WRAP) UK Gate Fees Report 2024–25 and HMRC Landfill Tax rates from April 2026",
+    "reference": [
+      "https://www.wrap.ngo/resources/report/uk-gate-fees-report-2024-25",
+      "https://www.gov.uk/government/publications/landfill-tax-rates-for-2026-to-2027/landfill-tax-increase-in-rates-from-1-april-2026"
+    ]
+  },
+  "efw_disposal_cost": {
+    "EVOH": 121.0,
+    "LDPE": 121.0,
+    "LLDPE": 121.0,
+    "Other": 121.0,
+    "PP": 121.0,
+    "TPE": 121.0,
+    "unit": "GBP_per_tonne_input",
+    "description": "Median UK Energy-from-Waste gate fee for residual waste excluding bulky waste containing persistent organic pollutants. Incineration without energy recovery is not modelled because mainstream UK residual-waste incineration is assumed to operate with energy recovery. Energy-sale revenue is retained by the EfW operator and reflected indirectly in the gate fee; no separate energy rebate is assigned to the waste producer. Excludes transport.",
+    "source": "WRAP — Gate Fees Report 2024/25",
+    "reference": "WRAP-Gate-Fees-Report-2024-25-v2.pdf"
+  },
+  "efw_gross_fossil_stack_tco2_per_tonne_input": {
+    "EVOH": 2.75,
+    "LDPE": 2.75,
+    "LLDPE": 2.75,
+    "Other": 2.75,
+    "PP": 2.75,
+    "TPE": 2.75,
+    "unit": "tCO2_per_tonne_input",
+    "description": "Generic gross fossil stack CO2 factor for combustion of fossil-derived plastic in a controlled EfW facility. This is used for UK ETS cost calculations before electricity or heat credits and must not be replaced by the net EfW LCA route factor.",
+    "derivation": "1.00 dry matter * 0.75 total carbon * 1.00 fossil carbon * 1.00 oxidation * 44/12 = 2.75 tCO2/t plastic",
+    "source": "IPCC 2006 Guidelines for National Greenhouse Gas Inventories, Volume 5, Tables 2.4 and 5.2",
+    "reference": [
+      "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/5_Volume5/V5_2_Ch2_Waste_Data.pdf",
+      "https://www.ipcc-nggip.iges.or.jp/public/2006gl/pdf/5_Volume5/V5_5_Ch5_IOB.pdf"
+    ]
+  },
+  "waste_route_distances": {
+    "Oxford": {
+      "mechanical_recycling_main_residual_incineration": {
+        "polyolefins": {
+          "eligible_polymers": [
+            "LDPE",
+            "LLDPE",
+            "PP"
+          ],
+          "facility": "Berry Circular Polymers",
+          "postcode": "CV31 3SS",
+          "distance_km": 76.0
+        },
+        "tpe_tubing": {
+          "eligible_polymers": [
+            "TPE"
+          ],
+          "material": "Segregated, autoclaved Sartorius single-use tubing",
+          "facility": "HEXPOL TPE Ltd",
+          "postcode": "M24 2GG",
+          "distance_km": 255.0
+        }
+      },
+      "incineration_efw_heat_electricity": {
+        "eligible_polymers": [
+          "EVOH",
+          "LDPE",
+          "LLDPE",
+          "Other",
+          "PP",
+          "TPE"
+        ],
+        "facility": "Ardley Energy Recovery Facility",
+        "postcode": "OX27 7AA",
+        "distance_km": 25.0,
+        "acceptance_status": "conditional",
+        "source": "Environment Agency permit and public road-distance estimate",
+        "reference": [
+          "https://www.gov.uk/government/publications/ox27-7aa-viridor-oxfordshire-limited-environmental-permit-issued-eprup3005ljv003",
+          "https://www.rome2rio.com/s/Oxford/Ardley"
+        ]
+      },
+      "landfill_all": {
+        "eligible_polymers": [
+          "EVOH",
+          "LDPE",
+          "LLDPE",
+          "Other",
+          "PP",
+          "TPE"
+        ],
+        "facility": "Sutton Courtenay (Phase 3) Landfill Site",
+        "postcode": "OX14 4PW",
+        "distance_km": 22.0,
+        "acceptance_status": "conditional",
+        "source": "Environment Agency public register and public road-distance estimate",
+        "reference": [
+          "https://environment.data.gov.uk/public-register/industrial-installations/registration/EPR-TP3330AT?__pageState=result-all",
+          "https://ukdistance.com/route/oxford/sutton-courtenay"
+        ]
+      }
+    },
+    "Cambridge": {
+      "mechanical_recycling_main_residual_incineration": {
+        "polyolefins": {
+          "eligible_polymers": [
+            "LDPE",
+            "LLDPE",
+            "PP"
+          ],
+          "facility": "Berry Circular Polymers",
+          "postcode": "CV31 3SS",
+          "distance_km": 135.0
+        },
+        "tpe_tubing": {
+          "eligible_polymers": [
+            "TPE"
+          ],
+          "material": "Segregated, autoclaved Sartorius single-use tubing",
+          "facility": "HEXPOL TPE Ltd",
+          "postcode": "M24 2GG",
+          "distance_km": 305.0
+        }
+      },
+      "incineration_efw_heat_electricity": {
+        "eligible_polymers": [
+          "EVOH",
+          "LDPE",
+          "LLDPE",
+          "Other",
+          "PP",
+          "TPE"
+        ],
+        "facility": "Peterborough Energy Recovery Facility",
+        "postcode": "PE1 5UR",
+        "distance_km": 66.0,
+        "acceptance_status": "conditional",
+        "source": "Environment Agency permit and public road-distance estimate",
+        "reference": [
+          "https://www.gov.uk/government/publications/pe1-5ur-viridor-peterborough-limited-environmental-permit-issued-eprnp3638zsv005",
+          "https://ukdistance.com/route/cambridge/peterborough"
+        ]
+      },
+      "landfill_all": {
+        "eligible_polymers": [
+          "EVOH",
+          "LDPE",
+          "LLDPE",
+          "Other",
+          "PP",
+          "TPE"
+        ],
+        "facility": "Eye Landfill",
+        "postcode": "PE6 7TH",
+        "distance_km": 68.0,
+        "acceptance_status": "conditional",
+        "source": "Environment Agency public register and public road-distance estimate",
+        "reference": [
+          "https://environment.data.gov.uk/public-register/industrial-installations/registration/EPR-BP3537PP",
+          "https://www.rome2rio.com/s/Cambridge-England/Eye-Peterborough-England"
+        ]
+      }
+    },
+    "Slough": {
+      "mechanical_recycling_main_residual_incineration": {
+        "polyolefins": {
+          "eligible_polymers": [
+            "LDPE",
+            "LLDPE",
+            "PP"
+          ],
+          "facility": "Berry Circular Polymers",
+          "postcode": "CV31 3SS",
+          "distance_km": 127.0
+        },
+        "tpe_tubing": {
+          "eligible_polymers": [
+            "TPE"
+          ],
+          "material": "Segregated, autoclaved Sartorius single-use tubing",
+          "facility": "HEXPOL TPE Ltd",
+          "postcode": "M24 2GG",
+          "distance_km": 335.0
+        }
+      },
+      "incineration_efw_heat_electricity": {
+        "eligible_polymers": [
+          "EVOH",
+          "LDPE",
+          "LLDPE",
+          "Other",
+          "PP",
+          "TPE"
+        ],
+        "facility": "Lakeside Energy from Waste Facility",
+        "postcode": "SL3 0FE",
+        "distance_km": 6.0,
+        "acceptance_status": "conditional",
+        "source": "Facility operator, Environment Agency permit and public road-distance estimate",
+        "reference": [
+          "https://www.lakesideefw.co.uk/",
+          "https://www.gov.uk/government/publications/sl3-0eg-lakeside-energy-from-waste-limited-environmental-permit-issued-eprbt7116iwv007",
+          "https://www.rome2rio.com/Bus/Slough/Lakeside-Road"
+        ]
+      },
+      "landfill_all": {
+        "eligible_polymers": [
+          "EVOH",
+          "LDPE",
+          "LLDPE",
+          "Other",
+          "PP",
+          "TPE"
+        ],
+        "facility": "Colnbrook Landfill",
+        "postcode": "SL3 8AB",
+        "distance_km": 9.0,
+        "acceptance_status": "conditional",
+        "source": "Environment Agency public register and public road-distance estimate",
+        "reference": [
+          "https://environment.data.gov.uk/public-register/industrial-installations/registration/EPR-BU7901IP",
+          "https://ukdistance.com/route/slough/colnbrook"
+        ]
+      }
+    },
+    "unit": "km",
+    "description": "Rounded one-way road distances from representative manufacturing locations to named recycling, EfW and non-hazardous landfill sinks. Recycling acceptance assumptions are retained from the existing dataset. Public information does not confirm acceptance of inactivated pharmaceutical SUT plastics at the named EfW or landfill facilities, so those links are conditional on waste classification, permit compatibility and operator approval."
+  },
+  "wastewater_facility_financial_assumptions": {
+    "asset_life_years": 20,
+    "discount_rate": 0.07,
+    "capital_recovery_factor": 0.09439,
+    "description": "Wastewater-treatment and water-reuse facility CAPEX is converted to an equivalent annual cost using a 20-year asset life and 7% discount rate. Annualised CAPEX equals installed CAPEX multiplied by 0.09439.",
+    "source": "US EPA Guidelines for Water Reuse; supported by water-reclamation techno-economic literature"
+  },
+  "avoided_mains_utility_water_cost": {
+    "Oxford": 2.7346,
+    "Cambridge": 1.4373,
+    "Slough": 1.5628,
+    "unit": "GBP_per_m3_reused",
+    "description": "Value of purchased mains utility water displaced by on-site treated-water reuse. Oxford uses the Thames Water standard non-household volumetric tariff, Cambridge uses the Cambridge Water standard tariff, and Slough uses the Affinity Water Central-region standard tariff. Each cubic metre reused is assumed to displace one cubic metre of purchased water. Fixed meter and connection charges are excluded because the manufacturing site remains connected to the mains. Retailer margins and any additional on-site water conditioning costs are excluded.",
+    "source": "Thames Water, Cambridge Water and Affinity Water — 2026/27 non-household wholesale charges"
+  },
+  "avoided_treated_effluent_discharge_cost": {
+    "Oxford": 2.09,
+    "Cambridge": 1.33,
+    "Slough": 2.09,
+    "unit": "GBP_per_m3_not_discharged",
+    "description": "Variable sewer and trade-effluent charges avoided when one cubic metre of on-site treated process water is reused rather than discharged to the public foul sewer. Oxford and Slough use Thames Water tariffs: £1.5496/m3 wastewater charge plus trade-effluent reception, primary treatment and residual-strength charges, giving £2.0865/m3 and rounded to £2.09/m3. Cambridge uses Anglian Water's Streamline Orange Mogden tariff with a low-strength treated-effluent proxy of 17 mg/L COD and 15 mg/L suspended solids, giving £1.3318/m3 and rounded to £1.33/m3. Fixed sewerage and consent charges are excluded because the sites remain connected and may retain other discharges.",
+    "source": "Thames Water and Anglian Water wholesale tariff schedules 2026/27",
+    "reference": [
+      "https://www.thameswater.co.uk/media-library/p1spkpbi/wholesale-tariff-document-2026-27.pdf",
+      "https://wholesale.anglianwater.co.uk/siteassets/charges-2026-27/wholesale-charges-schedule-2026-2027.pdf"
+    ]
+  },
+  "onsite_wastewater_treatment_facility": {
+    "design_capacity_m3_per_day": 7.0,
+    "purchased_equipment_capex_gbp_per_site": 16972.0,
+    "installation_factor": 1.5,
+    "installed_capex_gbp_per_site": 25458.0,
+    "capital_recovery_factor": 0.09439,
+    "annualised_capex_gbp_per_site_year": 2403.0,
+    "treatment_opex_gbp_per_m3": 3.0,
+    "description": "Base on-site wastewater-treatment facility required at every active manufacturing site. The 7 m3/day design capacity accommodates approximately one 6 m3 batch discharge per day. Purchased equipment CAPEX of £16,972 is multiplied by a 1.5 installation factor, giving £25,458 installed CAPEX and £2,403/site-year annualised CAPEX. Treatment OPEX of £3.00/m3 is a blended allowance covering energy, chemicals, sludge management, routine maintenance and operator attendance. The facility treats all wastewater regardless of whether it is subsequently discharged or reused.",
+    "source": "Current UK 7 m3/day packaged treatment-plant price; container-scale wastewater installation-factor literature; pharmaceutical and small-scale wastewater-treatment OPEX studies",
+    "reference": [
+      "https://direct-drainage.co.uk/products/klargester-be-biodisc-sewage-treatment-system-up-to-47-person",
+      "https://pmc.ncbi.nlm.nih.gov/articles/PMC8706618/",
+      "https://doi.org/10.3390/w13091326",
+      "https://doi.org/10.1061/(ASCE)EE.1943-7870.0000505"
+    ]
+  },
+  "biomass_ad_gate_fee": {
+    "value": 24.0,
+    "unit": "GBP_per_tonne_input",
+    "description": "Median UK anaerobic-digestion gate fee for food waste, used as a proxy for segregated, non-hazardous wet biopharmaceutical biomass. Biomethane and digestate revenues are assumed to be retained by the AD operator and reflected indirectly in the gate fee, so no separate economic credit is assigned to the pharmaceutical company. Environmental credits remain within the LCA route factors. Excludes transport.",
+    "source": "WRAP — Gate Fees Report 2024/25",
+    "reference": "WRAP-Gate-Fees-Report-2024-25-v2.pdf"
+  },
+  "biomass_ad_route": {
+    "gate_fee_gbp_per_tonne_input": 24.0,
+    "external_sinks": {
+      "Oxford": {
+        "facility": "Severn Trent Green Power Cassington AD Facility",
+        "postcode": "OX29 4FL",
+        "distance_km": 20.0,
+        "acceptance_status": "conditional"
+      },
+      "Cambridge": {
+        "facility": "Biogen Bygrave AD Facility",
+        "postcode": "SG7 6QX",
+        "distance_km": 40.0,
+        "acceptance_status": "conditional"
+      },
+      "Slough": {
+        "facility": "Severn Trent Green Power Wallingford AD Facility",
+        "postcode": "OX10 6SQ",
+        "distance_km": 45.0,
+        "acceptance_status": "conditional"
+      }
+    },
+    "onsite_ad_available": {
+      "Oxford": false,
+      "Cambridge": false,
+      "Slough": false
+    },
+    "unit": "km",
+    "description": "Representative external anaerobic-digestion sinks for segregated non-hazardous biopharmaceutical biomass. Cassington is an operating Oxfordshire food-waste AD facility; Biogen Bygrave accepts packaged and unpackaged Category 3 food waste; Wallingford accepts commercial solid and liquid organic wastes. Public information does not confirm acceptance of mammalian-cell or other pharmaceutical biomass, so each route is conditional on waste characterisation, permit compatibility and operator approval. Dedicated on-site AD is not available in the base case because no existing digesters were identified at the representative manufacturing sites and the current biomass quantity is too small to justify construction of a standalone plant.",
+    "source": "Severn Trent Green Power, Biogen and Environment Agency facility information",
+    "reference": [
+      "https://www.stgreenpower.co.uk/where-we-operate/cassington-ad-facility",
+      "https://www.biogen.co.uk/locations/",
+      "https://www.stgreenpower.co.uk/where-we-operate/wallingford-ad-facility"
+    ]
+  },
+  "external_biomass_ad_collection": {
+    "container_count_per_pickup": 2,
+    "container_volume_litres": 140,
+    "collection_frequency_per_active_site_year": 4,
+    "collection_cost_gbp_per_container_lift": 5.75,
+    "collection_cost_gbp_per_pickup": 11.5,
+    "annual_collection_cost_gbp_per_active_site_year": 46.0,
+    "description": "Segregated and inactivated biomass is accumulated on site in two sealed 140-litre organic-waste containers and collected quarterly. The 2026/27 charge is £5.75 per container lift, giving £11.50 per pickup and £46 per active site per year. This is a bundled commercial organics collection-service proxy, assumed to include transport and delivery to anaerobic digestion; therefore the separate £24/t AD gate fee is not added in the base case.",
+    "source": "Cherwell District Council — Business food-waste recycling charges 2026/27",
+    "reference": "https://www.cherwell.gov.uk/info/244/business-waste-collection-service/581/food-waste-recycling"
+  },
+  "biomass_route_choice": {
+    "description": "Endogenous choice between two external anaerobic-digestion energy-use routes for the segregated, inactivated residual biomass stream. Both routes retain digestate recovery. The existing biomethane route remains the deterministic reference. The CHP route is a sensitivity alternative representing direct use of raw biogas in an engine to export electricity and useful heat. Exactly one route is selected at each active manufacturing site.",
+    "stream_quantity_source": "master LCA route-factor database, residual_biomass row",
+    "stream_quantity_kg_per_batch_validation": 12.83,
+    "base_route": "ad_biomethane_digestate",
+    "selection_scope": "one_route_per_active_manufacturing_site",
+    "bundled_collection_cost_gbp_per_active_site_year": 46.0,
+    "gate_fee_treatment": "The bundled collection proxy is retained for both routes and is assumed to include transport and delivery to an external AD operator. The separate £24/t AD gate fee is not added, matching the existing cost boundary. Energy and digestate revenues are retained by the operator.",
+    "common_foreground_parameters": {
+      "raw_biogas_yield_m3_per_kg_biomass": 0.55,
+      "raw_biogas_ncv_mj_per_m3": 22.73,
+      "digestate_yield_kg_per_kg_biomass": 0.9,
+      "digestate_recovery_fraction": 1.0,
+      "digestate_available_nutrients_kg_per_tonne": {
+        "N": 6.0,
+        "P2O5": 1.0,
+        "K2O": 3.0
+      },
+      "fertiliser_substitution_efficiency": {
+        "N": 0.9,
+        "P2O5": 0.9,
+        "K2O": 0.9
+      }
+    },
+    "routes": {
+      "ad_biomethane_digestate": {
+        "label": "AD → biomethane + digestate",
+        "available": true,
+        "variable_cost_gbp_per_tonne_input": 0.0,
+        "net_gwp_factor_kgco2e_per_kg_biomass": -0.01044606124196824,
+        "net_fossil_resource_factor_kg_oil_eq_per_kg_biomass": -0.3078147998653324,
+        "net_water_scarcity_factor_m3_world_eq_per_kg_biomass": -0.02127768972476433,
+        "factor_status": "method-consistent factor copied from the supplied master LCA route-factor database",
+        "upgrading_recovery_fraction": 0.98,
+        "biomethane_ncv_mj_per_m3": 36.0,
+        "upgrading_electricity_kwh_per_m3_biomethane": 0.28
+      },
+      "ad_chp_digestate": {
+        "label": "AD → CHP + digestate",
+        "available": true,
+        "variable_cost_gbp_per_tonne_input": 0.0,
+        "chp_electrical_efficiency": 0.32,
+        "chp_recoverable_heat_efficiency": 0.48,
+        "useful_heat_utilisation_fraction": 0.5,
+        "published_biomethane_mean_gwp_kgco2e_per_mj_biogas_energy": 0.028,
+        "published_chp_mean_gwp_kgco2e_per_mj_biogas_energy": 0.0485,
+        "route_delta_gwp_kgco2e_per_kg_biomass": 0.25628075000000006,
+        "net_gwp_factor_kgco2e_per_kg_biomass": 0.24583468875803183,
+        "net_fossil_resource_factor_kg_oil_eq_per_kg_biomass": -0.3078147998653324,
+        "net_water_scarcity_factor_m3_world_eq_per_kg_biomass": -0.02127768972476433,
+        "factor_status": "GWP sensitivity proxy: the published mean CHP-minus-biomethane life-cycle intensity difference is applied to the existing method-consistent biomethane route factor. Fossil-resource and water-scarcity coefficients are held at the common AD+digestate reference because route-specific factors were not available; these reporting proxies do not enter the MILP objectives."
+      }
+    },
+    "derivation": {
+      "formula": "CHP net GWP factor = existing biomethane route factor + (0.0485 - 0.0280) kgCO2e/MJ × 0.55 m3 biogas/kg biomass × 22.73 MJ/m3",
+      "raw_biogas_energy_mj_per_kg_biomass": 12.501500000000002,
+      "derived_chp_minus_biomethane_gwp_kgco2e_per_kg_biomass": 0.25628075000000006,
+      "derived_chp_net_gwp_factor_kgco2e_per_kg_biomass": 0.24583468875803183,
+      "interpretation": "This is deliberately a sensitivity coefficient rather than a second Brightway foreground model. It tests whether the energy-use destination of AD biogas changes the optimisation result."
+    },
+    "source": [
+      "UK Government — Generating energy from waste, including anaerobic digestion",
+      "DESNZ — CHPQA unit list and useful-heat guidance",
+      "Bakkaloglu and Hawkes (2024), Energy & Environmental Science, DOI 10.1039/D3EE02516K",
+      "Existing project biomass LCA model and master LCA route-factor database"
+    ],
+    "reference": [
+      "https://www.gov.uk/guidance/generating-energy-from-waste-including-anaerobic-digestion",
+      "https://www.gov.uk/government/publications/chpqa-unit-list",
+      "https://www.gov.uk/government/publications/chpqa-guidance-note-50-quantifying-and-justifying-useful-heat-outputs",
+      "https://doi.org/10.1039/D3EE02516K"
+    ]
+  },
+  "industrial_grid_electricity_cost": {
+    "manufacturing_price_excluding_ccl_gbp_per_kwh": 0.1747,
+    "climate_change_levy_gbp_per_kwh": 0.00801,
+    "total_cost_gbp_per_kwh": 0.18271,
+    "description": "UK manufacturing grid-electricity cost calculated as the latest DESNZ average manufacturing electricity price of 17.47 p/kWh excluding Climate Change Levy, plus the 2026/27 main CCL rate of 0.801 p/kWh, giving 18.271 p/kWh. VAT is excluded because it is normally recoverable by a VAT-registered manufacturer. Fixed standing and metering charges are excluded.",
+    "source": "Department for Energy Security and Net Zero — Quarterly Energy Prices June 2026; HMRC — Climate Change Levy rates",
+    "reference": [
+      "https://www.gov.uk/government/statistics/quarterly-energy-prices-june-2026",
+      "https://www.gov.uk/guidance/climate-change-levy-rates"
+    ]
+  },
+  "industrial_renewable_electricity_cost": {
+  "central_value": 0.18271,
+  "low_value": 0.18271,
+  "high_value": 0.18271,
+  "unit": "GBP_per_kWh",
+  "central_premium_fraction": 0.0,
+  "high_premium_fraction": 0.0,
+  "calculation_rule": {
+    "central": "industrial_grid_electricity_cost.total_cost_gbp_per_kwh",
+    "low": "industrial_grid_electricity_cost.total_cost_gbp_per_kwh",
+    "high": "industrial_grid_electricity_cost.total_cost_gbp_per_kwh"
+  },
+  "description": "Deterministic base-case assumption that renewable electricity supplied through an industrial cPPA has the same effective electricity price as standard UK manufacturing grid electricity: £0.18271/kWh. Published and commercial evidence does not establish a consistent premium or discount applicable across UK industrial contracts, because cPPA pricing depends on contract duration, technology, volume, balancing arrangements, shape risk and market conditions. Renewable-electricity price premiums and discounts are therefore excluded from the central optimisation and reserved for later sensitivity analysis.",
+  "source": "Model assumption based on price parity with the validated UK manufacturing grid-electricity cost.",
+  "reference": [
+    "https://www.gov.uk/government/statistics/quarterly-energy-prices-june-2026",
+    "https://www.gov.uk/guidance/climate-change-levy-rates"
+  ]
+},
+  "lifecycle_carbon_value": {
+    "central_value": 264.0,
+    "low_value": 132.0,
+    "high_value": 396.0,
+    "unit": "GBP_2020_per_tonne_CO2e",
+    "applies_to": "All decision-dependent net life-cycle GWP from electricity supply, plastics routing, transport, wastewater and biomass pathways",
+    "description": "UK government target-consistent carbon values used for policy and project appraisal. The central value of £264/tCO2e is applied to decision-dependent net life-cycle greenhouse-gas emissions, with official low and high sensitivities of £132/tCO2e and £396/tCO2e. This represents the societal value of emissions reductions required to support UK climate targets; it is not a current carbon tax, cash payment or direct UK ETS liability. Carbon-cap scenarios are modelled separately as constraints on total annual life-cycle GWP. Values are expressed in real 2020 GBP and must be converted to the optimisation model's common price year before combining with nominal costs.",
+    "source": "Department for Energy Security and Net Zero — Valuation of greenhouse gas emissions for policy appraisal and evaluation",
+    "reference": "https://www.gov.uk/government/publications/valuing-greenhouse-gas-emissions-in-policy-appraisal/valuation-of-greenhouse-gas-emissions-for-policy-appraisal-and-evaluation"
+  },
+  "road_transport_modes": {
+    "diesel_articulated_hgv": {
+      "maximum_payload_tonnes": 20.0,
+      "cost_gbp_per_vehicle_route_km": 2.59,
+      "gwp_kgco2e_per_vehicle_km": 1.13,
+      "gwp_boundary": "well_to_wheel",
+      "description": "Conventional diesel articulated HGV. The route-kilometre cost includes the previously established allowance for typical empty running and haulier margin.",
+      "source": "Road Haulage Association 2025 haulage-cost benchmark; DESNZ 2026 UK Government GHG Conversion Factors",
+      "reference": [
+        "https://www.rha.uk.net/Membership/Annual-Cost-Movement-and-Pay-Surveys",
+        "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2026"
+      ]
+    },
+    "battery_electric_articulated_hgv": {
+      "maximum_payload_tonnes": 20.0,
+      "cost_gbp_per_vehicle_route_km": 2.86,
+      "energy_consumption_kwh_per_vehicle_km": 1.8,
+      "reference_uk_grid_gwp_kgco2e_per_vehicle_km": 0.236,
+      "commercial_availability": "Available by contract and subject to route, charging and operator capacity",
+      "description": "Battery-electric articulated HGV. The cost applies a 10.4% electric-HGV premium to the diesel benchmark. Energy consumption is a rounded representative value for a 34–40 tonne articulated electric HGV at trunk-road speeds and is measured at the charging socket, including charging losses. The 0.236 kgCO2e/vehicle-km value is a reference UK-grid result based on 1.8 kWh/km and the 2026 grid-generation factor of 0.131 kgCO2e/kWh. The optimisation should use the existing LCA electricity coefficient for the assumed charging source rather than treating 0.236 as a fixed value.",
+      "source": "Department for Transport electric-HGV energy curves; RHA Payload Loss Survey cost benchmark; DSV UK commercial electric-HGV operations; DESNZ 2026 electricity conversion factor",
+      "reference": [
+        "https://www.gov.uk/government/publications/ultra-low-emission-vehicles-speed-emission-and-fuelenergy-consumption-rates",
+        "https://www.rha.uk.net/news/news/detail/rha-to-launch-landmark-payload-loss-survey-report",
+        "https://www.dsv.com/en-gb/about-dsv/press/news/uk/2026/05/battery-electric-vehicles-driving-the-future-of-low-carbon-logistics",
+        "https://www.gov.uk/government/publications/greenhouse-gas-reporting-conversion-factors-2026"
+      ]
+    }
+  },
+  "currency_and_price_year_conversions": {
+    "target_basis": "nominal_GBP_2026",
+    "application_rule": "value_gbp_2026 = source_value * multiplier_to_nominal_GBP_2026",
+    "method": "Foreign-currency values are first converted to GBP using the exchange rate for the source year, then escalated to the 2026 price level using the UK GDP deflator. Values already denominated in GBP are escalated using the GDP-deflator ratio only.",
+    "multipliers_to_nominal_GBP_2026": {
+      "GBP_2026_nominal": 1.0,
+      "GBP_2025_nominal": 1.022,
+      "GBP_2025_real": 1.022,
+      "GBP_2020_real": 1.245129,
+      "USD_2019_nominal": 1.022785,
+      "USD_2020_nominal": 0.969953,
+      "USD_2025_nominal": 0.776832,
+      "USD_2026_nominal": 0.746046,
+      "EUR_2026_nominal": 0.864753
+    },
+    "basis_assignments": {
+      "SuperPro_supply_chain_labour_variable_facility_and_capital_costs": "USD_2019_nominal",
+      "lifecycle_carbon_values_in_MILP_params_and_scenarios": "GBP_2020_real",
+      "UK_ETS_allowance_values_in_scenarios": "GBP_2025_real",
+      "WRAP_2024_25_gate_fees_and_RHA_2025_transport_costs": "GBP_2025_nominal",
+      "STRAP_publication_raw_USD_OPEX_in_scenarios": "USD_2025_nominal",
+      "current_2026_27_UK_tariffs_taxes_market_values_and_electricity_costs": "GBP_2026_nominal",
+      "raw_2026_EUR_recyclate_prices_if_reimported": "EUR_2026_nominal",
+      "Volk_regranulation_cost": "Use recycling_costs.volk_regranulation_cost_conversion; German HICP first, then ECB 2026-10-12 GBP/EUR."
+    },
+    "special_rules": {
+      "landfill_total_cost": "Do not multiply the combined landfill total by one factor. Convert the WRAP gate-fee component from GBP_2025_nominal, retain the 2026 Landfill Tax at GBP_2026_nominal, then add the components.",
+      "preconverted_STRAP_GBP_values": "Do not convert a preconverted GBP field again. Prefer either the raw USD value with USD_2025_nominal conversion or the existing GBP value, but never both.",
+      "Volk_EUR2019_regranulation_cost": "Escalate EUR2019 using German all-items HICP to the latest available 2026 monthly price level, then convert the resulting EUR2026 value at the documented ECB GBP/EUR reference rate. Do not apply a second generic currency multiplier.",
+      "LCA_route_factor_database": "No currency conversion is required because the route-factor workbook contains physical quantities and environmental impact coefficients, not monetary objective coefficients."
+    },
+    "excluded_unresolved_currency_fields": {
+      "sensitivity_parameters.manufacturing.electricity_cost_usd_per_kwh": "Legacy LCA configuration value with no stated source price year; do not use in the MILP objective.",
+      "04_pyomo_optimisation_USD_named_fields": "Dummy optimisation-guide field names rather than validated monetary inputs. Populate from converted MILP parameters or rename to GBP."
+    },
+    "calculation_inputs": {
+      "UK_GDP_deflator_index": {
+        "2019": 84.3,
+        "2020": 88.4,
+        "2024": 103.9,
+        "2025": 107.7,
+        "2026": 110.0694
+      },
+      "exchange_rates_currency_units_per_GBP": {
+        "USD_2019_annual_average": 1.2766,
+        "USD_2020_annual_average": 1.2837,
+        "USD_2025_annual_average": 1.3156,
+        "USD_2026_July_HMRC": 1.3404,
+        "EUR_2026_July_HMRC": 1.1564
+      },
+      "2026_index_derivation": "107.7 * 1.022 = 110.0694"
+    },
+    "sources": {
+      "UK_GDP_deflator_outturn": "https://www.ons.gov.uk/economy/grossdomesticproductgdp/timeseries/ybgb",
+      "UK_2026_GDP_deflator_forecast": "https://obr.uk/efo/economic-and-fiscal-outlook-march-2026/",
+      "USD_2019_and_2020_annual_average_exchange_rates": "https://www.bankofengland.co.uk/boeapps/database/fromshowcolumns.asp?SeriesCodes=XUAAUSS",
+      "USD_and_EUR_2026_July_HMRC_exchange_rates": "https://www.trade-tariff.service.gov.uk/exchange_rates/view/2026-7",
+      "USD_2025_HMRC_annual_average_exchange_rate": "https://www.trade-tariff.service.gov.uk/exchange_rates/view/2025-12?type=average"
+    }
+  },
+  "autoclave_pre_treatment": {
+    "electricity_kwh_per_kg_input": {
+      "central": 0.8,
+      "low": 0.5,
+      "high": 1.9,
+      "unit": "kWh_per_kg_input"
+    },
+    "cost_calculation_rule": {
+      "formula": "cost_gbp_per_tonne_input = electricity_kwh_per_kg_input * 1000 * industrial_grid_electricity_cost.total_cost_gbp_per_kwh",
+      "central_reference_cost_gbp_per_tonne_input": 146.168,
+      "description": "Reference value only. The optimiser should calculate the cost dynamically using the current electricity price rather than treating £146.168/t as a fixed coefficient."
+    },
+    "applies_to_pathways": [
+      "landfill_all",
+      "mechanical_recycling_main_residual_incineration"
+    ],
+    "excluded_pathways": [
+      "incineration_efw_heat_electricity"
+    ],
+    "water_labor_and_capex_included": false,
+    "description": "Incremental electricity cost of on-site autoclave decontamination before landfill or recycling. The current LCA route factors already contain the corresponding autoclave electricity burden, so no second environmental burden should be added in the optimiser.",
+    "source": "Central value retained from the current SUT LCA assumption; low and high values informed by measured steam-sterilisation electricity consumption."
+  }
+}

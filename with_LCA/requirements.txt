@@ -1,0 +1,13 @@
+numpy>=1.26,<3
+pandas>=2.1,<4
+scipy>=1.11,<2
+openpyxl>=3.1,<4
+Pyomo>=6.7,<7
+highspy>=1.10,<2
+bw2data>=4,<5
+bw2calc>=2,<3
+bw2io>=0.9,<1
+nbformat>=5.9,<6
+nbclient>=0.9,<1
+ipykernel>=6.29,<8
+xlrd>=2.0,<3

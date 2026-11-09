@@ -1,0 +1,412 @@
+{
+  "inputs": {
+    "superpro_workbook": "inputs/SP_master_dataset.xlsx",
+    "superpro_inventory_sheet": "Superpro_SR_ICR_processed",
+    "sut_overall_sheet": "SUT_overall_plastic",
+    "sut_composition_sheet": "SUT_plastic_comp_matrix",
+    "manufacturing_workbook": "inputs/manufacturing_footprint_inputs_and_costs.xlsx",
+    "manufacturing_inputs_sheet": "manufacturing_inputs",
+    "itemised_costs_sheet": "itemised_costs"
+  },
+  "brightway": {
+    "ecoinvent_version": "3.12",
+    "system_model": "cutoff",
+    "project": "bw_ecoinvent_3_12_cutoff",
+    "background_database": "ecoinvent-3.12-cutoff",
+    "biosphere_database": "ecoinvent-3.12-biosphere"
+  },
+  "lcia": {
+    "methods": {
+      "gwp": [
+        "ecoinvent-3.12",
+        "IMPACT World+ v2.1, footprint version",
+        "climate change",
+        "carbon footprint"
+      ],
+      "fossil_resource_use": [
+        "ecoinvent-3.12",
+        "ReCiPe 2016 v1.03, midpoint (H)",
+        "energy resources: non-renewable, fossil",
+        "fossil fuel potential (FFP)"
+      ],
+      "water_scarcity": [
+        "ecoinvent-3.12",
+        "IMPACT World+ v2.1, footprint version",
+        "water use",
+        "water scarcity footprint"
+      ]
+    },
+    "gwp_method_label": "IMPACT World+ v2.1 Carbon footprint / Climate change short term (GWP100; IPCC AR6)",
+    "gwp_source_references": [
+      "https://www.impactworldplus.org/version-2-1/",
+      "https://doi.org/10.5281/zenodo.14041258"
+    ],
+    "water_scarcity_regionalisation": {
+      "method_label": "IMPACT World+ v2.1 Water scarcity footprint (AWARE 2.0)",
+      "foreground_scope": "known_site_tap_water_only",
+      "background_scope": "retain_native_brightway_geographies",
+      "correction_equation": "regionalised_score = native_background_score + foreground_consumption_m3 * site_AWARE20_CF",
+      "generic_scenario_factor_basis": "UK_annual_nonagricultural_country",
+      "generic_scenario_factor_m3_world_eq_per_m3": 2.29,
+      "sites": {
+        "Oxford": {
+          "factor_m3_world_eq_per_m3": 4.05,
+          "basin_id": 24053,
+          "latitude": 51.752,
+          "longitude": -1.2577
+        },
+        "Cambridge": {
+          "factor_m3_world_eq_per_m3": 4.37,
+          "basin_id": 23128,
+          "latitude": 52.1951,
+          "longitude": 0.1313
+        },
+        "Slough": {
+          "factor_m3_world_eq_per_m3": 4.05,
+          "basin_id": 24053,
+          "latitude": 51.5105,
+          "longitude": -0.595
+        }
+      },
+      "source_references": [
+        "https://doi.org/10.5281/zenodo.15133241",
+        "https://wulca-waterlca.org/what-is-aware/download-aware-factors/"
+      ]
+    }
+  },
+  "plastics": {
+    "tubing_to_assembly_mass_ratio": 1.0,
+    "bioreactor_defect_rate": 0.11,
+    "mixing_bag_defect_rate": 0.02,
+    "packaging_uplift_rate": 0.0,
+    "sut_manufacturing_gwp_adder_kgco2e_per_kg": 1.9,
+    "sut_manufacturing_gwp_adder_unit": "kg_CO2e_per_kg_modelled_SUT_plastic",
+    "sut_manufacturing_gwp_adder_impact_scope": "gwp_only",
+    "sut_manufacturing_gwp_adder_reporting_stage": "sut_component_manufacturing",
+    "sut_manufacturing_gwp_adder_value_qualifier": "upper_bound_up_to_1.9",
+    "sut_manufacturing_gwp_adder_source": "Reiners et al. (2026), citing and interpreting Ramasamy (2018)",
+    "sut_manufacturing_gwp_adder_source_references": [
+      "https://doi.org/10.1002/bit.70297",
+      "https://discovery.ucl.ac.uk/id/eprint/10048939/"
+    ],
+    "sut_manufacturing_gwp_adder_boundary": "aggregated supplier-stage fabrication proxy encompassing supplier-side transport, cleanroom assembly, and gamma sterilisation; used instead of, not in addition to, granular moulding/extrusion fabrication factors; does not replace virgin polymer production",
+    "mechanical_recycling_substitution_ratio": 0.81,
+    "mechanical_recycling_substitution_credit_scope": "virgin_polymer_production_only_excludes_sut_component_manufacturing",
+    "recycling_recovery_fraction": {
+      "LLDPE": 0.8,
+      "LDPE": 0.8,
+      "HDPE": 0.8,
+      "PP": 0.8,
+      "TPE": 0.7,
+      "EVOH": 0.0,
+      "Other": 0.0,
+      "Silicone": 0.0
+    },
+    "efw_electricity_kwh_per_kg": 0.6,
+    "efw_heat_mj_per_kg": 0.4176,
+    "autoclave_kwh_per_kg": 0.8,
+    "autoclave_low_kwh_per_kg": 0.2,
+    "autoclave_high_kwh_per_kg": 1.4,
+    "autoclave_activity_mapping_key": "avoided_electricity_medium_voltage_GB",
+    "unmapped_composition_policy": "exclude",
+    "autoclave_routes": [
+      "landfill_all",
+      "mechanical_recycling_main_residual_incineration"
+    ]
+  },
+  "ecosystem_quality": {
+    "internal_name": "ecosystem_quality",
+    "reporting_only": true,
+    "unit": "species.yr",
+    "method": [
+      "ecoinvent-3.12",
+      "ReCiPe 2016 v1.03, endpoint (H)",
+      "total: ecosystem quality",
+      "ecosystem quality"
+    ],
+    "manual_sut_proxy_scope": "climate_change_only_from_existing_gwp_proxy",
+    "source": "Unmodified ecoinvent 3.12 ReCiPe 2016 v1.03 Endpoint (H), total ecosystem quality. The existing GWP-only SUT fabrication proxy uses only the installed fossil CO2 climate endpoint CF.",
+    "source_references": [
+      "https://www.rivm.nl/bibliotheek/rapporten/2016-0104.pdf",
+      "https://support.ecoinvent.org/hubfs/Knowledge%20Base/Database/Releases/3.12/LCIA%20Implementation%20v3.12.pdf"
+    ]
+  },
+  "human_health_daly": {
+    "internal_name": "human_health_daly",
+    "reporting_only": true,
+    "unit": "DALY",
+    "method": [
+      "IS thesis",
+      "ReCiPe 2016 v1.03, midpoint-to-endpoint (H)",
+      "human health",
+      "total"
+    ],
+    "equation": "human_health_daly = sum(midpoint_score_i * human_health_damage_factor_i)",
+    "contributing_midpoint_pathways": [
+      "climate_change",
+      "ozone_depletion",
+      "ionising_radiation",
+      "photochemical_ozone_formation_human_health",
+      "fine_particulate_matter_formation",
+      "human_carcinogenic_toxicity",
+      "human_non_carcinogenic_toxicity",
+      "water_consumption"
+    ],
+    "midpoint_to_endpoint_damage_factors": {
+      "climate_change": 9.28e-07,
+      "ozone_depletion": 0.000531,
+      "ionising_radiation": 8.5e-09,
+      "photochemical_ozone_formation_human_health": 9.1e-07,
+      "fine_particulate_matter_formation": 0.000629,
+      "human_carcinogenic_toxicity": 3.32e-06,
+      "human_non_carcinogenic_toxicity": 2.28e-07,
+      "water_consumption": 2.22e-06
+    },
+    "midpoint_units": {
+      "climate_change": "kg CO2-eq",
+      "ozone_depletion": "kg CFC-11-eq",
+      "ionising_radiation": "kBq Co-60-eq",
+      "photochemical_ozone_formation_human_health": "kg NOx-eq",
+      "fine_particulate_matter_formation": "kg PM2.5-eq",
+      "human_carcinogenic_toxicity": "kg 1,4-DCB-eq",
+      "human_non_carcinogenic_toxicity": "kg 1,4-DCB-eq",
+      "water_consumption": "m3 water consumed"
+    },
+    "direct_endpoint_validation_method": [
+      "ecoinvent-3.12",
+      "ReCiPe 2016 v1.03, endpoint (H)",
+      "total: human health",
+      "human health"
+    ],
+    "direct_endpoint_role": "validation_only_not_added_to_reported_daly",
+    "reported_water_scarcity_relationship": "IMPACT World+ water_scarcity remains a separate reported KPI; ReCiPe water consumption potential is the midpoint feeding DALY",
+    "climate_change_damage_factor_daly_per_kg_co2e": 9.28e-07,
+    "manual_sut_proxy_scope": "climate_change_human_health_only",
+    "source": "ReCiPe 2016 Hierarchist midpoint and midpoint-to-human-health damage factors from RIVM Report 2016-0104 as implemented in ecoinvent 3.12 ReCiPe v1.03; manual SUT GWP proxy from Reiners et al. (2026), citing Ramasamy (2018)",
+    "source_references": [
+      "https://www.rivm.nl/bibliotheek/rapporten/2016-0104.pdf",
+      "https://support.ecoinvent.org/hubfs/Knowledge%20Base/Database/Releases/3.12/LCIA%20Implementation%20v3.12.pdf",
+      "https://doi.org/10.1002/bit.70297",
+      "https://discovery.ucl.ac.uk/id/eprint/10048939/"
+    ]
+  },
+  "wastewater": {
+    "run_utility_water_offset_credit": true,
+    "routes": {
+      "treatment_and_discharge": {
+        "reuse_fraction_per_m3_routed": 0.0,
+        "discharge_fraction_per_m3_routed": 1.0,
+        "treatment_fraction_per_m3_routed": 1.0
+      },
+      "treatment_for_utility_reuse": {
+        "reuse_fraction_per_m3_routed": 0.75,
+        "discharge_fraction_per_m3_routed": 0.25,
+        "treatment_fraction_per_m3_routed": 1.0
+      }
+    },
+    "utility_water_reuse_efficiency": 1.0,
+    "utility_water_reuse_demand_limit_m3_per_batch": null
+  },
+  "manufacturing": {
+    "electricity_cost_usd_per_kwh": 0.1,
+    "water_cp_kj_per_kg_c": 4.184,
+    "chilled_water_delta_t_c": 5.0,
+    "cooling_water_delta_t_c": 10.0,
+    "steam_mj_per_mt": 2257.0,
+    "kg_per_mt": 1000.0
+  },
+  "scenarios": {
+    "BAU: UK grid + incineration": {
+      "scenario_note": "UK grid electricity, plastic incineration and wastewater treatment with discharge. Residual biomass follows AD with biomethane upgrading and digestate recovery.",
+      "electricity_pathway": "electricity_grid_uk_bau",
+      "plastic_pathway": "incineration_all",
+      "wastewater_pathway": "treatment_and_discharge",
+      "biomass_pathway": "ad_biomethane_digestate"
+    },
+    "Wind electricity + incineration": {
+      "scenario_note": "GB onshore wind electricity, plastic incineration and wastewater treatment with discharge. Residual biomass follows AD with biomethane upgrading and digestate recovery.",
+      "electricity_pathway": "electricity_renewable_onshore_wind",
+      "plastic_pathway": "incineration_all",
+      "wastewater_pathway": "treatment_and_discharge",
+      "biomass_pathway": "ad_biomethane_digestate"
+    },
+    "Wind electricity + EfW plastics": {
+      "scenario_note": "GB onshore wind electricity, plastic incineration with energy recovery and wastewater treatment with discharge. Residual biomass follows AD with biomethane upgrading and digestate recovery.",
+      "electricity_pathway": "electricity_renewable_onshore_wind",
+      "plastic_pathway": "incineration_efw_heat_electricity",
+      "wastewater_pathway": "treatment_and_discharge",
+      "biomass_pathway": "ad_biomethane_digestate"
+    },
+    "Wind electricity + separable recycling": {
+      "scenario_note": "GB onshore wind electricity, mechanical recycling with residual incineration and treated-water reuse. Residual biomass follows AD with biomethane upgrading and digestate recovery.",
+      "electricity_pathway": "electricity_renewable_onshore_wind",
+      "plastic_pathway": "mechanical_recycling_main_residual_incineration",
+      "wastewater_pathway": "treatment_for_utility_reuse",
+      "biomass_pathway": "ad_biomethane_digestate"
+    }
+  },
+  "visuals": {
+    "formats": [
+      "html",
+      "png",
+      "svg",
+      "pdf"
+    ],
+    "image_scale": 2
+  },
+  "output": {
+    "directory": "outputs",
+    "filename_prefix": "master_lca_route_factor_database_ecoinvent_3_12"
+  },
+  "biomass": {
+    "stream_name": "Biomass",
+    "source_table_contains": "OVERALL COMPONENT BALANCE",
+    "pathway": "ad_biomethane_digestate",
+    "pathway_label": "Anaerobic digestion with biomethane and digestate recovery",
+    "biogas_yield_m3_per_kg_biomass": 0.55,
+    "digestate_yield_kg_per_kg_biomass": 0.9,
+    "upgrading_recovery_fraction": 0.98,
+    "raw_biogas_ncv_mj_per_m3": 22.73,
+    "biomethane_ncv_mj_per_m3": 36.0,
+    "upgrading_electricity_kwh_per_m3_biomethane": 0.28,
+    "digestate_recovery_fraction": 1.0,
+    "digestate_available_nutrients_kg_per_tonne": {
+      "N": 6.0,
+      "P2O5": 1.0,
+      "K2O": 3.0
+    },
+    "fertiliser_substitution_efficiency": {
+      "N": 0.9,
+      "P2O5": 0.9,
+      "K2O": 0.9
+    },
+    "activities": {
+      "anaerobic_digestion": {
+        "mapping_key": "treatment_of_biowaste_by_anaerobic_digestion",
+        "candidate_names": [
+          "treatment of biowaste by anaerobic digestion"
+        ],
+        "candidate_reference_products": [
+          "biowaste"
+        ],
+        "unit": "kilogram",
+        "preferred_locations": [
+          "RoW",
+          "CH"
+        ],
+        "required_name_tokens": [
+          "treatment",
+          "biowaste",
+          "anaerobic digestion"
+        ],
+        "assumption_note": "Generic ecoinvent anaerobic-digestion treatment of biowaste."
+      },
+      "upgrading_electricity": {
+        "mapping_key": "electricity_medium_voltage_GB_for_biogas_upgrading",
+        "candidate_names": [
+          "market for electricity, medium voltage"
+        ],
+        "candidate_reference_products": [
+          "electricity, medium voltage"
+        ],
+        "unit": "kilowatt hour",
+        "preferred_locations": [
+          "GB"
+        ],
+        "required_name_tokens": [
+          "market for electricity",
+          "medium voltage"
+        ],
+        "assumption_note": "GB medium-voltage electricity used for biomethane upgrading."
+      },
+      "avoided_natural_gas": {
+        "mapping_key": "avoided_natural_gas_high_pressure",
+        "candidate_names": [
+          "market for natural gas, high pressure"
+        ],
+        "candidate_reference_products": [
+          "natural gas, high pressure"
+        ],
+        "unit": "cubic meter",
+        "preferred_locations": [
+          "GB",
+          "Europe without Switzerland",
+          "RER",
+          "GLO",
+          "RoW"
+        ],
+        "required_name_tokens": [
+          "market for natural gas",
+          "high pressure"
+        ],
+        "assumption_note": "Biomethane delivered to the gas grid displaces fossil natural-gas supply on a volume basis."
+      },
+      "avoided_nitrogen_fertiliser": {
+        "mapping_key": "avoided_nitrogen_fertiliser_as_N",
+        "candidate_names": [
+          "market for nitrogen fertiliser, as N"
+        ],
+        "candidate_reference_products": [
+          "nitrogen fertiliser, as N"
+        ],
+        "unit": "kilogram",
+        "preferred_locations": [
+          "GLO",
+          "Europe without Switzerland",
+          "RER",
+          "RoW"
+        ],
+        "required_name_tokens": [
+          "market for nitrogen fertiliser",
+          "as n"
+        ],
+        "assumption_note": "Available digestate nitrogen displaces mineral nitrogen fertiliser."
+      },
+      "avoided_phosphate_fertiliser": {
+        "mapping_key": "avoided_phosphate_fertiliser_as_P2O5",
+        "candidate_names": [
+          "market for phosphate fertiliser, as P2O5"
+        ],
+        "candidate_reference_products": [
+          "phosphate fertiliser, as P2O5"
+        ],
+        "unit": "kilogram",
+        "preferred_locations": [
+          "GLO",
+          "Europe without Switzerland",
+          "RER",
+          "RoW"
+        ],
+        "required_name_tokens": [
+          "market for phosphate fertiliser",
+          "p2o5"
+        ],
+        "assumption_note": "Available digestate phosphate displaces mineral phosphate fertiliser."
+      },
+      "avoided_potassium_fertiliser": {
+        "mapping_key": "avoided_potassium_fertiliser_as_K2O",
+        "candidate_names": [
+          "market for inorganic potassium fertiliser, as K2O",
+          "market for potassium fertiliser, as K2O"
+        ],
+        "candidate_reference_products": [
+          "inorganic potassium fertiliser, as K2O",
+          "potassium fertiliser, as K2O"
+        ],
+        "unit": "kilogram",
+        "preferred_locations": [
+          "GLO",
+          "Europe without Switzerland",
+          "RER",
+          "RoW"
+        ],
+        "required_name_tokens": [
+          "potassium fertiliser",
+          "k2o"
+        ],
+        "assumption_note": "Available digestate potassium displaces mineral potassium fertiliser."
+      }
+    },
+    "yield_basis": "Biogas and digestate yields are declared foreground study assumptions retained from the supplied thesis model; they are not measurements from the SuperPro reports or ecoinvent. Their uncertainty requires sensitivity analysis."
+  }
+}
