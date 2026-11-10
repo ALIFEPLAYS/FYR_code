@@ -1,7 +1,7 @@
 """One annual supply-chain/industrial-symbiosis cost MILP, exported to GAMS.
 
-Run: python MILP/code/testjoint.py
-Export without solving: python MILP/code/testjoint.py --export-only
+Run from this directory: python testjoint.py
+Export without solving: python testjoint.py --export-only
 The supply-chain formulation below is retained; the IS block shares its
 site-opening and batch decisions. Monetary terms use nominal GBP 2026.
 """
@@ -25,16 +25,17 @@ import pyomo.environ as pyo
 CODE_DIR = Path(__file__).resolve().parent
 PROJECT_ROOT = CODE_DIR.parent
 REPO_ROOT = PROJECT_ROOT.parent
-PARAMETER_DIR = REPO_ROOT / 'parameters'
-RESULT_DIR = PROJECT_ROOT / 'results' / 'testjoint' / 'joint_cost'
+SEQUENTIAL_DIR = REPO_ROOT / '3_Sequential_Supply_Chain_MILP'
+PARAMETER_DIR = SEQUENTIAL_DIR / 'parameters'
+RESULT_DIR = CODE_DIR / 'results'
 GAMS_SOLVER = os.environ.get('IS_GAMS_SOLVER', 'cplex').strip().lower()
 MIP_REL_GAP = 1e-9
 INPUT_FILES = {
-    'eligibility': PROJECT_ROOT / 'inputs/polymer_route_eligibility_20260722.xlsx',
+    'eligibility': SEQUENTIAL_DIR / 'MILP/inputs/polymer_route_eligibility_20260722.xlsx',
     'lca': Path(os.environ.get('IS_LCA_ROUTE_FACTOR_FILE', str(
-        REPO_ROOT / 'LCA/outputs/master_lca_route_factor_database_ecoinvent_3_12.xlsx'))),
+        REPO_ROOT / '2_LCA/outputs/master_lca_route_factor_database_ecoinvent_3_12.xlsx'))),
     'params': PARAMETER_DIR / 'MILP_central_params.json',
-    'itemised_costs': REPO_ROOT / 'SuperPro_Reports_Data_Extraction/data/processed/itemised_costs_20261026.csv',
+    'itemised_costs': REPO_ROOT / '1_SuperPro_Results/data/processed/itemised_costs_20261110.csv',
 }
 
 
@@ -59,8 +60,8 @@ def load_joint_inputs():
     """
     # Input validation and site mapping: read source tables and match site IDs
     # to Oxford, Cambridge and Slough. Site openings are decided by the model.
-    for label, path in INPUT_FILES.items():
-        require(path.exists(), f'Missing {label} input: {path}')
+    missing = [f'  {label}: {path}' for label, path in INPUT_FILES.items() if not path.is_file()]
+    require(not missing, 'Missing required input files:\n' + '\n'.join(missing))
     params = json.loads(INPUT_FILES['params'].read_text(encoding='utf-8-sig'))
     eligibility_raw = pd.read_excel(INPUT_FILES['eligibility'], sheet_name='polymer_route_eligibility')
     mapping = pd.read_excel(INPUT_FILES['eligibility'], sheet_name='site_mapping')
