@@ -2,13 +2,13 @@
 
 This folder turns the global planetary-boundary (PB) safe operating space into **annual budgets for our UK mAb network**. It does this in two ways:
 
-| Method | Role | Basis | Climate utilisation (reference and expanded scenario extrema) | Audit verdict |
+| Method | Role | Basis | Climate utilisation (reference; crossed-scenario range) | Verdict |
 |---|---|---|---:|---|
-| `total_gva` | **Primary** | Hartmann et al. (2026), total gross value added, Eq. 7, recomputed to fix a PBAESA code error | **64.90%** (39.54–108.22%) | Exploratory fixed cap |
-| `ability_to_pay` | **Alternative** | Hjalsted et al. (2021) Eq. 5, applied per country, inside the same Hartmann framework | **153.46%** (70.38–1,773.20%) | Producer-region ethical scenario |
-| `total_fce`, `total_fce_corrected`, `total_fce_corrected_f` | Supporting | Hartmann total final consumption expenditure | 15.0–23.2% historical variants | Unresolved supporting comparison |
+| `total_gva` | **Primary** | Hartmann et al. (2026), total gross value added, Eq. 7, recomputed to fix a PBAESA code error | **64.90%** (39.5–108.2%) | Ready for MILP integration as a fixed exploratory budget |
+| `ability_to_pay` | **Alternative** | Hjalsted et al. (2021) Eq. 5 per country, substituted for population shares in Hartmann's production step | **153.46%** (70.4–1,773%), exceeded | Ready as a separate producer-region ethical scenario |
+| `total_fce_oosterhoff` | Supporting | Hartmann total FCE with the Oosterhoff et al. (2023) equations as printed | 29.42% | Comparison only; not in the MILP export |
 
-No other PB indicator is exceeded under either method. The impacts used are an incomplete characterised subtotal, so "within budget" is conditional. Every central number has been recomputed independently from raw sources (`tools/audit_from_raw.py`; METHODOLOGY.md §12). See [finalisation and interpretation](FINALISATION.md), [the methodology and Claude Code audit](METHODOLOGY.md), and [the separate Astra audit](audit/INDEPENDENT_AUDIT_ASTRA.md).
+No other PB indicator is exceeded under either method. The impacts used are an incomplete characterised subtotal, so "within budget" is conditional. **[METHODOLOGY.md](METHODOLOGY.md) is the single consolidated reference**: equations, data, results, sensitivity, the reconciliation of the Claude and Astra audits, MILP guidance and limitations. Preserved records: [Astra's independent audit](audit/INDEPENDENT_AUDIT_ASTRA.md), [Astra's finalisation note](FINALISATION.md), [the pre-consolidation methodology including Claude's audit](audit/METHODOLOGY_pre_consolidation_20261119.md) and the first results in `results_allocation_final/pre_audit_20261119/`. Legacy total-FCE readings (15.0%, 21.5%, 23.2%) remain selectable for traceability but are superseded.
 
 ## Use in the joint MILP
 
@@ -56,7 +56,7 @@ Optional rebuilds of the committed inputs:
 |---|---|
 | `pb_allocation.py` | All allocation logic and the MILP entry point `budget_vector()` |
 | `tools/` | Results exporter and the three input builders above |
-| `tests/test_pb_allocation.py` | Tests cover equations on synthetic economies, the vendored PBAESA function, Hjalsted α, data mapping, budgets, raw-data audit, exports |
+| `tests/test_pb_allocation.py` | 42 tests: equations on synthetic economies, the vendored PBAESA function, Oosterhoff total-FCE equations, Hjalsted α, data mapping, budgets, raw-data audit, exports |
 | `results_allocation_final/` | Final budgets, utilisation tables, sensitivity and combined envelope (`envelope_climate.csv`), regional decomposition, two SVG charts, `validation.json`, `provenance.json`; `pre_audit_20261119/` keeps the first pushed results |
 | `results_final/annual_impacts.csv` | Reference annual PB impacts of the saved two-stage network (copied unchanged from Ahmed's PB assessment; hash-checked) |
 | `data/` | EXIOBASE-derived regional terms, ability-to-pay weights, economic inputs, SuperPro cost structure, ONS ABS workbook, World Bank/IMF downloads (see `data/worldbank/SOURCES.txt`) |

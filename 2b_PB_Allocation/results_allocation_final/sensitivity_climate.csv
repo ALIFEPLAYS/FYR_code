@@ -32,7 +32,9 @@ Ability to pay,ability_to_pay,inputs: all from UK (bound),cost,primary_2022_MER,
 Ability to pay,ability_to_pay,inputs: full-supply-chain regional split,cost,primary_2022_MER,full_supply_chain,hartmann_reference,1.021e-06,106.051,"Regional origin of all value added embodied in the sector's output (v L), instead of first-tier inputs; tests Hartmann's Eqs. 8-9 simplification."
 Legacy,total_gva_published,published factor (PBAESA error),cost,primary_2022_MER,sector_average,hartmann_reference,3.51913e-06,30.769,Do not use
 Legacy,ability_to_pay_regional,ATP on 49 aggregated regions,cost,primary_2022_MER,sector_average,hartmann_reference,7.31494e-07,148.024,Superseded
-Supporting,total_fce,"total FCE, published",cost,primary_2022_MER,sector_average,hartmann_reference,7.21617e-06,15.005,Unresolved supporting comparison
-Supporting,total_fce_corrected,"total FCE, corrected reading",cost,primary_2022_MER,sector_average,hartmann_reference,5.03413e-06,21.509,Unresolved supporting comparison
-Supporting,total_fce_corrected_f,"total FCE, corrected reading with f by product",cost,primary_2022_MER,sector_average,hartmann_reference,4.66094e-06,23.231,Unresolved supporting comparison
-Supporting,ability_to_pay_fce,ability to pay x total FCE (corrected),cost,primary_2022_MER,sector_average,hartmann_reference,5.28013e-06,20.507,Unresolved supporting comparison
+Supporting,total_fce_oosterhoff,"total FCE, Oosterhoff Eqs. 3-7",cost,primary_2022_MER,sector_average,hartmann_reference,3.68084e-06,29.417,Supporting reference (not a decision budget)
+Supporting,ability_to_pay_fce_oosterhoff,ability to pay x total FCE (Oosterhoff),cost,primary_2022_MER,sector_average,hartmann_reference,3.74691e-06,28.898,Hjalsted's own consumption-based route
+Legacy FCE,total_fce,"total FCE, published workbook",cost,primary_2022_MER,sector_average,hartmann_reference,7.21617e-06,15.005,Replication: own sales counted twice
+Legacy FCE,total_fce_corrected,"total FCE, weighting fixed only",cost,primary_2022_MER,sector_average,hartmann_reference,5.03413e-06,21.509,Superseded: own sales counted twice
+Legacy FCE,total_fce_corrected_f,"total FCE, f by final product",cost,primary_2022_MER,sector_average,hartmann_reference,4.66094e-06,23.231,Superseded: contradicts Oosterhoff Eqs. 4-5
+Legacy FCE,ability_to_pay_fce,ability to pay x total FCE (weighting fixed only),cost,primary_2022_MER,sector_average,hartmann_reference,5.28013e-06,20.507,Superseded

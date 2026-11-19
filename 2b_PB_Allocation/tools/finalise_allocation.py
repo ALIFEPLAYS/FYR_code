@@ -27,7 +27,8 @@ import pb_allocation as pa  # noqa: E402
 OUT = ROOT / "results_allocation_final"
 VERIFY = ROOT / "data/total_gva_verification_2022.json"
 IMPACTS_SHA256 = "2a02c39fc43edd1ec200dc13bb49bdcb5b10493d8fabdfd6196409d85c8daf01"  # results_final/provenance.json
-MAIN = ("total_gva", "ability_to_pay", "total_fce", "total_fce_corrected", "total_fce_corrected_f")
+MAIN = ("total_gva", "ability_to_pay", "total_fce_oosterhoff", "total_fce", "total_fce_corrected",
+        "total_fce_corrected_f")
 DECISION_METHODS = ("total_gva", "ability_to_pay")
 INVENTORY = ROOT / "data/climate_inventory_scenarios.json"
 AUDIT = ROOT / "data/audit_from_raw_2022.json"
@@ -125,10 +126,13 @@ def sensitivity_rows(impacts):
             add(g, m, label, pa.INPUT_ORIGINS[origin], input_origin=origin)
     add("Legacy", "total_gva_published", "published factor (PBAESA error)", "Do not use")
     add("Legacy", "ability_to_pay_regional", "ATP on 49 aggregated regions", "Superseded")
-    add("Supporting", "total_fce", "total FCE, published", "Unresolved supporting comparison")
-    add("Supporting", "total_fce_corrected", "total FCE, corrected reading", "Unresolved supporting comparison")
-    add("Supporting", "total_fce_corrected_f", "total FCE, corrected reading with f by product", "Unresolved supporting comparison")
-    add("Supporting", "ability_to_pay_fce", "ability to pay x total FCE (corrected)", "Unresolved supporting comparison")
+    add("Supporting", "total_fce_oosterhoff", "total FCE, Oosterhoff Eqs. 3-7", "Supporting reference (not a decision budget)")
+    add("Supporting", "ability_to_pay_fce_oosterhoff", "ability to pay x total FCE (Oosterhoff)",
+        "Hjalsted's own consumption-based route")
+    add("Legacy FCE", "total_fce", "total FCE, published workbook", "Replication: own sales counted twice")
+    add("Legacy FCE", "total_fce_corrected", "total FCE, weighting fixed only", "Superseded: own sales counted twice")
+    add("Legacy FCE", "total_fce_corrected_f", "total FCE, f by final product", "Superseded: contradicts Oosterhoff Eqs. 4-5")
+    add("Legacy FCE", "ability_to_pay_fce", "ability to pay x total FCE (weighting fixed only)", "Superseded")
     return out
 
 
@@ -294,10 +298,15 @@ def validate(impacts):
         pairs = {"total_gva_eq7": "total_gva", "ability_to_pay_eq7": "ability_to_pay",
                  "total_fce_published_formula": "total_fce", "total_fce_corr_FR": "total_fce_corrected",
                  "total_fce_corr_FR_f": "total_fce_corrected_f", "ability_to_pay_fce_corr_FR": "ability_to_pay_fce",
-                 "total_gva_pbaesa_formula": "total_gva_published"}
+                 "total_gva_pbaesa_formula": "total_gva_published", "total_fce_oosterhoff": "total_fce_oosterhoff",
+                 "ability_to_pay_fce_oosterhoff": "ability_to_pay_fce_oosterhoff"}
         worst = max(abs(100 * climate / pa.budget_vector(m)["Climate Change"] / aud[k] - 1) for k, m in pairs.items())
         check("independent_raw_audit_agrees", worst < 1e-9,
-              f"7 climate results recomputed from raw EXIOBASE/World Bank/SuperPro; max rel. deviation {worst:.1e}")
+              f"{len(pairs)} climate results recomputed from raw EXIOBASE/World Bank/SuperPro; max rel. deviation {worst:.1e}")
+        chk = json.loads(AUDIT.read_text())["checks"]
+        check("fce_double_count_identified", abs(chk["corr_FR_minus_oosterhoff_over_direct_fce"]) < 1e-9
+              and abs(chk["direct_fce_vs_workbook"]) < 1e-9,
+              "weighting-only FCE correction exceeds the Oosterhoff result by exactly the published direct-FCE factor")
         sos = json.loads(AUDIT.read_text())["checks"]["sos_code_vs_workbook"]
         check("sos_matches_pbaesa_code_and_cf_workbook",
               all(math.isclose(pa.SOS[c], code) and (wbv is None or math.isclose(code, wbv)) for c, (code, wbv) in sos.items()),
@@ -335,8 +344,8 @@ def chart_boundaries(path, rows):
     ly = 74
     p.append(f'<circle class="s1" cx="26" cy="{ly - 4}" r="5"/><text class="t1" x="36" y="{ly}" font-size="12">Total GVA (primary)</text>')
     p.append(f'<path class="s2" d="M196 {ly - 10} l6 6 l-6 6 l-6 -6 z"/><text class="t1" x="208" y="{ly}" font-size="12">Ability to pay (alternative)</text>')
-    p.append(f'<line class="l3" x1="398" y1="{ly - 4}" x2="418" y2="{ly - 4}" stroke-width="4" stroke-linecap="round"/>'
-             f'<text class="t1" x="426" y="{ly}" font-size="12">Total FCE, unresolved historical variants</text>')
+    p.append(f'<rect class="s3" x="403" y="{ly - 9}" width="10" height="10" rx="2"/>'
+             f'<text class="t1" x="426" y="{ly}" font-size="12">Total FCE, Oosterhoff equations (supporting)</text>')
     axis_y = top + len(rows) * row_h
     p.append(f'<rect class="over" x="{X(100):.1f}" y="{top - 8}" width="{right - X(100):.1f}" height="{axis_y - top + 8}"/>')
     p.append(f'<text class="t2" x="{(X(100) + right) / 2:.1f}" y="{top - 14}" font-size="11" text-anchor="middle">budget exceeded</text>')
@@ -349,10 +358,9 @@ def chart_boundaries(path, rows):
     for k, r in enumerate(rows):
         y = top + k * row_h + row_h / 2
         p.append(f'<text class="t1" x="{left - 12}" y="{y + 4:.1f}" font-size="12" text-anchor="end">{SHORT[r["category"]]}</text>')
-        f0, f1 = min(r["total_fce_pct"], r["total_fce_corrected_pct"], r["total_fce_corrected_f_pct"]), \
-            max(r["total_fce_pct"], r["total_fce_corrected_pct"], r["total_fce_corrected_f_pct"])
-        p.append(f'<g><title>{SHORT[r["category"]]}, total FCE: {f0:.3g}–{f1:.3g}%</title>'
-                 f'<line class="l3" x1="{X(f0):.1f}" y1="{y:.1f}" x2="{X(f1):.1f}" y2="{y:.1f}" stroke-width="4" stroke-linecap="round"/></g>')
+        fo = r["total_fce_oosterhoff_pct"]
+        p.append(f'<g><title>{SHORT[r["category"]]}, total FCE (Oosterhoff): {fo:.3g}%</title>'
+                 f'<rect class="s3 ring" x="{X(fo) - 5.5:.1f}" y="{y - 5.5:.1f}" width="11" height="11" rx="2" stroke-width="2"/></g>')
         g, a = r["total_gva_pct"], r["ability_to_pay_pct"]
         p.append(f'<g><title>{SHORT[r["category"]]}, total GVA: {g:.3g}%</title>'
                  f'<circle class="s1 ring" cx="{X(g):.1f}" cy="{y:.1f}" r="6" stroke-width="2"/></g>')
@@ -433,7 +441,7 @@ def main():
     print(f"{len(checks)} checks passed")
     for r in summary:
         print(f"  {SHORT[r['category']]:20s} GVA {r['total_gva_pct']:9.4f}%  ATP {r['ability_to_pay_pct']:9.4f}%  "
-              f"historical FCE {r['total_fce_pct']:.4g}-{r['total_fce_corrected_f_pct']:.4g}%  exceeded: {r['exceeded_under']}")
+              f"FCE (Oosterhoff) {r['total_fce_oosterhoff_pct']:.4g}%  exceeded: {r['exceeded_under']}")
 
 
 if __name__ == "__main__":

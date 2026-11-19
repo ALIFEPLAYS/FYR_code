@@ -178,11 +178,17 @@ def total_gva_terms(multiplier="eq7", input_origin="sector_average"):
 def total_fce_terms(variant="published"):
     """FCE^total_{j,r} / FCE_r by region (Hartmann Eqs. 3, 5; Oosterhoff 2023 scaling).
 
-    "published": as PBAESA computes it; "corrected": the code-comment reading (sum over the final
-    demand of the products sector j supplies); "corrected_f": additionally indexes the Oosterhoff
-    scaling f by the final product. None is confirmed by the authors; report the range."""
+    "oosterhoff" (SUPPORTING REFERENCE): Oosterhoff et al. (2023) Eqs. 3-7 as printed. The share of supplier
+        i is sum_j FR_{j,r} S_ij / S_hat_jj with S_hat = diag(L^T e) and S_tilde = L_ij (1 + f_i) on the
+        off-diagonal only, i.e. (1 + f_i) sum_j L_ij FR_{j,r} / cs_j. A one-sector economy gets exactly 1.
+    "published": PBAESA as coded (replicates the workbook): weights supplier i by its OWN final demand and
+        adds S_tilde on the diagonal, so own sales count twice.
+    "corrected": fixes the weighting only; exceeds "oosterhoff" by exactly the direct-FCE share (legacy).
+    "corrected_f": also indexes f by the final product, contrary to Eqs. 4-5 (legacy)."""
     if variant == "corrected_f":
         return dict(_json(AUDIT_TERMS)["tfce_corr_FR_f_by_region"])
+    if variant == "oosterhoff":
+        return dict(_json(AUDIT_TERMS)["tfce_oosterhoff_by_region"])
     t = exiobase_terms()["target"]
     key = {"published": "tfce_implemented_by_region", "corrected": "tfce_alternative_by_region"}[variant]
     return dict(zip(exiobase_terms()["regions"], t[key]))
@@ -272,13 +278,23 @@ METHODS = {
                         "total GVA, Eq. 7"),
     "ability_to_pay": Method("ability_to_pay", "Ability to pay x total GVA", "alternative",
                              "ability to pay, country level, GDP at market exchange rates, 2022", "total GVA, Eq. 7"),
-    "total_fce": Method("total_fce", "Total FCE (published)", "supporting", "equal per capita", "total FCE, published"),
-    "total_fce_corrected": Method("total_fce_corrected", "Total FCE (corrected reading)", "supporting",
-                                  "equal per capita", "total FCE, comment-consistent reading"),
-    "total_fce_corrected_f": Method("total_fce_corrected_f", "Total FCE (corrected reading, f by product)",
-                                    "supporting", "equal per capita", "total FCE, both index orientations corrected"),
-    "ability_to_pay_fce": Method("ability_to_pay_fce", "Ability to pay x total FCE (corrected)", "supporting",
-                                 "ability to pay, country level, 2022", "total FCE, comment-consistent reading"),
+    "total_fce_oosterhoff": Method("total_fce_oosterhoff", "Total FCE (Oosterhoff equations)", "supporting",
+                                   "equal per capita", "total FCE, Oosterhoff et al. 2023 Eqs. 3-7",
+                                   "Supporting reference; not an MILP decision budget."),
+    "ability_to_pay_fce_oosterhoff": Method("ability_to_pay_fce_oosterhoff", "Ability to pay x total FCE (Oosterhoff)",
+                                            "supporting", "ability to pay, country level, 2022",
+                                            "total FCE, Oosterhoff et al. 2023 Eqs. 3-7"),
+    "total_fce": Method("total_fce", "Total FCE (published workbook)", "legacy", "equal per capita",
+                        "total FCE, published (PBAESA as coded)", "Replication only: own sales counted twice."),
+    "total_fce_corrected": Method("total_fce_corrected", "Total FCE (weighting fixed only)", "legacy",
+                                  "equal per capita", "total FCE, comment-consistent reading",
+                                  "Superseded: still counts own sales twice."),
+    "total_fce_corrected_f": Method("total_fce_corrected_f", "Total FCE (weighting fixed, f by product)",
+                                    "legacy", "equal per capita", "total FCE, f indexed by final product",
+                                    "Superseded: contradicts Oosterhoff Eqs. 4-5."),
+    "ability_to_pay_fce": Method("ability_to_pay_fce", "Ability to pay x total FCE (weighting fixed only)", "legacy",
+                                 "ability to pay, country level, 2022", "total FCE, comment-consistent reading",
+                                 "Superseded by ability_to_pay_fce_oosterhoff."),
     "total_gva_published": Method("total_gva_published", "Total GVA, published factor", "legacy",
                                   "equal per capita", "total GVA, PBAESA broadcasting error",
                                   "Do not use: factor not computed with Eq. 7."),
@@ -305,9 +321,10 @@ def geographical_weights(method, atp_case="primary_2022_MER", *, population_case
         case = {"worldbank_hartmann": "primary_2022_MER",
                 "worldbank_EXIO3": "sensitivity_2022_MER_EXIO3"}[population_case]
         return _json(ATP_WEIGHTS)["cases"][case]["population_share_by_region"]
-    if method in ("total_gva", "total_fce", "total_fce_corrected", "total_fce_corrected_f", "total_gva_published"):
+    if method in ("total_gva", "total_fce", "total_fce_corrected", "total_fce_corrected_f", "total_fce_oosterhoff",
+                  "total_gva_published"):
         return population_weights()
-    if method in ("ability_to_pay", "ability_to_pay_fce"):
+    if method in ("ability_to_pay", "ability_to_pay_fce", "ability_to_pay_fce_oosterhoff"):
         return ability_to_pay_weights(atp_case)
     if method == "ability_to_pay_regional":
         return ability_to_pay_weights_regional()
@@ -327,6 +344,8 @@ def value_terms(method, input_origin="sector_average"):
         return total_fce_terms("corrected")
     if method == "total_fce_corrected_f":
         return total_fce_terms("corrected_f")
+    if method in ("total_fce_oosterhoff", "ability_to_pay_fce_oosterhoff"):
+        return total_fce_terms("oosterhoff")
     raise KeyError(method)
 
 

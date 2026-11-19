@@ -1,3 +1,5 @@
+> **Preserved Astra finalisation note (commit 3c07961).** Its decisions are consolidated, with the total-FCE correction implemented, in [METHODOLOGY.md](METHODOLOGY.md) on branch `feature/final-pb-allocation`.
+
 # Finalisation of the GVA and Ability-to-Pay budgets
 
 The reference remains the saved 861-batch UK network, delivering 4,003.65 kg of bulk mAb per year. Both central calculations reproduce independently from the underlying data. We retain their inputs for the reference comparison because the evidence does not identify a better mAb-specific producer price or supplier mix.

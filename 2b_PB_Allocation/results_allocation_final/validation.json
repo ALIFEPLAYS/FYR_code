@@ -104,7 +104,12 @@
   {
    "check": "independent_raw_audit_agrees",
    "passed": true,
-   "detail": "7 climate results recomputed from raw EXIOBASE/World Bank/SuperPro; max rel. deviation 3.1e-15"
+   "detail": "9 climate results recomputed from raw EXIOBASE/World Bank/SuperPro; max rel. deviation 3.1e-15"
+  },
+  {
+   "check": "fce_double_count_identified",
+   "passed": true,
+   "detail": "weighting-only FCE correction exceeds the Oosterhoff result by exactly the published direct-FCE factor"
   },
   {
    "check": "sos_matches_pbaesa_code_and_cf_workbook",

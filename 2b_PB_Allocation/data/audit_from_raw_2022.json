@@ -7,7 +7,10 @@
   "total_fce_published_formula": 0.0008533198626938313,
   "total_fce_corr_FR": 0.0005952921663594335,
   "total_fce_corr_FR_f": 0.0005511610628168157,
-  "ability_to_pay_fce_corr_FR": 0.0006243818835219201
+  "total_fce_oosterhoff": 0.00043526310550937004,
+  "direct_fce": 0.0001600290608500635,
+  "ability_to_pay_fce_corr_FR": 0.0006243818835219201,
+  "ability_to_pay_fce_oosterhoff": 0.000443076791992603
  },
  "workbook": {
   "tGVA": 0.0004161413565987638,
@@ -21,6 +24,8 @@
   "alpha_GB": 0.7445161375407778,
   "pbaesa_tgva_formula_vs_workbook": 5.218048215738236e-14,
   "pbaesa_tfce_formula_vs_workbook": 2.6645352591003757e-15,
+  "direct_fce_vs_workbook": 0.0,
+  "corr_FR_minus_oosterhoff_over_direct_fce": -3.3306690738754696e-16,
   "sectors_with_output_zero_direct_and_total_fce": 146,
   "sos_code_vs_workbook": {
    "Climate Change": [
@@ -78,7 +83,9 @@
   "total_fce_corr_FR": 21.508897510958054,
   "total_fce_corr_FR_f": 23.231100778170937,
   "ability_to_pay_fce_corr_FR": 20.506806064067575,
-  "total_gva_pbaesa_formula": 30.76857897506699
+  "total_gva_pbaesa_formula": 30.76857897506699,
+  "total_fce_oosterhoff": 29.416870010880373,
+  "ability_to_pay_fce_oosterhoff": 28.89810169862159
  },
  "utilisation_pct": {
   "total_gva_eq7": {
@@ -157,6 +164,28 @@
    "Freshwater Use": 0.9808108223696816,
    "Stratospheric Ozone Depletion": 0.08983986892383422,
    "Land-system Change": 0.050709596342770766
+  },
+  "total_fce_oosterhoff": {
+   "Climate Change": 29.416870010880373,
+   "Ocean Acidification": 9.372160824236326,
+   "Change in Biosphere Integrity": 3.535069075904651,
+   "Phosphorus Cycle": 5.026653694084069,
+   "Nitrogen Cycle": 0.053447271504186794,
+   "Atmospheric Aerosol Loading": 7.46592095529953,
+   "Freshwater Use": 0.9377223592384244,
+   "Stratospheric Ozone Depletion": 0.08589307124220898,
+   "Land-system Change": 0.04848184913343903
+  },
+  "ability_to_pay_fce_oosterhoff": {
+   "Climate Change": 28.89810169862159,
+   "Ocean Acidification": 9.206882191560293,
+   "Change in Biosphere Integrity": 3.472727915286714,
+   "Phosphorus Cycle": 4.938008346967775,
+   "Nitrogen Cycle": 0.05250472558333224,
+   "Atmospheric Aerosol Loading": 7.334258979977015,
+   "Freshwater Use": 0.9211855677480479,
+   "Stratospheric Ozone Depletion": 0.08437834164702897,
+   "Land-system Change": 0.04762686874154702
   }
  },
  "source_sha256": {

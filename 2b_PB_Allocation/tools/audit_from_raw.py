@@ -11,7 +11,15 @@ total-FCE discrepancy can be bounded:
   published   term_{a,r} = FR_{a,r} * (1 + (1 + f_a) * sum_b L_ab / cs_b)              (code as written)
   corr_FR     term_{a,r} = FR_{a,r} + (1 + f_a) * sum_b L_ab FR_{b,r} / cs_b            (weights final product b)
   corr_FR_f   term_{a,r} = FR_{a,r} + sum_b L_ab (1 + f_b) FR_{b,r} / cs_b              (also f indexed by column)
+  oosterhoff  term_{a,r} = (1 + f_a) * sum_b L_ab FR_{b,r} / cs_b                         (source equations)
   with cs_b = sum_i L_ib, f_b = (cs_b - L_bb) / L_bb (PBAESA Eqs. 3-8 as coded).
+
+The 'oosterhoff' reading follows Oosterhoff et al. (2023) Eqs. 3-7 as printed: S = S_hat + S_tilde with
+S_hat = diag(L^T e) and S_tilde the OFF-diagonal entries L_ij (1 + f_i) (Eq. 4: f indexed by the supplier i,
+Eq. 5); aSoSOS_{i,j,r} = FR_{j,r} S_ij / S_hat_jj (Eq. 7: weighted by the final product j). Because
+L_ii (1 + f_i) = cs_i, every entry equals L_ij (1 + f_i) / cs_j, and the diagonal equals one. PBAESA adds
+S_tilde on the diagonal as well, so a sector's own final sales count twice; corr_FR keeps that extra term
+and corr_FR_f additionally indexes f by the final product, contrary to Eqs. 4-5.
 
 It additionally exports two sensitivity inputs to data/exiobase_audit_terms_2022.json:
   * full-supply-chain regional origin of the value added embodied in GB Chemicals nec output,
@@ -150,10 +158,14 @@ def main():
     published = FR[j] * (1 + (1 + f[j]) * np.sum(Lrow / cs))
     corr_fr = FR[j] + (1 + f[j]) * (Lrow / cs) @ FR
     corr_fr_f = FR[j] + (Lrow * (1 + f) / cs) @ FR
+    oosterhoff = (1 + f[j]) * (Lrow / cs) @ FR
     for k, t in (("total_fce_published_formula", published), ("total_fce_corr_FR", corr_fr),
-                 ("total_fce_corr_FR_f", corr_fr_f)):
+                 ("total_fce_corr_FR_f", corr_fr_f), ("total_fce_oosterhoff", oosterhoff),
+                 ("direct_fce", FR[j])):
         af[k] = float(w_pop @ t)
-    af["ability_to_pay_fce_corr_FR"] = float(np.array([w_atp[r] for r in regions]) @ corr_fr)
+    w_atp_vec = np.array([w_atp[r] for r in regions])
+    af["ability_to_pay_fce_corr_FR"] = float(w_atp_vec @ corr_fr)
+    af["ability_to_pay_fce_oosterhoff"] = float(w_atp_vec @ oosterhoff)
 
     wb = pd.read_excel(ROOT / "data/Allocation Factors_2022.xlsx")
     wb.columns = ["region", "sector", "dFCE", "tFCE", "dGVA", "tGVA"]
@@ -182,13 +194,17 @@ def main():
         sos_wb = dict(zip(cf["Planetary Boundary Category"], cf["Safe Operating Space"]))
     util = {m: {c: 100 * imp[c] / (sos[c] * af[m] * share) for c in sos}
             for m in ("total_gva_eq7", "ability_to_pay_eq7", "total_fce_published_formula", "total_fce_corr_FR",
-                      "total_fce_corr_FR_f", "ability_to_pay_fce_corr_FR", "total_gva_pbaesa_formula")}
+                      "total_fce_corr_FR_f", "ability_to_pay_fce_corr_FR", "total_gva_pbaesa_formula",
+            "total_fce_oosterhoff", "ability_to_pay_fce_oosterhoff")}
     rec = dict(
         description="Independent recomputation from raw sources (no pb_allocation, no committed extracts).",
         sector_factors=af, workbook=dict(tGVA=float(row.tGVA), tFCE=float(row.tFCE), dFCE=float(row.dFCE)),
         checks=dict(vL_target=vL_j, m_eq7=m_eq7, m_pbaesa=m_pbaesa, alpha_GB=float(alpha_j[regions.index("GB")]),
                     pbaesa_tgva_formula_vs_workbook=af["total_gva_pbaesa_formula"] / row.tGVA - 1,
                     pbaesa_tfce_formula_vs_workbook=af["total_fce_published_formula"] / row.tFCE - 1,
+                    direct_fce_vs_workbook=af["direct_fce"] / row.dFCE - 1,
+                    corr_FR_minus_oosterhoff_over_direct_fce=(af["total_fce_corr_FR"] - af["total_fce_oosterhoff"])
+                    / af["direct_fce"] - 1,
                     sectors_with_output_zero_direct_and_total_fce=b2b_zero,
                     sos_code_vs_workbook={c: (sos[c], sos_wb.get(c)) for c in sos},
                     atp_alpha_2022=atp_alpha, atp_countries=n_countries, atp_weight_GB=w_atp["GB"]),
@@ -208,6 +224,8 @@ def main():
         full_supply_chain_value_added_share=full_chain,
         full_supply_chain_note="share_r = sum_{i in r} v_i L_ij / (v L)_j; Hartmann Eqs. 8-9 use first-tier inputs instead.",
         tfce_corr_FR_f_by_region=dict(zip(regions, corr_fr_f.tolist())),
+        tfce_oosterhoff_by_region=dict(zip(regions, oosterhoff.tolist())),
+        tfce_oosterhoff_note="(1 + f_j) sum_k L_jk FR_k,r / cs_k: Oosterhoff et al. (2023) Eqs. 3-7 as printed.",
         tfce_corr_FR_f_note="FR_a + sum_b L_ab (1 + f_b) FR_b / cs_b: both index orientations corrected.",
         source_sha256=rec["source_sha256"]), indent=1) + "\n")
     rec["full_supply_chain_value_added_share_GB"] = full_chain["GB"]

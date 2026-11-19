@@ -1,359 +1,253 @@
-# Planetary-boundary allocation for the UK mAb network: total GVA and ability to pay
+# Planetary-boundary allocation for the UK mAb network: final methodology
 
-Methodology report, 19 November 2026. This report finalises the two allocation methods used in the FYR. **Total gross value added (GVA)** is the primary method (Hartmann et al. 2026). **Ability to pay** is the alternative (Hjalsted et al. 2021). **Total final consumption expenditure (FCE)** is kept as a supporting comparison. All earlier figures were re-derived from the papers, the vendored code and the raw data, and were not taken as given. Environmental impacts, the LCA and the joint MILP are **unchanged**.
+Consolidated 19 November 2026 on branch `feature/final-pb-allocation`. This document is the single reference for the two allocation methods used in the FYR: **total gross value added (GVA)**, the primary method (Hartmann et al. 2026), and **ability to pay (ATP)**, the alternative (Hjalsted et al. 2021). **Total final consumption expenditure (FCE)** is a supporting comparison only. The document merges Claude's implementation and audit with Astra's independent audit. Where the two disagreed, the source papers, code and raw data decided. The environmental impacts, the LCA and the joint MILP are unchanged.
 
 | | |
 |---|---|
-| Implementation | [`2b_PB_Allocation/pb_allocation.py`](pb_allocation.py): single entry point, reads only committed data |
-| Results | [`2b_PB_Allocation/results_allocation_final/`](results_allocation_final/): tables, MILP budgets, charts, validation, provenance |
-| Data builders | [`build_ability_to_pay_weights.py`](tools/build_ability_to_pay_weights.py), [`verify_total_gva.py`](tools/verify_total_gva.py), [`extract_network_cost_structure.py`](tools/extract_network_cost_structure.py) |
-| Tests | [`2b_PB_Allocation/tests/test_pb_allocation.py`](tests/test_pb_allocation.py): 34 tests pass; 23 export checks pass; independent raw-data audit in [`audit_from_raw.py`](tools/audit_from_raw.py) |
+| Code | [`pb_allocation.py`](pb_allocation.py): one entry point, committed data only |
+| Results | [`results_allocation_final/`](results_allocation_final/) |
+| Tests | [`tests/test_pb_allocation.py`](tests/test_pb_allocation.py): 42 tests pass; 24 export checks pass |
+| Independent checks | [`tools/audit_from_raw.py`](tools/audit_from_raw.py) (Claude), [`audit/`](audit/) (Astra) |
+| Traceability | §12 |
 
-[Finalisation findings and expanded sensitivities](FINALISATION.md) update this methodology. [The separate Astra audit](audit/INDEPENDENT_AUDIT_ASTRA.md) independently checks the source calculations. Section 12 preserves Claude Code's original audit as a historical record.
+## 1. Final results
 
-## 1. Summary
+Saved two-stage network: 861 batches, 4,003.65 kg/yr of bulk drug substance, 2022 economy. The impacts are an **incomplete characterised subtotal**. Budgets are in native PBAESA units per year.
 
-| | Total GVA (primary) | Ability to pay (alternative) |
-|---|---|---|
-| Ethical principle | Equal per capita, then by economic value created (egalitarian + utilitarian) | Prioritarian (poorer people get more), then by economic value created |
-| **Climate utilisation (central)** | **64.9%** | **153.5%** |
-| Range, one assumption changed at a time | 51.5–93.3% | 106.1–1,539% |
-| Range, all 24 combinations of value basis × input origin | 46.3–104.3% | 84.2–1,720% |
-| Boundaries exceeded (central) | none | **climate change** |
-| Robustness of that conclusion | within budget in 22 of 24 combinations | exceeded in 22 of 24 combinations |
-| Change from earlier figure | 64.9%: confirmed | 148% → 153.5% (country-level calculation) |
-| Most sensitive assumption | Value of output (±20%) | Origin of purchased inputs (factor of ~10) |
-| Audit verdict (§12) | **Ready for exploratory fixed-budget runs** | **Usable with documented assumptions** (normative stress test) |
+| Method | Role | Network share of global SOS | Climate budget (W/m²) | **Climate utilisation** | Exceeded boundaries | Verdict |
+|---|---|---:|---:|---:|---|---|
+| **Total GVA** (Hartmann Eq. 7) | **Primary** | 1.6684×10⁻⁶ | 1.6684×10⁻⁶ | **64.90%** | none | **Ready for MILP integration** (fixed exploratory budget) |
+| **Ability to pay** × total GVA | **Alternative** | 7.0559×10⁻⁷ | 7.0559×10⁻⁷ | **153.46%** | climate | **Ready as a separate normative scenario**, interpreted as producer-region capacity |
+| Total FCE (Oosterhoff equations) | Supporting | 3.6808×10⁻⁶ | 3.6808×10⁻⁶ | **29.42%** | none | Comparison only; not an MILP budget |
 
-Main findings:
-1. **The PBAESA total-GVA error is real.** It was confirmed by reading the code, by running the vendored function on a synthetic economy, and by an independent recomputation from raw EXIOBASE. The published factor for GB Chemicals nec (4.161×10⁻⁴) should be 1.973×10⁻⁴, so climate goes from 30.8% to 64.9%.
-2. **Ability to pay must be calculated per country**, as Hjalsted et al. do. Doing so reproduces their α (0.234–0.239 vs 0.243). Applying it to 49 aggregated regions, as before, gave 148%; the correct value is 153.5%.
-3. **The ability-to-pay result depends heavily on where inputs come from.** With EXIOBASE sector-average sourcing, 78.47% of the budget is attributed to India and three rest-of-world regions representing 2.70% of first-tier inputs. All foreign regions account for 92.58% of the budget from 25.55% of first-tier inputs. With the network's own cost structure the result is 295%, and with high-income suppliers about 1,500%. With the full supply chain used for the regional split it is 106%. Total GVA is far less sensitive (58.3–93.3%).
-4. **Switching between the methods only rescales the budgets**: ability-to-pay budget = 0.4229 × total-GVA budget, identically for all nine boundaries.
-5. **$92.10/g is kept** as a documented zero-margin scenario for the value of output.
+Both central values agree between the two reviews and are reproduced from raw sources to 3×10⁻¹⁵. The supporting total-FCE value changes from the earlier 15.0–23.2% range to **29.42%** (§6).
 
-## 2. Why these two methods
+**Sensitivity ranges (climate)**
 
-- **Total GVA** is the method recommended by the dataset we use (Hartmann et al. 2026). It is consistent with a cradle-to-gate inventory, because total value includes upstream value just as the footprint includes upstream impacts. It needs only published or verifiable data, and its key (value of output) can be matched exactly to our network.
-- **Ability to pay** is a peer-reviewed alternative fairness principle (prioritarianism). It slots into the *same* framework by replacing only the geographical step. Comparing the two isolates the ethical choice of how the SOS is shared between countries, holding the sector and network steps constant. It is also the only established principle we examined that makes a boundary bind for this network, so it gives the optimisation formulations something to act on.
-- **Total FCE** is kept as Hartmann's companion consumption perspective. Its factor may contain a second code issue, so it is reported as a range and not used to draw conclusions.
-- Not carried forward: status quo/grandfathering (rewards current polluters; examined earlier), the illustrative 0.1% share (no basis), network direct-GVA keys (mismatched with total factors), and the $200/g price (unsourced).
+| | Total GVA | Ability to pay |
+|---|---:|---:|
+| One assumption at a time ([`sensitivity_climate.csv`](results_allocation_final/sensitivity_climate.csv)) | 51.5–93.3% | 106.1–1,539% |
+| Value basis × input origin, 36 combinations ([`envelope_climate.csv`](results_allocation_final/envelope_climate.csv)) | 46.3–106.9% (6 of 36 exceed) | 84.2–1,763% (34 of 36 exceed) |
+| Also × weight cases × 9 physical inventory cases ([`crossed_climate_sensitivity.csv`](results_allocation_final/crossed_climate_sensitivity.csv)) | **39.5–108.2%** (114 of 1,440 exceed) | **70.4–1,773%** (2,312 of 2,520 exceed) |
+| Physical inventory cases only (materials × electricity), central budget | 55.5–65.3% | 131–154% |
 
-## 3. Framework: three separate steps
+These are discrete scenario ranges, not probability intervals. Over all cases, total GVA is within budget in 92% and ability to pay exceeds it in 92%. The most robust research finding is the one Astra stated: **the reference plan moves from below to above its climate threshold when entitlement changes from equal per-capita to income-weighted producer-region allocation**, before any design decision changes.
 
-Hartmann et al. (2026) build every allocation factor with the two-step approach of Hjalsted et al. (2021): first share the SOS between people by region, then between the economic activities that create value for those people. A third step downscales from the sector to our network.
+## 2. Reconciliation of the two reviews
 
-| Step | Question | Total GVA | Ability to pay |
+| Topic | Claude | Astra | Resolution |
 |---|---|---|---|
-| 1. Geography | How is the global SOS shared between regions? | w_r = Pop_r/Pop_world (Hartmann Eq. 2) | w_r = Σ_{c∈r} (Pop_c/Pop_w)(GDPpc_w/GDPpc_c)·α (Hjalsted Eq. 5) |
-| 2. Sector | How much of region r's share goes to GB Chemicals nec? | Hartmann Eqs. 1, 4, 6–9 | **identical** |
-| 3. Network | How much of the sector's share goes to our network? | s = V_net/x_sector | **identical** |
+| PBAESA total-GVA error | Broadcasting bug; Eq. 7 factor 1.9729×10⁻⁴ | Same; replays workbook to 3×10⁻¹⁷ | **Agreed.** Correction kept. |
+| Population weights sum to 1.000089 | Negligible | Normalising gives 64.9045% | Keep unnormalised (Hartmann replication); normalised case reported. |
+| Central total GVA, ATP | 64.90%, 153.46% | 64.90%, 153.46% | **Agreed.** |
+| "93% of ATP budget through 3.6% of inputs" | Claimed | Incorrect pairing | **Astra correct:** India + three RoW regions = 78.47% of budget from 2.70% of inputs; all foreign regions 92.58% from 25.55%. Corrected. |
+| ATP income effect | Not stated | Budget per € ∝ 1/y² (income enters twice) | **Astra correct**; added to §5.4. |
+| RoW country mapping | Hartmann Table 1 (World Bank regions) | EXIO3 concordance moves 14 countries; ATP 159.77% | Both confirmed. EXIO3 matches the EXIOBASE developers' `country_converter`; Table 1 is what Hartmann's weights use. Table 1 kept as reference for consistency with the primary method; EXIO3 reported (GVA 66.45%, ATP 159.77%). |
+| PPP vs MER | PPP 149.7% vs 153.5% | Coverage differs; same 199 economies: MER 160.31%, PPP 149.70% | **Astra's matched comparison adopted.** |
+| Hjalsted α residual (0.234 vs 0.243) | "Data revisions" | Population source and coverage also differ | Wording corrected to "approximate replication". |
+| $92.10/g | "Lower bound", conservative | Zero-margin scenario; cost can exceed price; tolling and utilisation matter | **Astra's framing adopted**: zero-margin reference, not a bound. |
+| No-inflation case | "Upper utilisation bound" | ONS C212 PPI fell (109.9 → 107.2), giving 74.33% | **Astra correct** (series verified). PPI cases added. |
+| Operating-margin cases | "Upper bound" | Gross surplus includes depreciation already in SuperPro; not a bound | **Astra correct**: "illustrative uplift". |
+| SuperPro filling | "Fill-finish has zero cost" | Detailed ledger: $49,282 labour + $145,200 consumables (bags, cartridges) | **Astra correct** (verified in the ICR). This is bulk filling (0.37% of cost), not drug-product fill-finish. |
+| Total FCE | 15.0–23.2%, unresolved | 29.42% from the Oosterhoff equations; own sales counted twice | **Astra correct** (verified against the printed equations, §6). Implemented here as the supporting value; earlier variants are legacy. |
+| Robustness | Corrected to combined envelopes | Extended with inventory, weights, PPI (crossed set) | Astra's crossed set adopted as the final ranges. |
+| MILP use | Fixed budgets, scale rows, choose method outside the solver | Same; treat ATP as an ethical scenario | **Agreed.** |
+
+## 3. Framework
+
+Hartmann et al. (2026) build each factor with the two-step approach of Hjalsted et al. (2021). Step 1 shares the SOS between people by region. Step 2 shares each region's portion with the economic activity that creates value for those people. Step 3 (this project) downscales from the sector to the network. The two methods differ **only in step 1**.
 
 ```
-AF_j            = Σ_r w_r · GVA^total_{j,r} / GVA_r                       Hartmann Eq. 1 with Eq. 4
-GVA^total_{j,r} = α_{r,j} · m_j · GVA^direct_j                            Eqs. 6–7
-m_j             = (Σ_i v_i L_ij) / v_j,   v_i = GVA_i / x_i,  L = (I − A)⁻¹  type-I GVA multiplier (Keček et al. 2022)
-α_{r,j}         = share of first-tier inputs to j (intermediates + own GVA) from region r   Eqs. 8–9
-s               = V_net / x_j                                             network share of sector output
-budget_c        = SOS_c · AF_j · s          utilisation_c = impact_c / budget_c
+F_j        = Σ_r w_r · a_rj · H_j / G_r                     Hartmann Eqs. 1, 4, 6–9
+H_j        = m_j · V_j = x_j · g_j,   g_j = Σ_i v_i L_ij     type-I GVA multiplier m_j = g_j / v_j (Eq. 7)
+a_rj       = (Σ_{i∈r} Z_ij + 1[r = home(j)] · V_j) / (Σ_i Z_ij + V_j)   first-tier origin shares (Eqs. 8–9)
+s          = X / x_j                                         network share of sector gross output
+B_c        = SOS_c · F_j · s,       utilisation_c = I_c / B_c
 ```
 
-The two methods differ **only in w_r**. Ability to pay is not multiplied on top of total GVA. It replaces the population weight inside Eq. 1, so nothing is counted twice and no factors are mixed.
+x_j is gross output, V_j direct GVA, v = V/x, L = (I − A)⁻¹, Z the transaction matrix, G_r regional direct GVA, and X the network's annual basic-price output (€ M₂₀₂₂). For GB Chemicals nec: x_j = 44,744.27, V_j = 16,233.04, g_j = 0.99999995 (so H_j = x_j), a_GB = 0.7445.
+
+| Step 1 weight w_r | Definition |
+|---|---|
+| Total GVA (equal per capita) | Population share Pop_r/Pop_world (Hartmann Eq. 2; PBAESA 2022 values, GB 0.8525%) |
+| Ability to pay | Σ_{c∈r} (P_c/P)(Y/P)/(D_c/P_c)·α = Σ_{c∈r} (P_c²/D_c)/Σ_k(P_k²/D_k), computed **per country** before summing to regions (Hjalsted Eq. 5, α from Eq. S1) |
+
+Because step 1 and step 2 multiply into one scalar, every budget vector is SOS × one fraction. **Switching methods rescales all nine budgets equally:** ATP/GVA = 0.4229 for every indicator.
 
 ## 4. Total GVA (primary)
 
-### 4.1 Sector, country, year and data
+### 4.1 Sector and data
+NACE 21.1 and 21.2 map to EXIOBASE product p24.d and industry i24.d, "Chemicals nec" (public concordances). This is the supported classification, but it is broad and a weak model of biotechnology. In the 2022 nowcast the UK sector also records zero compensation of employees and zero net surplus: its GVA is almost all consumption of fixed capital. Data: EXIOBASE 3.9.6, 2022 ixi, and the Hartmann allocation workbook (checksum matches Zenodo).
 
-| Item | Choice | Justification |
-|---|---|---|
-| Sector | EXIOBASE "Chemicals nec" (i24.d) | NACE 21 (pharmaceuticals) maps only to this product group in the public EXIOBASE concordance. It is broader than pharma. With an output-share key, sector size cancels; only "SOS per € of output" matters. |
-| Country | GB | All three network sites are in the UK |
-| Year / database | 2022, EXIOBASE 3.9.6 ixi | Same as the Hartmann factors; impacts are for one year of operation |
-| Population weights | PBAESA 2022 (GB 0.8525%) | Hartmann's own. They sum to 1.000089, a negligible inconsistency inherited from PBAESA. |
-| GVA definition | PBAESA's six components | `calculate_GVA_per_sector` |
+### 4.2 PBAESA error (verified by both reviews)
+`np.divide(V, x)`, with V of shape (n,) and x of shape (n, 1), broadcasts to an n×n matrix V_k/x_i. `.iloc[:, 0]` then keeps the first sector's GVA in every numerator. The resulting multiplier, x_j Σ_i L_ij/x_i, contains no value-added coefficient, so it cannot be Eq. 7's type-I GVA multiplier (Keček et al.). This formula reproduces the published factor (4.1614×10⁻⁴) to 5×10⁻¹⁴ on our route and 3×10⁻¹⁷ on Astra's. Eq. 7 gives **1.9729×10⁻⁴**; the published value is 2.109× larger. We report the corrected value; author confirmation is pending.
 
-### 4.2 The PBAESA error
+### 4.3 Economic valuation: X
+**Reference:** SuperPro full average production cost $92.09802/g (USD 2019), × 4,003.65 kg = $368.73 M. This is converted by USD→GBP (BoE 2019, 1.2766), the UK GDP deflator (ONS YBGB, 81.1 → 90.6) and GBP→EUR (ECB 2022, 0.85276), giving **€378.38 M**, a share s = 0.84566%.
 
-In `calculate_total_GVA_per_sector` (vendor `allocation.py`, lines 707–729), `V` has shape (n,) and `x` has shape (n, 1). `np.divide(V, x)` broadcasts to an n×n matrix, and `.iloc[:, 0]` then uses **V₀/xᵢ**: the GVA of the first sector, divided by each sector's output. The resulting "multiplier", m_j = x_j Σ_i L_ij/x_i, does not depend on value added, so it cannot be the Eq. 7 GVA multiplier.
+It is a **zero-margin valuation scenario**, not a bound. The realised factory-gate price is unobserved. Cost can exceed price, and tolling (customer-owned inputs), internal transfers or capacity utilisation can move it either way. SuperPro's cost is 53.4% facility-dependent and comes from one 121-batch plant. Applying it unchanged to sites running 320/320/221 batches assumes the same cost per gram at every utilisation level. The GDP deflator is kept for consistency with the MILP's economic parameters.
 
-| Evidence | Result |
-|---|---|
-| Code reading | Shapes and indexing as above |
-| Vendored function on a synthetic economy (`test_vendored_pbaesa_function_contains_the_broadcasting_error`) | Returns exactly x_j Σ L_ij/x_i. Agrees with Eq. 7 only if all sectors have equal absolute GVA. |
-| Independent recomputation from raw EXIOBASE (linear solves; α from Z as PBAESA does) | Buggy formula reproduces all 6,161 published factors (max rel. error 1.1×10⁻⁴; GB Chemicals nec 2×10⁻⁸). Eq. 7 gives 1.9729321876×10⁻⁴, identical to a separate A-based route. |
-| Accounting identity | (vL) = 0.99999995 for GB Chemicals nec, so total GVA = gross output (€44,744 M) |
-| Size of error | Eq. 7/published = 0.474 here; median 1.76 across sectors (not a uniform scaling) |
-| Sum over sectors | Eq. 7: 1.97 ≈ world output/GVA (2.01), as expected for overlapping total factors. Published: 8.86. |
-
-**Meaning.** Because total GVA equals gross output, the corrected budget is roughly the population share of each region where the sector's value is generated, times the network's output value divided by that region's GVA. Every euro of UK output earns the same SOS. **Status: verified (code + data); author confirmation pending.**
-
-### 4.3 Downscaling to the network and the $92.10/g proxy
-
-Hartmann's usage notes recommend disaggregating "based on the share of the sector's economic value attributable to the assessed anthropogenic system, for example using turnover data". Under Eq. 7 the sector's total GVA is its gross output, so the matched network key is its **gross output at basic prices**, i.e. sales value excluding product taxes.
-
-| Value basis | € M₂₀₂₂/yr | Total GVA | Ability to pay | Status |
+| Valuation scenario | € M₂₀₂₂ | Total GVA | ATP | Status |
 |---|---:|---:|---:|---|
-| **SuperPro full unit cost, $92.10/g × 4,003.65 kg** | **378.4** | **64.9%** | **153.5%** | **Reference.** Full average production cost used as a zero-margin bulk output valuation. Detailed filling costs include labour, cartridges and bulk bags. See [boundary reconciliation](FINALISATION.md#valuation-and-system-boundary). |
-| Cost, no 2019→2022 inflation | 338.7 | 72.5% | 171.4% | Sensitivity: the UK GDP deflator (×1.117) is general, not a pharma price index |
-| Cost / (1 − ONS SIC 21.1 margin, 14.6%) | 443.1 | 55.4% | 131.0% | Illustrative uplift. SIC 21.1 basic pharmaceutical products is the closest class to drug substance (2022: turnover £2,834 M, aGVA £971 M, employment £557 M). The margin includes depreciation, which SuperPro already counts. |
-| Cost / (1 − SIC 21 margin, 20.6%) | 476.8 | 51.5% | 121.8% | Illustrative uplift, all pharmaceuticals |
-| $200/g "price" | 821.7 | 29.9% | – | Rejected: no source |
-| EXIOBASE sector profit margin | – | – | – | Unusable: the 2022 nowcast records zero compensation and zero net operating surplus for GB Chemicals nec |
-| MILP private cost (£480 M/yr) | – | – | – | Rejected: depends on the decisions and includes freight that is not in the inventory |
+| **SuperPro cost, GDP deflator** | **378.38** | **64.90%** | **153.46%** | Reference |
+| ONS C211 basic pharmaceuticals PPI (107.7 → 110.2) | 346.57 | 70.86% | 167.55% | Sector price analogue |
+| ONS C212 pharmaceutical preparations PPI (109.9 → 107.2) | 330.39 | 74.33% | 175.75% | Sector price analogue (prices fell) |
+| No 2019→2022 inflation | 338.71 | 72.50% | 171.44% | Diagnostic |
+| Cost / (1 − SIC 21.1 gross margin 14.6%) | 443.12 | 55.42% | 131.04% | Illustrative uplift (margin includes depreciation) |
+| Cost / (1 − SIC 21 gross margin 20.6%) | 476.75 | 51.51% | 121.80% | Illustrative uplift |
 
-Limitations of $92.10/g: it is one SuperPro design case (2019 prices, one 121-batch plant replicated 7.1×); it uses general rather than pharma price inflation; and it excludes profit. The price index and margin variants are discrete scenarios. Scale and realised producer value remain uncertain.
+Break-even 2019 values for the partial climate footprint are **$59.77/g (total GVA)** and **$141.4/g (ATP)**. A sourced bulk drug-substance transfer price would have high decision value.
 
-### 4.4 Consistency with the assessment boundary
-
-- **Scope:** the inventory is cradle-to-gate for bulk drug substance. Total-value factors are the correct partner; direct factors are for gate-to-gate burdens only (Hartmann usage notes).
-- **Functional unit and time:** one year of output (861 batches, 4,003.65 kg) in 2022 terms, for both budget and impact.
-- **Units:** native PBAESA control-variable units, same method version for SOS and characterisation.
-- **Geography:** UK production. Upstream value and impacts both occur partly abroad, which is why Hartmann's Eq. 1 credits supplying regions (see §5.4).
-- **Known asymmetry:** media and buffers are in the cost (and so in the budget) but missing from the impact inventory, so utilisation is biased **downwards**. Climate would exceed the total-GVA budget if the full footprint is ≥1.54× the current subtotal.
+### 4.4 System boundary
+The product is bulk mAb at the drug-substance gate. SuperPro's detailed ledger contains bulk filling: $49,282/yr labour and $145,200/yr bags and cartridges, i.e. 0.37% of cost. It contains no finished-dose fill-finish. Downstream cold chain is excluded. The total-value factor matches a cradle-to-gate footprint; direct factors would apply only to gate-to-gate burdens. The economic allocation is applied once, to the network. Applying whole-chain budgets again to individual suppliers or plants would double count. Inventory gaps (media and buffers, resin and plastics fabrication, logistics, heat conversion, some elementary-flow mappings) bias utilisation downwards. Under total GVA, uncovered burdens would use up the climate headroom of 5.86×10⁻⁷ W/m² at ≥1.54× the current subtotal.
 
 ## 5. Ability to pay (alternative)
 
-### 5.1 The original method
+### 5.1 Calculation (verified by both reviews)
+218 economies, 2022. World Bank population and GDP at market exchange rates, IMF WEO for Taiwan, South Sudan, Yemen and Eritrea, and income-group median GDP per capita for six economies without data. Results: α = 0.22107; UK weight 0.051207% of global SOS, i.e. 6.0% of its population share. Country weights are computed before aggregation; aggregating first, as in the legacy 148.0%, distorts the inverse-income average. The 2017 recomputation gives α = 0.234 against Hjalsted's 0.243. This is an approximate replication: GDP vintage, population source (Hjalsted used UNSD) and coverage differ.
 
-Hjalsted et al. (2021, Table 2, Eq. 5): SoSOS_ind = (SOS/Pop_world) × (GDPpc_world/GDPpc_local) × α, with α chosen so that shares sum to the SOS (their Eq. S1; **α = 0.243 for 2017**). It is prioritarian, favouring the worst-off by allocating in inverse proportion to GDP per capita. It is the geographical first step of their two-step framework; The project combines those region weights with Hartmann’s producer-side GVA rule. This places responsibility on producer regions. Hjalsted’s original second step allocates by local final consumption.
+### 5.2 What the hybrid represents
+Hjalsted's own second step distributes individual entitlements by **final consumption** (their Eq. 6). The FYR substitutes the ATP country weights into Hartmann's **production (GVA)** step. The method therefore allocates by **the income of the people in the regions where the network's value is produced**. Patients' needs and company finances do not enter. The consumption-route comparator (ATP × total FCE, Oosterhoff) gives **28.90%**. "Climate exceeded under ATP" is a result of the producer-region perspective chosen for the FYR, and the paper must say so.
 
-### 5.2 Implementation and validation
+### 5.3 Data choices
+| Case | ATP climate |
+|---|---:|
+| Reference: 218 economies, MER, Hartmann Table 1 mapping | **153.46%** |
+| No imputation (212 economies) | 153.48% |
+| Same 199 economies: MER / PPP | 160.31% / 149.70% |
+| 2017 MER | 158.34% |
+| EXIO3 country concordance (14 economies reassigned) | 159.77% |
 
-Calculated per country, then summed into the 49 EXIOBASE regions:
+### 5.4 Geographical attribution: the dominant uncertainty
+Under ATP, the SOS per € of regional GVA scales as **1/y²**: income enters once in the individual entitlement and again when it is divided by regional GVA. One euro of value added in India earns 414× the UK rate, and in RoW Africa 1,226×. With EXIOBASE sector-average first-tier origins, **India and RoW Asia-Pacific, Middle East and Africa supply 2.70% of inputs but 78.47% of the ATP budget**. All foreign regions supply 25.55% of inputs and 92.58% of the budget. The UK term is 7.4%.
 
-- **Data:** World Bank 2022 population (SP.POP.TOTL) and GDP in current US$ at market exchange rates (NY.GDP.MKTP.CD). Taiwan, South Sudan, Yemen and Eritrea are filled from IMF WEO. Six economies without any GDP data (Cuba, DPRK, Eritrea 2022 and three territories) use their income group's median GDP per capita. 218 economies in total.
-- **Mapping:** the 44 EXIOBASE countries by ISO code; all others by World Bank region (Hartmann Table 1). Afghanistan and Pakistan go to RoW Asia-Pacific, as in the classification Hartmann used.
-
-| Check | Result | Status |
-|---|---|---|
-| α for 2017, market exchange rates | 0.234 (0.239 without imputation) vs **0.243** | Approximate replication (−2 to −4%). Population source, coverage and vintage differ. |
-| α for 2017, PPP | 0.431, inconsistent | Consistent with market-rate GDP in Hjalsted’s supporting information |
-| World Bank population shares vs PBAESA weights | GB −0.7%; worst 5.9% (Cyprus); RoW regions within 2% | Aggregate comparison. Country assignment has a separate sensitivity. |
-| Closed-form tests | Shares sum to 1; equal incomes → equal per capita; poorer → more | Verified |
-| Independent recomputation of 153.5% from the country rows | Identical | Verified |
-
-2022: α = 0.221. The UK receives 0.0512% of the global SOS, which is **6.0%** of its equal-per-capita share.
-
-### 5.3 Was 148% correct?
-
-Arithmetically yes, but it applied Eq. 5 to the 49 regions, using EXIOBASE GVA as GDP. Averaging incomes within the Rest-of-World regions gives rich countries too much, because the weight is convex in income: the UK received 0.074% instead of 0.051%. The country-level central value is **153.5%**. The difference is small only because the UK term is a small part of the ability-to-pay budget (next section).
-
-### 5.4 Reliance on imported inputs and whether sector-average sourcing fits the network
-
-Hartmann's Eq. 1 credits each region with the value it generates in the sector's first-tier inputs (α_r). Under ability to pay, one euro of value in a poor region earns far more SOS than one in the UK: 414× for India and 1,226× for RoW Africa, against 20× and 28× under equal per capita. With EXIOBASE sector-average sourcing for GB Chemicals nec:
-
-| Region | Share of sector inputs | Share of total-GVA budget | Share of ability-to-pay budget |
+| Input origin a_rj | Foreign share | Total GVA | ATP |
 |---|---:|---:|---:|
-| GB | 74.5% | 52% | **7%** |
-| India | 0.63% | 9% | **26%** |
-| RoW Asia-Pacific | 0.78% | 6% | **21%** |
-| RoW Middle East | 1.17% | 5% | **17%** |
-| RoW Africa | 0.12% | 2% | **15%** |
+| **Sector average, first tier (Hartmann; reference)** | 25.5% | **64.90%** | **153.46%** |
+| Full-supply-chain origin of embodied GVA, Σ_{i∈r} v_i L_ij / g_j | 31.6% | 58.30% | 106.05% |
+| SuperPro cost structure, sector import ratio | 11.9% | 77.15% | 294.83% |
+| As above, high-income suppliers only | 11.9% | 93.33% | 1,505% |
+| All purchased goods imported | 29.8% | 61.84% | 133.53% |
+| All first tier UK (bound) | 0% | 92.47% | 1,539% |
 
-India and the three listed rest-of-world regions account for 78.47% of the budget from 2.70% of first-tier inputs. All foreign regions account for 92.58% of the budget from 25.55% of inputs. **Is the sector average appropriate for our network?** Two features suggest it is not:
+The first-tier rule reproduces Hartmann. The full-chain rule better answers *where* upstream value is added. Neither reflects measured biopharma procurement: distributors can resell imports, imported equipment underlies facility costs, and supplier profits can accrue elsewhere. Changing procurement in reality would also change impacts and freight, which the fixed footprint ignores. Normalising country entitlements conserves the global SOS among people, but overlapping whole-chain product allocations do not inherit that guarantee.
 
-1. **Cost structure.** In EXIOBASE, the sector's own value added is 36% of inputs, UK intermediates 38% and imports 26%. Our network (SuperPro entire-process costs) is 70.2% facility, labour, QC, utilities and waste, all UK first-tier. Only 29.8% is purchased raw materials and consumables.
-2. **Supplier mix.** The sector's import mix reflects bulk and generic chemicals (e.g. Indian APIs, Middle-East petrochemicals). Single-use systems, chromatography resins, filters and cell-culture media come mainly from manufacturers in high-income economies. This is a qualitative judgement; it is not quantified with supplier data here.
+## 6. Total FCE (supporting)
 
-Scenarios (`input_origin` in `pb_allocation`), one assumption changed at a time:
+Hartmann's Eq. 5 takes the downstream scaling from Oosterhoff et al. (2023). The printed equations (checked against the DTU author copy) are:
+- S = Ŝ + S̃, with Ŝ = diag(Lᵀe) (Eq. 3).
+- S̃ holds **only the off-diagonal** entries L_ij(1 + f_i) (Eqs. 4, 6), where f_i = (c_i − L_ii)/L_ii (Eq. 5) is indexed by the **supplier** i.
+- aSoSOS_ijr = FR_jr · S_ij / Ŝ_jj (Eq. 7), weighted by the **final product** j.
 
-| Input origin | Foreign share of inputs | Total GVA | Ability to pay | UK share of ATP budget |
-|---|---:|---:|---:|---:|
-| **Sector average (Hartmann default; central)** | 25.5% | **64.9%** | **153.5%** | 7% |
-| Network cost structure; purchased goods imported at the sector's import ratio (40%) and mix | 11.9% | 77.1% | 294.8% | 17% |
-| As above, imports only from high-income regions | 11.9% | 93.3% | 1,505% | 86% |
-| Network cost structure; all purchased goods imported, sector mix | 29.8% | 61.8% | 133.5% | 6% |
-| All inputs from UK (bound) | 0% | 92.5% | 1,539% | 100% |
-| Full-supply-chain regional split of value added (audit, §12) | 31.6% | 58.3% | 106.1% | – |
+Because L_ii(1 + f_i) = c_i, this simplifies to
 
-**Interpretation.** The sector-average default is kept as the central case for both methods. It is the published construction, it makes the two methods comparable, and the alternatives depend on an assumed import ratio. The cost-structure and high-income scenarios illustrate how assumed procurement can tighten ATP. Actual manufacturing origins are unknown. With the network's own cost structure it roughly doubles (295%; ocean acidification then reaches 94%), and with high-income suppliers it is about 15× the budget. The opposite adjustment also exists. Hartmann's Eqs. 8–9 regionalise *whole-chain* value using *first-tier* inputs only; tracing all embodied value added to its origin lowers ability to pay to 106%. Total GVA stays within budget whenever one assumption is changed (58.3–93.3%). Ethically, under the sector average, a prioritarian principle ends up granting a UK producer most of its budget from poorer people's shares. This follows consistently from Hartmann's framework, but the FYR should state it.
+  F_i = Σ_r p_r (1 + f_i) Σ_j L_ij FR_jr / c_j.
 
-**Status.** The reference arithmetic reproduces. Expanded discrete combinations cross 100% for both methods. See [final sensitivities](FINALISATION.md#sensitivity).
+| Reading | Factor | Climate | Status |
+|---|---:|---:|---|
+| PBAESA as coded (published workbook) | 8.5332×10⁻⁴ | 15.01% | Legacy replication. Weights supplier i by its *own* final demand, and adds S̃ on the diagonal, so own sales count twice. |
+| Weighting fixed only (Claude, earlier) | 5.9529×10⁻⁴ | 21.51% | Legacy. Exceeds the source equations by exactly the direct-FCE factor (1.6003×10⁻⁴). |
+| Weighting fixed, f by final product (Claude, earlier) | 5.5116×10⁻⁴ | 23.23% | Legacy. Contradicts Eqs. 4–5. |
+| **Oosterhoff equations (Astra; implemented here)** | **4.3526×10⁻⁴** | **29.42%** | **Supporting reference** |
 
-## 6. Results for all supported boundaries
+Tests confirm it on synthetic economies: one sector gets exactly 1, where PBAESA's code gives 2. A pure final-goods sector keeps its direct share, and a supplier with no own final demand is credited (PBAESA gives it zero). Remaining caveats: no author confirmation yet, Oosterhoff's case study endogenised capital and used customer data, and the final-market mix of UK chemicals is a weak proxy for mAb patients and payers. Total FCE is therefore excluded from the MILP decision export.
 
-Saved two-stage network, 2022, SuperPro cost valuation, sector-average input origins. † = budget exceeded. Impacts are an **incomplete characterised subtotal** ([`utilisation_summary.csv`](results_allocation_final/utilisation_summary.csv)).
+## 7. Results by boundary
 
-| PB indicator | Unit | Annual impact | Budget, total GVA | **Total GVA %** | Budget, ability to pay | **Ability to pay %** | Total FCE % |
+Reference valuation and origins. † = exceeded. Full table: [`utilisation_summary.csv`](results_allocation_final/utilisation_summary.csv).
+
+| PB indicator | Unit | Annual impact | Budget, total GVA | **Total GVA** | Budget, ATP | **ATP** | Total FCE |
 |---|---|---:|---:|---:|---:|---:|---:|
-| Climate change | W/m² | 1.083e-06 | 1.668e-06 | **64.9** | 7.056e-07 | **153.5†** | 15.0–23.2 |
-| Ocean acidification | Ωarag | 2.373e-07 | 1.148e-06 | 20.7 | 4.854e-07 | 48.9 | 4.8–7.4 |
-| Aerosol loading | AOD | 3.023e-08 | 1.835e-07 | 16.5 | 7.761e-08 | 38.9 | 3.8–5.9 |
-| Phosphorus cycle | Tg P/yr | 1.850e-06 | 1.668e-05 | 11.1 | 7.056e-06 | 26.2 | 2.6–4.0 |
-| Biosphere integrity | BII % | 1.301e-06 | 1.668e-05 | 7.80 | 7.056e-06 | 18.4 | 1.8–2.8 |
-| Freshwater use | km³/yr | 1.381e-04 | 6.674e-03 | 2.07 | 2.822e-03 | 4.89 | 0.48–0.74 |
-| Ozone depletion | DU | 4.584e-08 | 2.419e-05 | 0.190 | 1.023e-05 | 0.448 | 0.04–0.07 |
-| Nitrogen cycle | Tg N/yr | 1.220e-07 | 1.034e-04 | 0.118 | 4.375e-05 | 0.279 | 0.03–0.04 |
-| Land-system change | Mkm² | 1.519e-07 | 1.420e-04 | 0.107 | 6.005e-05 | 0.253 | 0.02–0.04 |
+| Climate change | W/m² | 1.083e-06 | 1.668e-06 | **64.90%** | 7.056e-07 | **153.46%†** | 29.42% |
+| Ocean acidification | Ωarag | 2.373e-07 | 1.148e-06 | 20.68% | 4.854e-07 | 48.89% | 9.37% |
+| Aerosol loading | AOD | 3.023e-08 | 1.835e-07 | 16.47% | 7.761e-08 | 38.95% | 7.47% |
+| Phosphorus cycle | Tg P/yr | 1.850e-06 | 1.668e-05 | 11.09% | 7.056e-06 | 26.22% | 5.03% |
+| Biosphere integrity | BII % | 1.301e-06 | 1.668e-05 | 7.80% | 7.056e-06 | 18.44% | 3.54% |
+| Freshwater use | km³/yr | 1.381e-04 | 6.674e-03 | 2.07% | 2.822e-03 | 4.89% | 0.94% |
+| Ozone depletion | DU | 4.584e-08 | 2.419e-05 | 0.19% | 1.023e-05 | 0.45% | 0.09% |
+| Nitrogen cycle | Tg N/yr | 1.220e-07 | 1.034e-04 | 0.12% | 4.375e-05 | 0.28% | 0.05% |
+| Land-system change | Mkm² | 1.519e-07 | 1.420e-04 | 0.11% | 6.005e-05 | 0.25% | 0.05% |
 
 ![Utilisation by boundary](results_allocation_final/utilisation_by_boundary.svg)
 
 ![Climate sensitivity](results_allocation_final/climate_sensitivity.svg)
 
-The 15.0–23.2% Total FCE values are unresolved historical variants. The separate Astra audit explains why neither variant resolves the source-equation discrepancy. Ability to pay × total FCE gives 20.5%. Full sensitivity table: [`sensitivity_climate.csv`](results_allocation_final/sensitivity_climate.csv); regional decomposition: [`regional_contributions.csv`](results_allocation_final/regional_contributions.csv).
+SOS values (PBAESA, pinned): climate 1 W/m², biosphere 10 BII %-points, ocean acidification 0.688 Ωarag, ozone 14.5 DU, P 10 Tg/yr, N 62 Tg/yr, freshwater 4,000 km³/yr, aerosols 0.11 AOD, land 85.1 Mkm². Native units are preserved. Annual activity yields W/m² with no extra annual divisor. Climate forcing is not interchangeable with kg CO₂e, and the indicator set omits novel entities and regional water criteria.
 
-## 7. Verified, assumed and uncertain
+## 8. Status of each element
 
-| Item | Class | Basis |
-|---|---|---|
-| PBAESA tGVA broadcasting error; Eq. 7 factor 1.973×10⁻⁴ | **Verified** | Code, synthetic test, two independent numerical routes |
-| Total GVA = gross output for GB Chemicals nec | **Verified** | (vL) = 0.99999995 |
-| Country-level ATP weights, market-rate GDP | **Verified** | Reproduces Hjalsted α within 2–4%; PPP rejected |
-| Annual mass 4,003.65 kg; currency path 1.026185 €₂₀₂₂/$₂₀₁₉ | **Verified** | MILP output; BoE, ONS, ECB sources |
-| 64.9%, 153.5%, 15.0%, 21.5%, 23.2% (central) | **Verified** | Recomputed from raw sources by `audit_from_raw.py` (agreement 3×10⁻¹⁵) |
-| Sector concordance (NACE 21 → Chemicals nec) | Assumption (standard) | Public concordance; broader than pharma |
-| Output valued at SuperPro cost | Assumption (conservative) | Lower bound; variants 51.5–72.5% (GVA) |
-| Sector-average first-tier input origins (α) | Assumption (Hartmann default) | ATP 106–1,539% across origins (§5.4) |
-| Assumptions combine multiplicatively | Limitation | Combined cases cross 100% for both methods ([expanded scenarios](FINALISATION.md#sensitivity)) |
-| Total FCE published vs corrected | **Unresolved issue** | Published factor very probably wrong; correct formula unconfirmed; 15.0–23.2% |
-| Completeness of the impact inventory | Uncertain | Missing media/buffers, cold chain, fabrication; 1.54× threshold |
-| Author confirmation of the corrections | Outstanding | To be requested |
-
-## 8. Using the budgets in the joint MILP
-
-**Selection.** `pb_allocation.budget_vector("total_gva")` or `budget_vector("ability_to_pay")` returns {indicator: annual budget} in native units. The same numbers, plus a `sensitivity_sos_fractions` block (value basis × input origin), are in [`milp_budgets.json`](results_allocation_final/milp_budgets.json). Use them as **fixed parameters**, chosen once per run and never by the solver. Production is fixed (861 batches), so budgets do not depend on decisions. If a later model lets output vary, keep the budget at the demand level.
-
-**Rescaling or reweighting?** Both methods give B_c = f·SOS_c, with f_GVA = 1.668×10⁻⁶ and f_ATP = 7.056×10⁻⁷. The ratio is 0.4229 for all nine indicators. The same holds for every sensitivity variant, which also only changes f. Switching method therefore **rescales** the budgets and never changes their relative importance.
-
-| Formulation (to be implemented later) | Consequence of choosing ability to pay instead of total GVA |
+| Element | Status |
 |---|---|
-| ε-constraint: min cost s.t. I_c ≤ ε·B_c | Identical feasible sets with ε relabelled (ε_ATP = 1 ⇔ ε_GVA = 0.423). One sweep on SOS-normalised impacts serves both; draw both 100% lines on one cost–utilisation curve. Meeting the ATP budget needs a climate cut of ≥35% from the saved design. |
-| Minimax: min max_c I_c/B_c | Same optimal design; z* scaled by 2.365. Climate (about 3× the next indicator) drives the solution. |
-| Ehrenstein transgression: min Σ max(0, I_c/B_c − 1) | Total GVA: zero at the saved design, so the objective is degenerate. ATP: only climate is positive (0.535), so it reduces to "bring climate down to its budget", then goes flat. Ocean acidification would join if the footprint grows 2.05×, or under the network-cost input origin (94%). |
+| Eq. 7 correction; GB Chemicals nec factor | **Verified** (code, synthetic test, three numerical routes) |
+| Central 64.90% / 153.46% / 29.42% | **Verified** (independent raw recomputation in both reviews) |
+| ATP country weights, MER basis | **Verified**; α replication approximate |
+| Oosterhoff FCE reading | **Verified against printed equations**; author confirmation pending |
+| Impact numerator | Verified as aggregation of characterised coefficients (Astra, 4×10⁻¹⁰); inventory incomplete |
+| Sector concordance | Supported, but a weak technological proxy |
+| Network value (zero-margin cost) | **Assumption**; price unobserved |
+| First-tier sector-average origins | **Assumption** (Hartmann default); ATP highly sensitive |
+| RoW concordance (Table 1 vs EXIO3) | **Open**: release-specific membership to confirm; +2% GVA, +4% ATP |
+| Overlap of total factors | **Inherent limitation**: Eq. 7 factors sum to 1.97 over sectors |
 
-Implementation notes: scale each PB row by its budget (r_c = I_c/B_c), because native budgets are about 10⁻⁶. Keep fixed impact terms inside the constraints. Report both methods side by side.
+## 9. Using the budgets in the joint MILP
 
-**Readiness.** Total GVA supports exploratory fixed-budget optimisation. Producer-region ATP supports a separate ethical scenario. The characterised subtotal, real output value and actual sourcing limit any absolute sustainability claim. The budget export contains these two decision methods.
+```python
+import sys; sys.path.insert(0, "2b_PB_Allocation")
+import pb_allocation as pa
+B = pa.budget_vector("total_gva")          # primary; or "ability_to_pay"
+```
 
-## 9. Relation to other project files
+The same vectors are in [`milp_budgets.json`](results_allocation_final/milp_budgets.json), which contains only the two decision methods.
+1. **Fix outside the optimiser:** functional demand (4,000 kg/yr delivered), the bulk-product gate, the 2022 budget year, valuation and geography. The solver must not enlarge its entitlement by spending more, producing surplus or relabelling purchase origins.
+2. **Rows:** Σ_k a_ck q_k / B_c ≤ 1 (dimensionless), including fixed burdens on the left. Each activity is counted once (electricity, treatment, reuse, credits), and decisions without coefficients are controlled so that an uncharacterised activity cannot win by default.
+3. **Validate** row evaluations against the frozen plan (climate 1.0828×10⁻⁶ W/m²) and recompute residuals in native units.
+4. **Formulations (not implemented yet):** because ATP = 0.4229 × GVA for every row, ε-constraint and minimax runs give the same designs up to relabelling of ε and z*. Ehrenstein transgression minimisation is inactive under total GVA at the reference plan, and under ATP is driven by climate alone (a ≥34.8% cut of the characterised subtotal is needed). Feasibility must be established by minimising utilisation over admissible designs.
 
-- Earlier allocation reports in Ahmed's project (`09_Documentation/02_Analysis_Reports/`: *PB allocation methodology review*, *PB alternative allocation principles*, *PB allocation decision before MILP*) are superseded on allocation where they differ. This file is the copy of *PB allocation methods final*.
-- Alfie's `2a_PB-LCA /FYR_Economic_Allocation.xlsx` (GitHub, 17 November) reproduces the 14 November review: published total-GVA factor, $200/g and network-GVA shares. Those inputs are superseded by this report (factor error; unsourced price; mismatched key). The workbook was not modified.
+**Readiness:** both budget vectors are final, tested and selectable. They are ready for exploratory fixed-budget integration. They do not support an absolute-sustainability claim until value, geography and inventory describe the same delivered product.
 
-## 10. Limitations and unresolved uncertainties
+## 10. Limitations
 
-1. The impact inventory is incomplete; every "within budget" statement applies to the characterised subtotal only.
-2. Neither PBAESA correction (total GVA; possible total FCE issue) has been confirmed by the authors.
-3. Ability to pay depends on the origin of purchased inputs and on how whole-chain value is regionalised (§5.4, §12.3). Neither is known for a hypothetical network.
-4. Chemicals nec is broader than biopharmaceuticals; the EXIOBASE 2022 nowcast has value-added anomalies for this sector (zero compensation recorded).
-5. The cost basis is one SuperPro design case at 2019 prices, replicated linearly.
-6. The nine PBAESA indicators do not cover novel entities or regional boundaries, and the climate and biosphere control variables are those of the PBAESA method.
-7. The local EXIOBASE `Z.txt` has one corrupted cell (value 2.39×10⁻¹³). It is detected and bypassed by the verification tool; the file was not edited.
-8. Sensitivities compound: combined envelopes (§12.5) are wider than the one-at-a-time ranges.
-9. Total-value factors overlap along supply chains (Eq. 7 factors sum to 1.97 over all sectors), so every actor being "within budget" would not by itself guarantee global compliance. This is inherent to Hartmann's total factors and matched by the overlapping footprints.
-10. PB-LCIA characterisation converts annual emissions to control-variable changes under the PBAESA convention. Budgets and impacts share that convention, so the ratios are consistent; they should not be compared with observed global boundary status.
+1. The impact inventory is incomplete (§4.4); the sign and size of the omitted terms are unknown.
+2. The network value is an unobserved price, proxied by a single-plant cost at 2019 prices.
+3. ATP depends on first-tier versus full-chain attribution and on procurement origin (§5.4), and expresses one ethical stance (producer-region capacity).
+4. The Eq. 7 and Oosterhoff corrections await author confirmation.
+5. Chemicals nec is broad, and its 2022 UK value-added split is anomalous.
+6. RoW membership (Table 1 vs EXIO3) is unconfirmed for EXIOBASE 3.9.6.
+7. Total-value factors overlap along supply chains, so actor-level "within budget" results do not add up to global compliance.
+8. Scenario ranges are not probabilistic. Procurement scenarios hold environmental factors fixed.
+9. The local EXIOBASE `Z.txt` contains one corrupted cell (2.39×10⁻¹³), which is detected and bypassed.
 
 ## 11. Reproduce
 
 From the repository root, without EXIOBASE:
 
 ```bash
-.venv/bin/python -B 2b_PB_Allocation/tools/finalise_allocation.py
+python -B 2b_PB_Allocation/tools/finalise_allocation.py
 ```
 
 ```bash
-.venv/bin/python -B -m unittest discover -s 2b_PB_Allocation/tests -v
+python -B -m unittest discover -s 2b_PB_Allocation/tests -v
 ```
 
-Rebuild the committed inputs (optional):
+Optional rebuilds: `tools/build_ability_to_pay_weights.py`, `tools/extract_network_cost_structure.py`, `tools/verify_total_gva.py --exiobase <dir>` and `tools/audit_from_raw.py --exiobase <dir>` (needs EXIOBASE 3.9.6 2022 ixi). Astra's reconstruction is in `audit/reconstruct_economic.py`. The reference environment is CPython 3.11; newer releases can change the last digits of exported floats.
 
-```bash
-.venv/bin/python -B 2b_PB_Allocation/tools/build_ability_to_pay_weights.py
-```
+## 12. Traceability
 
-```bash
-.venv/bin/python -B 2b_PB_Allocation/tools/extract_network_cost_structure.py
-```
-
-```bash
-.venv/bin/python -B 2b_PB_Allocation/tools/verify_total_gva.py --exiobase <EXIOBASE IOT_2022_ixi folder>
-```
-
-```bash
-.venv/bin/python -B 2b_PB_Allocation/tools/audit_from_raw.py --exiobase <EXIOBASE IOT_2022_ixi folder>
-```
-
-## 12. Claude Code audit (19 November 2026, historical)
-
-This section records the audit as delivered on the source branch. The [finalisation note](FINALISATION.md) supersedes its claims about valuation bounds, filling, sensitivity coverage and integration readiness.
-
-
-The audit re-examined the papers, the PBAESA code, the raw data and the results. The new tool `tools/audit_from_raw.py` rebuilds every result from raw EXIOBASE, the Hartmann workbook, PBAESA source literals, raw World Bank/IMF files, the SuperPro report, the MILP mass and the saved impacts. It does not use `pb_allocation` or any committed extract. Earlier results are preserved in `results_allocation_final/pre_audit_20261119/`.
-
-### 12.1 Central results: verified
-
-| Result (climate) | Module | Raw recomputation |
-|---|---:|---:|
-| Total GVA, Eq. 7 | 64.8987% | 64.8987% |
-| Ability to pay × total GVA | 153.4593% | 153.4593% |
-| Total FCE, published formula | 15.0050% | 15.0050% |
-| Total FCE, FR-orientation corrected | 21.5089% | 21.5089% |
-| Total GVA, PBAESA formula (reproduces the published factor to 5×10⁻¹⁴) | 30.7686% | 30.7686% |
-
-Maximum relative deviation over all nine indicators: 3×10⁻¹⁵. The SOS values match the PBAESA code and the CF workbook. The impact file is unchanged (hash-checked). Units, functional unit (one year, 4,003.65 kg bulk drug substance), year (2022) and geography are consistent between budgets and impacts. Replacing the PBAESA population weights with World Bank 2022 populations changes total GVA by 0.3%.
-
-### 12.2 PBAESA total-GVA correction: justified
-
-The code's multiplier x_j Σ_i L_ij/x_i contains no value-added coefficient. It therefore cannot be the "type-I gross-value-added multiplier" that Eq. 7 specifies (Keček et al.: (Σ_i v_i L_ij)/v_j). The published factors equal the code's formula to 5×10⁻¹⁴ and differ from Eq. 7 by a sector-specific amount. Correcting to Eq. 7 implements the paper as written; it is not a new modelling choice. **No change needed.** Author confirmation is still advisable before publication.
-
-### 12.3 Ability to pay: calculation verified; conclusion assumption-dependent
-
-The country-level weights reproduce Hjalsted's α and use market-rate GDP. That is correct. The audit adds two challenges:
-1. **Regionalisation.** Hartmann's Eqs. 8–9 split *whole-chain* total GVA by *first-tier* input shares. Using the full-supply-chain origin of embodied value added instead (GB 68.4%) gives **106.1%**. Still exceeded, but barely.
-2. **Perspective.** Hjalsted's own upscaling step is consumption-based (customers' FCE). Paired with total FCE, ability to pay gives **20.5%**. "Climate exceeded under ability to pay" is therefore a result of the **production (GVA) perspective** chosen for the FYR, and the paper should say so.
-
-### 12.4 Total FCE discrepancy: not resolvable with available sources
-
-The published factor is reproduced exactly by PBAESA's code (3×10⁻¹⁵). That code weights each supplying sector by its *own* final demand: `S_marginal * FR_vector` with an (n, 1) vector broadcasts along rows. Three pieces of evidence indicate this is wrong. The code comment says the share is based on the final demand of sector *i* (the column). The paper says total FCE captures downstream value induced by the sector's output. And Oosterhoff et al. (2023) designed the framework for business-to-business sectors, yet 146 sectors with output and no direct final demand receive zero. Correcting the orientation gives 21.5%. Also indexing Oosterhoff's scaling f by the final product gives **23.2%**. The paper's equations were not accessible (paywalled), so the correct variant cannot be confirmed. **Classification: unresolved methodological issue.** Report 15.0–23.2% as a supporting range only.
-
-### 12.5 Assumptions compound: robustness statements corrected
-
-Budgets are products of independent factors, so the one-at-a-time ranges understated the spread. All 24 combinations of value basis × input origin (`envelope_climate.csv`):
-
-| Method | Min | Max | Combinations exceeding 100% |
-|---|---:|---:|---:|
-| Total GVA | 46.3% (cost + SIC 21 margin, full-chain split) | 104.3% (no price inflation, high-income suppliers) | 2 of 24 |
-| Ability to pay | 84.2% (cost + SIC 21 margin, full-chain split) | 1,720% (no price inflation, UK-only inputs) | 22 of 24 |
-
-**Correction to earlier text:** "within budget in every variant" (total GVA) and "exceeded in every variant" (ability to pay) held only one assumption at a time. The statements in §1 and §5.4 were revised. No central value changes.
-
-### 12.6 Value proxy ($92.10/g)
-
-The proxy is confirmed: it is a full production cost (materials 7%, consumables 23%, facility incl. depreciation 53%, labour 12%, QC 3%, utilities 2%), excludes profit, and covers the same bulk drug substance as the inventory. Valued against EXIOBASE gross output at basic prices it is a lower bound, so the budget is conservative. Its limitations (one design case, 2019 prices, linear replication, GDP deflator) are genuine but covered by the sensitivities. **No change needed.**
-
-### 12.7 Audit verdict
-
-| Method | Verdict | Reason |
-|---|---|---|
-| **Total GVA** | **Validated and ready for MILP integration** | Correction mathematically justified; every number reproduced from raw data; within budget in 22 of 24 combined cases; only caveats are author confirmation and inventory completeness. |
-| **Ability to pay** | **Usable with documented assumptions** | Calculation validated against Hjalsted; ready as a normative stress-test budget. Its conclusion depends on the production perspective, on input origins and on regionalisation (84–1,720%); not a basis for firm claims about magnitude. |
-| **Total FCE** | **Not ready (as an MILP budget)**; supporting range only | Published factor very probably affected by a code error; corrected formula unconfirmed (15.0–23.2%). |
-
-### 12.8 Changes made in the audit
-
-| File | Change |
+| Record | Location |
 |---|---|
-| `tools/audit_from_raw.py` (new) | Independent raw-data recomputation; writes `data/audit_from_raw_2022.json` and `data/exiobase_audit_terms_2022.json` |
-| `pb_allocation.py` | `input_origin="full_supply_chain"`; method `total_fce_corrected_f`; `envelope()` helper. Defaults and central results unchanged. |
-| `tools/finalise_allocation.py` | Full-chain and third-FCE rows; `envelope_climate.csv`; raw-audit agreement and SOS checks (23 checks); provenance skips subfolders |
-| `tests/test_pb_allocation.py` | 5 new tests (34 in total): raw-audit agreement, published-factor reproduction, SOS, full-chain shares, combined envelope |
-| `results_allocation_final/` | Regenerated; pre-audit outputs kept in `pre_audit_20261119/` |
-| This report | Robustness statements, total FCE range (15.0–23.2%), limitations 8–10 and this section |
+| Claude implementation | branch `feature/pb-allocation-methods`, commit 7b0a4bb; its outputs in `results_allocation_final/pre_audit_20261119/` |
+| Claude audit | same branch, commit 035538e; text in `audit/METHODOLOGY_pre_consolidation_20261119.md` §12 |
+| Astra audit and finalisation | branch `codex/pb-allocation-final`, commit 3c07961; [`audit/INDEPENDENT_AUDIT_ASTRA.md`](audit/INDEPENDENT_AUDIT_ASTRA.md), [`FINALISATION.md`](FINALISATION.md) |
+| Consolidation (this document) | branch `feature/final-pb-allocation` |
 
 ## References
 
-**Methods**
-- Hartmann, J.M., Shu, D.Y., Bardow, A. & von der Assen, N. (2026). Allocation and characterisation factors for absolute environmental sustainability assessment. *Scientific Data* 13, 970. [doi:10.1038/s41597-026-07797-w](https://doi.org/10.1038/s41597-026-07797-w). Eqs. 1–9, Table 1, usage notes. Code: PBAESA commit d932921 (MIT); allocation-factor dataset (CC BY-NC-SA, custom).
-- Hjalsted, A.W., Laurent, A., Andersen, M.M., Olsen, K.H., Ryberg, M. & Hauschild, M. (2021). Sharing the safe operating space: exploring ethical allocation principles to operationalize the planetary boundaries and assess absolute sustainability at individual and industrial sector levels. *J. Ind. Ecol.* 25, 6–19. Table 2, Eq. 5; α = 0.243 (2017). [DTU author copy](https://backend.orbit.dtu.dk/ws/files/234548766/Hjalsted_2020_.pdf)
-- Keček, D., Brlek, P. & Buntak, K. (2022). Economic effects of transport sectors on Croatian economy: an input–output approach. *Econ. Res.-Ekon. Istraživanja* 35, 2023–2038 (type-I GVA multiplier; Hartmann ref. 20).
-- Oosterhoff, H.C., Golsteijn, L., Laurent, A. & Ryberg, M.W. (2023). A new consistent framework for assignment of safe operating space to B2C and B2B industries. *J. Clean. Prod.* 399, 136574.
+- Hartmann, J.M., Shu, D.Y., Bardow, A. & von der Assen, N. (2026). Allocation and characterisation factors for absolute environmental sustainability assessment. *Scientific Data* 13, 970. [doi:10.1038/s41597-026-07797-w](https://doi.org/10.1038/s41597-026-07797-w). Dataset [doi:10.5281/zenodo.17457702](https://doi.org/10.5281/zenodo.17457702); code [PBAESA d932921](https://github.com/RWTH-LTT/pbaesa/tree/d9329215521feba86005caac65bfa7d0404efb5a).
+- Hjalsted, A.W., Laurent, A., Andersen, M.M., Olsen, K.H., Ryberg, M. & Hauschild, M. (2021). Sharing the safe operating space. *J. Ind. Ecol.* 25, 6–19. Table 2, Eq. 5, Eq. S1. [Author copy](https://backend.orbit.dtu.dk/ws/files/234548766/Hjalsted_2020_.pdf)
+- Oosterhoff, H.C., Golsteijn, L., Laurent, A. & Ryberg, M.W. (2023). A new consistent framework for assignment of safe operating space to B2C and B2B industries. *J. Clean. Prod.* 399, 136574. Eqs. 1–9. [Author copy](https://backend.orbit.dtu.dk/ws/files/311056680/1_s2.0_S0959652623007321_main.pdf)
+- Keček, D., Brlek, P. & Buntak, K. (2022). Economic effects of transport sectors on Croatian economy: an input–output approach. *Econ. Res.-Ekon. Istraživanja* 35, 2023–2038.
+- Stadler, K. et al. (2018). EXIOBASE 3. *J. Ind. Ecol.* 22, 502–515; data 3.9.6, 2022 ixi, [doi:10.5281/zenodo.15689391](https://doi.org/10.5281/zenodo.15689391).
 - Ehrenstein, M. et al. (2020). Optimising fuel supply chains within planetary boundaries. *Appl. Energy* 276, 115486.
-- Mavrotas, G. (2009). Effective implementation of the ε-constraint method. *Appl. Math. Comput.* 213, 455–465.
-
-**Economic data**
-- Stadler, K. et al. (2018). EXIOBASE 3. *J. Ind. Ecol.* 22, 502–515; data version 3.9.6, 2022 ixi (CC BY-SA 4.0).
-- World Bank, World Development Indicators: SP.POP.TOTL, NY.GDP.MKTP.CD, NY.GDP.MKTP.PP.CD; country metadata (retrieved 19 Nov 2026; CC BY 4.0).
-- IMF, World Economic Outlook DataMapper: NGDPD, LP (retrieved 19 Nov 2026; gap filling only).
-- ONS, Annual Business Survey, sections A–S (SIC 21, 21.1; 2022), retrieved 11 Nov 2026 (Open Government Licence).
-- Bank of England XUAAUSS (USD/GBP 2019); ONS YBGB GDP deflator; ECB euro reference rate GBP/EUR 2022.
-- SuperPro Designer report `mab_fedbatch_1000_sut_ICR.xls`, "SUMMARY PER COST ITEM (Entire Process)" (project model output).
+- Steffen, W. et al. (2015). Planetary boundaries. *Science* 347, 1259855. Richardson, K. et al. (2023). Earth beyond six of nine planetary boundaries. *Sci. Adv.* 9, eadh2458.
+- Economic data: World Bank WDI (SP.POP.TOTL, NY.GDP.MKTP.CD, NY.GDP.MKTP.PP.CD; CC BY 4.0); IMF WEO (NGDPD, LP); ONS ABS 2022 (SIC 21, 21.1); ONS PPI G32A (C211) and G32B (C212), release 18 Nov 2026; ONS YBGB; Bank of England XUAAUSS; ECB GBP/EUR 2022. [`country_converter` EXIO3 concordance](https://github.com/IndEcol/country_converter/blob/f7f46c5cf41ad32c3207006715a1863a16b3d6f7/country_converter/country_data.tsv).
+- Project model data: SuperPro `mab_fedbatch_1000_sut_ICR.xls`; saved joint/two-stage plan (861 batches).

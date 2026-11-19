@@ -234,6 +234,72 @@ class InputOriginTests(unittest.TestCase):
             pa.allocate("total_fce", input_origin="network_costs")
 
 
+def oosterhoff_literal(L, FR):
+    """Oosterhoff et al. (2023) Eqs. 3-7 exactly as printed (matrix form), for one region of final demand."""
+    n = L.shape[0]
+    I = np.eye(n)
+    e = np.ones(n)
+    S_hat = np.diag(L.T @ e)                                    # Eq. 3: diag of column sums
+    f = ((L - L * I).T @ e) / ((L * I) @ e)                     # Eq. 5: indexed by industry i
+    S_tilde = (L + L * np.outer(f, e)) * (1 - I)                # Eq. 4: off-diagonal entries only
+    S = S_hat + S_tilde                                         # Eq. 6
+    share = FR[None, :] * S / np.diag(S_hat)[None, :]           # Eq. 7: weighted by final product j
+    return share.sum(axis=1)                                    # Eq. 8: sum over j
+
+
+def pbaesa_tfce_as_coded(L, FR):
+    """PBAESA calculate_total_FCE_allocation_factor, one region: S_tilde on the diagonal, FR of the row."""
+    n = L.shape[0]
+    I = np.eye(n)
+    e = np.ones((n, 1))
+    S_roof = (L.T @ e) * I
+    f = ((L - L * I).T @ e) / ((L * I) @ e)
+    S = S_roof + L + L * (f @ e.T)
+    S_marginal = S @ np.linalg.inv(S_roof)
+    return (S_marginal * FR.reshape(n, 1)).sum(axis=1)
+
+
+class TotalFCETests(unittest.TestCase):
+    """Total FCE: Oosterhoff's printed equations against the PBAESA code and the module's closed form."""
+
+    def test_one_sector_economy_receives_exactly_its_whole_share(self):
+        L, FR = np.array([[1.0]]), np.array([1.0])
+        self.assertAlmostEqual(oosterhoff_literal(L, FR)[0], 1.0)
+        self.assertAlmostEqual(pbaesa_tfce_as_coded(L, FR)[0], 2.0)   # own sales counted twice
+
+    def test_pure_final_sector_keeps_its_direct_share_and_b2b_supplier_gets_credit(self):
+        # Sector 0 sells only to final demand and buys from sector 1 (pure B2B, no final demand).
+        A = np.array([[0.0, 0.0], [0.4, 0.0]])
+        L = np.linalg.inv(np.eye(2) - A)
+        FR = np.array([1.0, 0.0])
+        lit = oosterhoff_literal(L, FR)
+        self.assertAlmostEqual(lit[0], 1.0)            # B2C sector retains its direct FCE (Hartmann text)
+        self.assertGreater(lit[1], 0.0)                 # B2B supplier is credited (Oosterhoff's purpose)
+        coded = pbaesa_tfce_as_coded(L, FR)
+        self.assertAlmostEqual(coded[0], 2.0)
+        self.assertEqual(coded[1], 0.0)                 # PBAESA: zero for a sector without own final demand
+
+    def test_closed_form_used_in_the_audit_equals_the_literal_equations(self):
+        _, A, _, _ = synthetic_economy()
+        L = np.linalg.inv(np.eye(4) - A)
+        FR = np.array([0.1, 0.5, 0.0, 0.4])
+        cs, f = L.sum(axis=0), (L.sum(axis=0) - np.diag(L)) / np.diag(L)
+        closed = (1 + f) * ((L / cs[None, :]) @ FR)
+        np.testing.assert_allclose(closed, oosterhoff_literal(L, FR), rtol=1e-12)
+        corr_fr = FR + closed                           # weighting fixed only (legacy 21.5%)
+        np.testing.assert_allclose(corr_fr - closed, FR, rtol=1e-12)
+
+    def test_module_value_and_double_count_identity(self):
+        self.assertTrue(math.isclose(pa.allocate("total_fce_oosterhoff").sector_factor, 0.0004352631055, rel_tol=1e-9))
+        wb = pd.read_excel(ROOT / "data/Allocation Factors_2022.xlsx")
+        wb.columns = ["region", "sector", "dFCE", "tFCE", "dGVA", "tGVA"]
+        dfce = wb[(wb.region == "GB") & (wb.sector == "Chemicals nec")].iloc[0].dFCE
+        diff = pa.allocate("total_fce_corrected").sector_factor - pa.allocate("total_fce_oosterhoff").sector_factor
+        self.assertTrue(math.isclose(diff, dfce, rel_tol=1e-9))
+        self.assertEqual(pa.METHODS["total_fce_oosterhoff"].role, "supporting")
+        self.assertEqual(pa.METHODS["total_fce"].role, "legacy")
+
+
 class BudgetTests(unittest.TestCase):
     def setUp(self):
         self.impacts = pa.load_impacts()
@@ -251,6 +317,7 @@ class BudgetTests(unittest.TestCase):
     def test_reference_results(self):
         expected = {"total_gva": 64.8987, "ability_to_pay": 153.4593, "total_fce": 15.0051,
                     "total_fce_corrected": 21.5093, "total_fce_corrected_f": 23.2311,
+                    "total_fce_oosterhoff": 29.4169, "ability_to_pay_fce_oosterhoff": 28.8981,
                     "total_gva_published": 30.7687, "ability_to_pay_regional": 148.0237}
         for m, pct in expected.items():
             got = 100 * pa.utilisation(self.impacts, pa.budget_vector(m))["Climate Change"]
