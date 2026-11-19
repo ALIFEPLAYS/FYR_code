@@ -222,11 +222,11 @@ class InputOriginTests(unittest.TestCase):
         g_lo, g_hi = pa.envelope("total_gva")
         a_lo, a_hi = pa.envelope("ability_to_pay")
         self.assertAlmostEqual(100 * g_lo["utilisation"], 46.271, places=2)
-        self.assertAlmostEqual(100 * g_hi["utilisation"], 104.265, places=2)
+        self.assertAlmostEqual(100 * g_hi["utilisation"], 106.891, places=2)
         self.assertAlmostEqual(100 * a_lo["utilisation"], 84.170, places=2)
-        self.assertAlmostEqual(100 * a_hi["utilisation"], 1719.778, places=1)
+        self.assertAlmostEqual(100 * a_hi["utilisation"], 1763.09, places=1)
         self.assertEqual((g_hi["value_basis"], g_hi["input_origin"]),
-                         ("cost_no_inflation", "network_costs_high_income_suppliers"))
+                         ("cost_ppi_C212", "network_costs_high_income_suppliers"))
         self.assertEqual((a_lo["value_basis"], a_lo["input_origin"]), ("cost_plus_margin_SIC21", "full_supply_chain"))
 
     def test_input_origin_rejected_for_fce(self):
@@ -325,12 +325,52 @@ class ExportTests(unittest.TestCase):
             self.skipTest("run tools/finalise_allocation.py first")
         rec = json.loads(path.read_text())
         self.assertEqual(rec["default_method"], "total_gva")
+        self.assertEqual(set(rec["methods"]), {"total_gva", "ability_to_pay"})
         for m in ("total_gva", "ability_to_pay"):
             self.assertEqual(set(rec["methods"][m]["budgets"]), set(pa.CATEGORIES))
             for c, b in pa.budget_vector(m).items():
                 self.assertTrue(math.isclose(rec["methods"][m]["budgets"][c], b, rel_tol=1e-12))
         eps = rec["methods"]["ability_to_pay"]["epsilon_equivalent_vs_total_gva"]
         self.assertTrue(math.isclose(eps, 0.4229, rel_tol=1e-3))
+
+
+class FinalisationSensitivityTests(unittest.TestCase):
+    def test_pharmaceutical_output_valuation(self):
+        self.assertAlmostEqual(pa.network_value_eur_m("cost_ppi_C211"), 346.57, places=2)
+        self.assertAlmostEqual(pa.network_value_eur_m("cost_ppi_C212"), 330.39, places=2)
+
+    def test_matched_coverage_and_concordance(self):
+        cases = json.loads(pa.ATP_WEIGHTS.read_text())["cases"]
+        self.assertEqual(cases["sensitivity_2022_MER_matched_PPP"]["n_countries"], 199)
+        self.assertEqual(cases["sensitivity_2022_PPP"]["n_countries"], 199)
+        climate = pa.load_impacts()["Climate Change"]["value"]
+        for case, expected in (("sensitivity_2022_MER_matched_PPP", 160.31),
+                               ("sensitivity_2022_PPP", 149.70),
+                               ("sensitivity_2022_MER_EXIO3", 159.77)):
+            b = pa.budget_vector("ability_to_pay", atp_case=case)["Climate Change"]
+            self.assertAlmostEqual(100 * climate / b, expected, delta=0.01)
+
+    def test_population_scenarios_are_normalised(self):
+        for case in pa.POPULATION_CASES[1:]:
+            weights = pa.geographical_weights("total_gva", population_case=case)
+            self.assertAlmostEqual(sum(weights.values()), 1.0, places=12)
+
+    def test_crossed_scenarios_reproduce_the_reference_and_extremes(self):
+        import csv
+        out = ROOT / "results_allocation_final"
+        with (out / "crossed_climate_sensitivity.csv").open(newline="") as stream:
+            rows = list(csv.DictReader(stream))
+        for method, case in (("total_gva", "hartmann_reference"), ("ability_to_pay", "primary_2022_MER")):
+            references = [r for r in rows if (r["method"], r["weight_case"], r["value_basis"],
+                          r["input_origin"], r["inventory_case"]) ==
+                          (method, case, "cost", "sector_average", "reference")]
+            self.assertEqual(len(references), 1)
+            self.assertAlmostEqual(float(references[0]["budget_W_m2"]) /
+                                   pa.budget_vector(method)["Climate Change"], 1.0, places=12)
+        with (out / "crossed_climate_extrema.csv").open(newline="") as stream:
+            extrema = list(csv.DictReader(stream))
+        for row, expected in zip(extrema, (39.5421, 108.2168, 70.3777, 1773.1986), strict=True):
+            self.assertAlmostEqual(float(row["climate_pct"]), expected, places=3)
 
 
 if __name__ == "__main__":

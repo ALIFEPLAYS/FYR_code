@@ -1,28 +1,38 @@
-group,method,variant,value_basis,atp_case,input_origin,sos_fraction,climate_pct,note
-Total GVA,total_gva,central,cost,primary_2022_MER,sector_average,1.66843e-06,64.899,"SuperPro cost, 2022 weights"
-Total GVA,total_gva,no 2019-2022 price inflation,cost_no_inflation,primary_2022_MER,sector_average,1.49348e-06,72.501,Flat pharma producer prices (upper utilisation bound)
-Total GVA,total_gva,cost + SIC 21.1 operating margin,cost_plus_margin_SIC21.1,primary_2022_MER,sector_average,1.95385e-06,55.418,Upper bound on missing profit (basic pharmaceutical products)
-Total GVA,total_gva,cost + SIC 21 operating margin,cost_plus_margin_SIC21,primary_2022_MER,sector_average,2.10216e-06,51.508,Upper bound on missing profit (all pharmaceuticals)
-Ability to pay,ability_to_pay,central,cost,primary_2022_MER,sector_average,7.05586e-07,153.459,"SuperPro cost, 2022 weights"
-Ability to pay,ability_to_pay,no 2019-2022 price inflation,cost_no_inflation,primary_2022_MER,sector_average,6.31601e-07,171.435,Flat pharma producer prices (upper utilisation bound)
-Ability to pay,ability_to_pay,cost + SIC 21.1 operating margin,cost_plus_margin_SIC21.1,primary_2022_MER,sector_average,8.26293e-07,131.041,Upper bound on missing profit (basic pharmaceutical products)
-Ability to pay,ability_to_pay,cost + SIC 21 operating margin,cost_plus_margin_SIC21,primary_2022_MER,sector_average,8.89015e-07,121.796,Upper bound on missing profit (all pharmaceuticals)
-Ability to pay,ability_to_pay,2017 population and GDP,cost,validation_2017_MER,sector_average,6.83836e-07,158.34,Data choice for Hjalsted Eq. 5
-Ability to pay,ability_to_pay,no GDP imputation (6 small economies dropped),cost,sensitivity_2022_MER_no_imputation,sector_average,7.05472e-07,153.484,Data choice for Hjalsted Eq. 5
-Ability to pay,ability_to_pay,GDP at purchasing-power parity,cost,sensitivity_2022_PPP,sector_average,7.23327e-07,149.695,Data choice for Hjalsted Eq. 5
-Total GVA,total_gva,inputs: network cost structure,cost,primary_2022_MER,network_costs,1.40352e-06,77.148,"SuperPro cost structure: facility, labour, QC, utilities and waste are UK (70.2%); purchased raw materials and consumables (29.8%) are imported at the sector's intermediate-import ratio and regional mix."
-Total GVA,total_gva,"inputs: network costs, high-income suppliers",cost,primary_2022_MER,network_costs_high_income_suppliers,1.16015e-06,93.332,"As network_costs, but imported goods come only from high-income regions (pro rata to the sector mix), as for single-use consumables and media."
-Total GVA,total_gva,inputs: all purchased goods imported,cost,primary_2022_MER,network_costs_all_purchases_imported,1.75088e-06,61.843,SuperPro cost structure with all purchased goods imported in the sector's regional mix (largest foreign share; bound).
-Total GVA,total_gva,inputs: all from UK (bound),cost,primary_2022_MER,domestic_only,1.17103e-06,92.465,"All first-tier inputs from GB, i.e. only the GB term of Hartmann Eq. 1 (bound)."
-Total GVA,total_gva,inputs: full-supply-chain regional split,cost,primary_2022_MER,full_supply_chain,1.85727e-06,58.3,"Regional origin of all value added embodied in the sector's output (v L), instead of first-tier inputs; tests Hartmann's Eqs. 8-9 simplification."
-Ability to pay,ability_to_pay,inputs: network cost structure,cost,primary_2022_MER,network_costs,3.67257e-07,294.831,"SuperPro cost structure: facility, labour, QC, utilities and waste are UK (70.2%); purchased raw materials and consumables (29.8%) are imported at the sector's intermediate-import ratio and regional mix."
-Ability to pay,ability_to_pay,"inputs: network costs, high-income suppliers",cost,primary_2022_MER,network_costs_high_income_suppliers,7.19351e-08,1505.228,"As network_costs, but imported goods come only from high-income regions (pro rata to the sector mix), as for single-use consumables and media."
-Ability to pay,ability_to_pay,inputs: all purchased goods imported,cost,primary_2022_MER,network_costs_all_purchases_imported,8.1089e-07,133.531,SuperPro cost structure with all purchased goods imported in the sector's regional mix (largest foreign share; bound).
-Ability to pay,ability_to_pay,inputs: all from UK (bound),cost,primary_2022_MER,domestic_only,7.0336e-08,1539.448,"All first-tier inputs from GB, i.e. only the GB term of Hartmann Eq. 1 (bound)."
-Ability to pay,ability_to_pay,inputs: full-supply-chain regional split,cost,primary_2022_MER,full_supply_chain,1.021e-06,106.051,"Regional origin of all value added embodied in the sector's output (v L), instead of first-tier inputs; tests Hartmann's Eqs. 8-9 simplification."
-Legacy,total_gva_published,published factor (PBAESA error),cost,primary_2022_MER,sector_average,3.51913e-06,30.769,Do not use
-Legacy,ability_to_pay_regional,ATP on 49 aggregated regions,cost,primary_2022_MER,sector_average,7.31494e-07,148.024,Superseded
-Supporting,total_fce,"total FCE, published",cost,primary_2022_MER,sector_average,7.21617e-06,15.005,Companion perspective
-Supporting,total_fce_corrected,"total FCE, corrected reading",cost,primary_2022_MER,sector_average,5.03413e-06,21.509,Companion perspective
-Supporting,total_fce_corrected_f,"total FCE, corrected reading with f by product",cost,primary_2022_MER,sector_average,4.66094e-06,23.231,Companion perspective
-Supporting,ability_to_pay_fce,ability to pay x total FCE (corrected),cost,primary_2022_MER,sector_average,5.28013e-06,20.507,Companion perspective
+group,method,variant,value_basis,atp_case,input_origin,population_case,sos_fraction,climate_pct,note
+Total GVA,total_gva,central,cost,primary_2022_MER,sector_average,hartmann_reference,1.66843e-06,64.899,"SuperPro cost, 2022 weights"
+Total GVA,total_gva,no 2019-2022 price inflation,cost_no_inflation,primary_2022_MER,sector_average,hartmann_reference,1.49348e-06,72.501,Flat price scenario
+Total GVA,total_gva,cost + SIC 21.1 operating margin,cost_plus_margin_SIC21.1,primary_2022_MER,sector_average,hartmann_reference,1.95385e-06,55.418,Illustrative gross margin uplift (basic pharmaceutical products)
+Total GVA,total_gva,cost + SIC 21 operating margin,cost_plus_margin_SIC21,primary_2022_MER,sector_average,hartmann_reference,2.10216e-06,51.508,Illustrative gross margin uplift (all pharmaceuticals)
+Total GVA,total_gva,ONS C211 price index,cost_ppi_C211,primary_2022_MER,sector_average,hartmann_reference,1.52815e-06,70.856,Domestic output price index proxy
+Total GVA,total_gva,ONS C212 price index,cost_ppi_C212,primary_2022_MER,sector_average,hartmann_reference,1.45679e-06,74.327,Domestic output price index proxy
+Ability to pay,ability_to_pay,central,cost,primary_2022_MER,sector_average,hartmann_reference,7.05586e-07,153.459,"SuperPro cost, 2022 weights"
+Ability to pay,ability_to_pay,no 2019-2022 price inflation,cost_no_inflation,primary_2022_MER,sector_average,hartmann_reference,6.31601e-07,171.435,Flat price scenario
+Ability to pay,ability_to_pay,cost + SIC 21.1 operating margin,cost_plus_margin_SIC21.1,primary_2022_MER,sector_average,hartmann_reference,8.26293e-07,131.041,Illustrative gross margin uplift (basic pharmaceutical products)
+Ability to pay,ability_to_pay,cost + SIC 21 operating margin,cost_plus_margin_SIC21,primary_2022_MER,sector_average,hartmann_reference,8.89015e-07,121.796,Illustrative gross margin uplift (all pharmaceuticals)
+Ability to pay,ability_to_pay,ONS C211 price index,cost_ppi_C211,primary_2022_MER,sector_average,hartmann_reference,6.46262e-07,167.546,Domestic output price index proxy
+Ability to pay,ability_to_pay,ONS C212 price index,cost_ppi_C212,primary_2022_MER,sector_average,hartmann_reference,6.16084e-07,175.753,Domestic output price index proxy
+Ability to pay,ability_to_pay,2017 population and GDP,cost,validation_2017_MER,sector_average,hartmann_reference,6.83836e-07,158.34,Data choice for Hjalsted Eq. 5
+Ability to pay,ability_to_pay,no GDP imputation (6 small economies dropped),cost,sensitivity_2022_MER_no_imputation,sector_average,hartmann_reference,7.05472e-07,153.484,Data choice for Hjalsted Eq. 5
+Ability to pay,ability_to_pay,"PPP GDP, complete cases",cost,sensitivity_2022_PPP,sector_average,hartmann_reference,7.23327e-07,149.695,Data choice for Hjalsted Eq. 5
+Ability to pay,ability_to_pay,"MER GDP, same PPP coverage",cost,sensitivity_2022_MER_matched_PPP,sector_average,hartmann_reference,6.75435e-07,160.31,Data choice for Hjalsted Eq. 5
+Ability to pay,ability_to_pay,EXIO3 concordance,cost,sensitivity_2022_MER_EXIO3,sector_average,hartmann_reference,6.777e-07,159.774,Data choice for Hjalsted Eq. 5
+Ability to pay,ability_to_pay,2017 PPP comparison,cost,sensitivity_2017_PPP,sector_average,hartmann_reference,7.44088e-07,145.519,Data choice for Hjalsted Eq. 5
+Total GVA,total_gva,Hartmann weights normalised,cost,primary_2022_MER,sector_average,hartmann_normalised,1.66828e-06,64.904,Population-weight scenario
+Total GVA,total_gva,"World Bank, Hartmann mapping",cost,primary_2022_MER,sector_average,worldbank_hartmann,1.66294e-06,65.113,Population-weight scenario
+Total GVA,total_gva,"World Bank, EXIO3 mapping",cost,primary_2022_MER,sector_average,worldbank_EXIO3,1.62948e-06,66.45,Population-weight scenario
+Total GVA,total_gva,inputs: network cost structure,cost,primary_2022_MER,network_costs,hartmann_reference,1.40352e-06,77.148,"SuperPro cost structure: facility, labour, QC, utilities and waste are UK (70.2%); purchased raw materials and consumables (29.8%) are imported at the sector's intermediate-import ratio and regional mix."
+Total GVA,total_gva,"inputs: network costs, high-income suppliers",cost,primary_2022_MER,network_costs_high_income_suppliers,hartmann_reference,1.16015e-06,93.332,"As network_costs, but imported goods come only from high-income regions (pro rata to the sector mix), as for single-use consumables and media."
+Total GVA,total_gva,inputs: all purchased goods imported,cost,primary_2022_MER,network_costs_all_purchases_imported,hartmann_reference,1.75088e-06,61.843,SuperPro cost structure with all purchased goods imported in the sector's regional mix (largest foreign share; bound).
+Total GVA,total_gva,inputs: all from UK (bound),cost,primary_2022_MER,domestic_only,hartmann_reference,1.17103e-06,92.465,"All first-tier inputs from GB, i.e. only the GB term of Hartmann Eq. 1 (bound)."
+Total GVA,total_gva,inputs: full-supply-chain regional split,cost,primary_2022_MER,full_supply_chain,hartmann_reference,1.85727e-06,58.3,"Regional origin of all value added embodied in the sector's output (v L), instead of first-tier inputs; tests Hartmann's Eqs. 8-9 simplification."
+Ability to pay,ability_to_pay,inputs: network cost structure,cost,primary_2022_MER,network_costs,hartmann_reference,3.67257e-07,294.831,"SuperPro cost structure: facility, labour, QC, utilities and waste are UK (70.2%); purchased raw materials and consumables (29.8%) are imported at the sector's intermediate-import ratio and regional mix."
+Ability to pay,ability_to_pay,"inputs: network costs, high-income suppliers",cost,primary_2022_MER,network_costs_high_income_suppliers,hartmann_reference,7.19351e-08,1505.228,"As network_costs, but imported goods come only from high-income regions (pro rata to the sector mix), as for single-use consumables and media."
+Ability to pay,ability_to_pay,inputs: all purchased goods imported,cost,primary_2022_MER,network_costs_all_purchases_imported,hartmann_reference,8.1089e-07,133.531,SuperPro cost structure with all purchased goods imported in the sector's regional mix (largest foreign share; bound).
+Ability to pay,ability_to_pay,inputs: all from UK (bound),cost,primary_2022_MER,domestic_only,hartmann_reference,7.0336e-08,1539.448,"All first-tier inputs from GB, i.e. only the GB term of Hartmann Eq. 1 (bound)."
+Ability to pay,ability_to_pay,inputs: full-supply-chain regional split,cost,primary_2022_MER,full_supply_chain,hartmann_reference,1.021e-06,106.051,"Regional origin of all value added embodied in the sector's output (v L), instead of first-tier inputs; tests Hartmann's Eqs. 8-9 simplification."
+Legacy,total_gva_published,published factor (PBAESA error),cost,primary_2022_MER,sector_average,hartmann_reference,3.51913e-06,30.769,Do not use
+Legacy,ability_to_pay_regional,ATP on 49 aggregated regions,cost,primary_2022_MER,sector_average,hartmann_reference,7.31494e-07,148.024,Superseded
+Supporting,total_fce,"total FCE, published",cost,primary_2022_MER,sector_average,hartmann_reference,7.21617e-06,15.005,Unresolved supporting comparison
+Supporting,total_fce_corrected,"total FCE, corrected reading",cost,primary_2022_MER,sector_average,hartmann_reference,5.03413e-06,21.509,Unresolved supporting comparison
+Supporting,total_fce_corrected_f,"total FCE, corrected reading with f by product",cost,primary_2022_MER,sector_average,hartmann_reference,4.66094e-06,23.231,Unresolved supporting comparison
+Supporting,ability_to_pay_fce,ability to pay x total FCE (corrected),cost,primary_2022_MER,sector_average,hartmann_reference,5.28013e-06,20.507,Unresolved supporting comparison

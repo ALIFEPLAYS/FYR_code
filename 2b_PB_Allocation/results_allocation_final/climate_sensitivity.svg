@@ -1,6 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 789" width="900" height="789" font-family="Helvetica, Arial, sans-serif" role="img" aria-labelledby="t d">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1059" width="900" height="1059" font-family="Helvetica, Arial, sans-serif" role="img" aria-labelledby="t d">
 <style>.bg{fill:#fcfcfb}.t1{fill:#0b0b0b}.t2{fill:#52514e}.grid{stroke:#e4e3df}.ref{stroke:#0b0b0b}.over{fill:#f3f2ef}.s1{fill:#2a78d6}.s2{fill:#eb6834}.s3{fill:#1baf7a}.l3{stroke:#1baf7a}.sg{fill:#9b9a95}.ring{stroke:#fcfcfb}.halo{stroke:#fcfcfb;stroke-width:4px;paint-order:stroke;stroke-linejoin:round}@media (prefers-color-scheme: dark){.bg{fill:#1a1a19}.t1{fill:#f0efec}.t2{fill:#c3c2b7}.grid{stroke:#34332f}.ref{stroke:#f0efec}.over{fill:#24231f}.s1{fill:#3987e5}.s2{fill:#d95926}.s3{fill:#199e70}.l3{stroke:#199e70}.sg{fill:#8a8984}.ring{stroke:#1a1a19}.halo{stroke:#1a1a19}}</style>
-<rect class="bg" width="900" height="789"/>
+<rect class="bg" width="900" height="1059"/>
 <title id="t">Climate utilisation: sensitivity of total GVA and ability to pay</title>
 <desc id="d">Bar length is climate budget utilisation in percent, linear from zero, capped at 250%. Values in sensitivity_climate.csv.</desc>
 <text class="t1" x="20" y="30" font-size="17" font-weight="600">Climate utilisation under documented variants</text>
@@ -8,13 +8,13 @@
 <rect class="s1" x="20" y="64" width="12" height="12" rx="2"/><text class="t1" x="38" y="74" font-size="12">Total GVA</text>
 <rect class="s2" x="190" y="64" width="12" height="12" rx="2"/><text class="t1" x="208" y="74" font-size="12">Ability to pay</text>
 <rect class="sg" x="360" y="64" width="12" height="12" rx="2"/><text class="t1" x="378" y="74" font-size="12">Legacy</text>
-<line class="grid" x1="330.0" y1="90" x2="330.0" y2="717"/><text class="t2" x="330.0" y="733" font-size="11" text-anchor="middle">0%</text>
-<line class="grid" x1="426.0" y1="90" x2="426.0" y2="717"/><text class="t2" x="426.0" y="733" font-size="11" text-anchor="middle">50%</text>
-<line class="grid" x1="522.0" y1="90" x2="522.0" y2="717"/><text class="t2" x="522.0" y="733" font-size="11" text-anchor="middle">100%</text>
-<line class="grid" x1="618.0" y1="90" x2="618.0" y2="717"/><text class="t2" x="618.0" y="733" font-size="11" text-anchor="middle">150%</text>
-<line class="grid" x1="714.0" y1="90" x2="714.0" y2="717"/><text class="t2" x="714.0" y="733" font-size="11" text-anchor="middle">200%</text>
-<line class="grid" x1="810.0" y1="90" x2="810.0" y2="717"/><text class="t2" x="810.0" y="733" font-size="11" text-anchor="middle">250%</text>
-<line class="ref" x1="522.0" y1="86" x2="522.0" y2="717" stroke-width="2" stroke-dasharray="5 3"/>
+<line class="grid" x1="330.0" y1="90" x2="330.0" y2="987"/><text class="t2" x="330.0" y="1003" font-size="11" text-anchor="middle">0%</text>
+<line class="grid" x1="426.0" y1="90" x2="426.0" y2="987"/><text class="t2" x="426.0" y="1003" font-size="11" text-anchor="middle">50%</text>
+<line class="grid" x1="522.0" y1="90" x2="522.0" y2="987"/><text class="t2" x="522.0" y="1003" font-size="11" text-anchor="middle">100%</text>
+<line class="grid" x1="618.0" y1="90" x2="618.0" y2="987"/><text class="t2" x="618.0" y="1003" font-size="11" text-anchor="middle">150%</text>
+<line class="grid" x1="714.0" y1="90" x2="714.0" y2="987"/><text class="t2" x="714.0" y="1003" font-size="11" text-anchor="middle">200%</text>
+<line class="grid" x1="810.0" y1="90" x2="810.0" y2="987"/><text class="t2" x="810.0" y="1003" font-size="11" text-anchor="middle">250%</text>
+<line class="ref" x1="522.0" y1="86" x2="522.0" y2="987" stroke-width="2" stroke-dasharray="5 3"/>
 <text class="t1" x="320" y="109.0" font-size="11" text-anchor="end">Total GVA: central</text>
 <g><title>Total GVA: central: 64.9%</title><rect class="s1" x="330" y="96" width="124.6" height="18" rx="4"/></g>
 <text class="t1 halo" x="460.6" y="109.0" font-size="11">64.9%</text>
@@ -27,62 +27,92 @@
 <text class="t1" x="320" y="190.0" font-size="11" text-anchor="end">Total GVA: cost + SIC 21 operating margin</text>
 <g><title>Total GVA: cost + SIC 21 operating margin: 51.5%</title><rect class="s1" x="330" y="177" width="98.9" height="18" rx="4"/></g>
 <text class="t1 halo" x="434.9" y="190.0" font-size="11">51.5%</text>
-<text class="t1" x="320" y="217.0" font-size="11" text-anchor="end">Total GVA: inputs: network cost structure</text>
-<g><title>Total GVA: inputs: network cost structure: 77.1%</title><rect class="s1" x="330" y="204" width="148.1" height="18" rx="4"/></g>
-<text class="t1 halo" x="484.1" y="217.0" font-size="11">77.1%</text>
-<text class="t1" x="320" y="244.0" font-size="11" text-anchor="end">Total GVA: inputs: network costs, high-income suppliers</text>
-<g><title>Total GVA: inputs: network costs, high-income suppliers: 93.3%</title><rect class="s1" x="330" y="231" width="179.2" height="18" rx="4"/></g>
-<text class="t1 halo" x="528.0" y="244.0" font-size="11">93.3%</text>
-<text class="t1" x="320" y="271.0" font-size="11" text-anchor="end">Total GVA: inputs: all purchased goods imported</text>
-<g><title>Total GVA: inputs: all purchased goods imported: 61.8%</title><rect class="s1" x="330" y="258" width="118.7" height="18" rx="4"/></g>
-<text class="t1 halo" x="454.7" y="271.0" font-size="11">61.8%</text>
-<text class="t1" x="320" y="298.0" font-size="11" text-anchor="end">Total GVA: inputs: all from UK (bound)</text>
-<g><title>Total GVA: inputs: all from UK (bound): 92.5%</title><rect class="s1" x="330" y="285" width="177.5" height="18" rx="4"/></g>
-<text class="t1 halo" x="528.0" y="298.0" font-size="11">92.5%</text>
-<text class="t1" x="320" y="325.0" font-size="11" text-anchor="end">Total GVA: inputs: full-supply-chain regional split</text>
-<g><title>Total GVA: inputs: full-supply-chain regional split: 58.3%</title><rect class="s1" x="330" y="312" width="111.9" height="18" rx="4"/></g>
-<text class="t1 halo" x="447.9" y="325.0" font-size="11">58.3%</text>
-<text class="t1" x="320" y="352.0" font-size="11" text-anchor="end">ATP: central</text>
-<g><title>ATP: central: 153.5%</title><rect class="s2" x="330" y="339" width="294.6" height="18" rx="4"/></g>
-<text class="t1 halo" x="630.6" y="352.0" font-size="11">153.5%</text>
-<text class="t1" x="320" y="379.0" font-size="11" text-anchor="end">ATP: no 2019-2022 price inflation</text>
-<g><title>ATP: no 2019-2022 price inflation: 171.4%</title><rect class="s2" x="330" y="366" width="329.2" height="18" rx="4"/></g>
-<text class="t1 halo" x="665.2" y="379.0" font-size="11">171.4%</text>
-<text class="t1" x="320" y="406.0" font-size="11" text-anchor="end">ATP: cost + SIC 21.1 operating margin</text>
-<g><title>ATP: cost + SIC 21.1 operating margin: 131.0%</title><rect class="s2" x="330" y="393" width="251.6" height="18" rx="4"/></g>
-<text class="t1 halo" x="587.6" y="406.0" font-size="11">131.0%</text>
-<text class="t1" x="320" y="433.0" font-size="11" text-anchor="end">ATP: cost + SIC 21 operating margin</text>
-<g><title>ATP: cost + SIC 21 operating margin: 121.8%</title><rect class="s2" x="330" y="420" width="233.8" height="18" rx="4"/></g>
-<text class="t1 halo" x="569.8" y="433.0" font-size="11">121.8%</text>
-<text class="t1" x="320" y="460.0" font-size="11" text-anchor="end">ATP: 2017 population and GDP</text>
-<g><title>ATP: 2017 population and GDP: 158.3%</title><rect class="s2" x="330" y="447" width="304.0" height="18" rx="4"/></g>
-<text class="t1 halo" x="640.0" y="460.0" font-size="11">158.3%</text>
-<text class="t1" x="320" y="487.0" font-size="11" text-anchor="end">ATP: no GDP imputation (6 small economies dropped)</text>
-<g><title>ATP: no GDP imputation (6 small economies dropped): 153.5%</title><rect class="s2" x="330" y="474" width="294.7" height="18" rx="4"/></g>
-<text class="t1 halo" x="630.7" y="487.0" font-size="11">153.5%</text>
-<text class="t1" x="320" y="514.0" font-size="11" text-anchor="end">ATP: GDP at purchasing-power parity</text>
-<g><title>ATP: GDP at purchasing-power parity: 149.7%</title><rect class="s2" x="330" y="501" width="287.4" height="18" rx="4"/></g>
-<text class="t1 halo" x="623.4" y="514.0" font-size="11">149.7%</text>
-<text class="t1" x="320" y="541.0" font-size="11" text-anchor="end">ATP: inputs: network cost structure</text>
-<g><title>ATP: inputs: network cost structure: 294.8%</title><rect class="s2" x="330" y="528" width="480.0" height="18" rx="4"/></g>
-<text class="t1 halo" x="816.0" y="541.0" font-size="11">294.8% ▸</text>
-<text class="t1" x="320" y="568.0" font-size="11" text-anchor="end">ATP: inputs: network costs, high-income suppliers</text>
-<g><title>ATP: inputs: network costs, high-income suppliers: 1505.2%</title><rect class="s2" x="330" y="555" width="480.0" height="18" rx="4"/></g>
-<text class="t1 halo" x="816.0" y="568.0" font-size="11">1,505.2% ▸</text>
-<text class="t1" x="320" y="595.0" font-size="11" text-anchor="end">ATP: inputs: all purchased goods imported</text>
-<g><title>ATP: inputs: all purchased goods imported: 133.5%</title><rect class="s2" x="330" y="582" width="256.4" height="18" rx="4"/></g>
-<text class="t1 halo" x="592.4" y="595.0" font-size="11">133.5%</text>
-<text class="t1" x="320" y="622.0" font-size="11" text-anchor="end">ATP: inputs: all from UK (bound)</text>
-<g><title>ATP: inputs: all from UK (bound): 1539.4%</title><rect class="s2" x="330" y="609" width="480.0" height="18" rx="4"/></g>
-<text class="t1 halo" x="816.0" y="622.0" font-size="11">1,539.4% ▸</text>
-<text class="t1" x="320" y="649.0" font-size="11" text-anchor="end">ATP: inputs: full-supply-chain regional split</text>
-<g><title>ATP: inputs: full-supply-chain regional split: 106.1%</title><rect class="s2" x="330" y="636" width="203.6" height="18" rx="4"/></g>
-<text class="t1 halo" x="539.6" y="649.0" font-size="11">106.1%</text>
-<text class="t1" x="320" y="676.0" font-size="11" text-anchor="end">Legacy: published factor (PBAESA error)</text>
-<g><title>Legacy: published factor (PBAESA error): 30.8%</title><rect class="sg" x="330" y="663" width="59.1" height="18" rx="4"/></g>
-<text class="t1 halo" x="395.1" y="676.0" font-size="11">30.8%</text>
-<text class="t1" x="320" y="703.0" font-size="11" text-anchor="end">Legacy: ATP on 49 aggregated regions</text>
-<g><title>Legacy: ATP on 49 aggregated regions: 148.0%</title><rect class="sg" x="330" y="690" width="284.2" height="18" rx="4"/></g>
-<text class="t1 halo" x="620.2" y="703.0" font-size="11">148.0%</text>
-<text class="t2" x="20" y="757" font-size="11">One assumption changed at a time. "inputs:" rows replace the EXIOBASE sector-average input origins (Hartmann Eqs. 8-9).</text>
-<text class="t2" x="20" y="773" font-size="11">Combined extremes are in envelope_climate.csv (total GVA 46-104%, ability to pay 84-1,720%). Legacy rows: traceability only.</text></svg>
+<text class="t1" x="320" y="217.0" font-size="11" text-anchor="end">Total GVA: ONS C211 price index</text>
+<g><title>Total GVA: ONS C211 price index: 70.9%</title><rect class="s1" x="330" y="204" width="136.0" height="18" rx="4"/></g>
+<text class="t1 halo" x="472.0" y="217.0" font-size="11">70.9%</text>
+<text class="t1" x="320" y="244.0" font-size="11" text-anchor="end">Total GVA: ONS C212 price index</text>
+<g><title>Total GVA: ONS C212 price index: 74.3%</title><rect class="s1" x="330" y="231" width="142.7" height="18" rx="4"/></g>
+<text class="t1 halo" x="478.7" y="244.0" font-size="11">74.3%</text>
+<text class="t1" x="320" y="271.0" font-size="11" text-anchor="end">Total GVA: Hartmann weights normalised</text>
+<g><title>Total GVA: Hartmann weights normalised: 64.9%</title><rect class="s1" x="330" y="258" width="124.6" height="18" rx="4"/></g>
+<text class="t1 halo" x="460.6" y="271.0" font-size="11">64.9%</text>
+<text class="t1" x="320" y="298.0" font-size="11" text-anchor="end">Total GVA: World Bank, Hartmann mapping</text>
+<g><title>Total GVA: World Bank, Hartmann mapping: 65.1%</title><rect class="s1" x="330" y="285" width="125.0" height="18" rx="4"/></g>
+<text class="t1 halo" x="461.0" y="298.0" font-size="11">65.1%</text>
+<text class="t1" x="320" y="325.0" font-size="11" text-anchor="end">Total GVA: World Bank, EXIO3 mapping</text>
+<g><title>Total GVA: World Bank, EXIO3 mapping: 66.5%</title><rect class="s1" x="330" y="312" width="127.6" height="18" rx="4"/></g>
+<text class="t1 halo" x="463.6" y="325.0" font-size="11">66.5%</text>
+<text class="t1" x="320" y="352.0" font-size="11" text-anchor="end">Total GVA: inputs: network cost structure</text>
+<g><title>Total GVA: inputs: network cost structure: 77.1%</title><rect class="s1" x="330" y="339" width="148.1" height="18" rx="4"/></g>
+<text class="t1 halo" x="484.1" y="352.0" font-size="11">77.1%</text>
+<text class="t1" x="320" y="379.0" font-size="11" text-anchor="end">Total GVA: inputs: network costs, high-income suppliers</text>
+<g><title>Total GVA: inputs: network costs, high-income suppliers: 93.3%</title><rect class="s1" x="330" y="366" width="179.2" height="18" rx="4"/></g>
+<text class="t1 halo" x="528.0" y="379.0" font-size="11">93.3%</text>
+<text class="t1" x="320" y="406.0" font-size="11" text-anchor="end">Total GVA: inputs: all purchased goods imported</text>
+<g><title>Total GVA: inputs: all purchased goods imported: 61.8%</title><rect class="s1" x="330" y="393" width="118.7" height="18" rx="4"/></g>
+<text class="t1 halo" x="454.7" y="406.0" font-size="11">61.8%</text>
+<text class="t1" x="320" y="433.0" font-size="11" text-anchor="end">Total GVA: inputs: all from UK (bound)</text>
+<g><title>Total GVA: inputs: all from UK (bound): 92.5%</title><rect class="s1" x="330" y="420" width="177.5" height="18" rx="4"/></g>
+<text class="t1 halo" x="528.0" y="433.0" font-size="11">92.5%</text>
+<text class="t1" x="320" y="460.0" font-size="11" text-anchor="end">Total GVA: inputs: full-supply-chain regional split</text>
+<g><title>Total GVA: inputs: full-supply-chain regional split: 58.3%</title><rect class="s1" x="330" y="447" width="111.9" height="18" rx="4"/></g>
+<text class="t1 halo" x="447.9" y="460.0" font-size="11">58.3%</text>
+<text class="t1" x="320" y="487.0" font-size="11" text-anchor="end">ATP: central</text>
+<g><title>ATP: central: 153.5%</title><rect class="s2" x="330" y="474" width="294.6" height="18" rx="4"/></g>
+<text class="t1 halo" x="630.6" y="487.0" font-size="11">153.5%</text>
+<text class="t1" x="320" y="514.0" font-size="11" text-anchor="end">ATP: no 2019-2022 price inflation</text>
+<g><title>ATP: no 2019-2022 price inflation: 171.4%</title><rect class="s2" x="330" y="501" width="329.2" height="18" rx="4"/></g>
+<text class="t1 halo" x="665.2" y="514.0" font-size="11">171.4%</text>
+<text class="t1" x="320" y="541.0" font-size="11" text-anchor="end">ATP: cost + SIC 21.1 operating margin</text>
+<g><title>ATP: cost + SIC 21.1 operating margin: 131.0%</title><rect class="s2" x="330" y="528" width="251.6" height="18" rx="4"/></g>
+<text class="t1 halo" x="587.6" y="541.0" font-size="11">131.0%</text>
+<text class="t1" x="320" y="568.0" font-size="11" text-anchor="end">ATP: cost + SIC 21 operating margin</text>
+<g><title>ATP: cost + SIC 21 operating margin: 121.8%</title><rect class="s2" x="330" y="555" width="233.8" height="18" rx="4"/></g>
+<text class="t1 halo" x="569.8" y="568.0" font-size="11">121.8%</text>
+<text class="t1" x="320" y="595.0" font-size="11" text-anchor="end">ATP: ONS C211 price index</text>
+<g><title>ATP: ONS C211 price index: 167.5%</title><rect class="s2" x="330" y="582" width="321.7" height="18" rx="4"/></g>
+<text class="t1 halo" x="657.7" y="595.0" font-size="11">167.5%</text>
+<text class="t1" x="320" y="622.0" font-size="11" text-anchor="end">ATP: ONS C212 price index</text>
+<g><title>ATP: ONS C212 price index: 175.8%</title><rect class="s2" x="330" y="609" width="337.4" height="18" rx="4"/></g>
+<text class="t1 halo" x="673.4" y="622.0" font-size="11">175.8%</text>
+<text class="t1" x="320" y="649.0" font-size="11" text-anchor="end">ATP: 2017 population and GDP</text>
+<g><title>ATP: 2017 population and GDP: 158.3%</title><rect class="s2" x="330" y="636" width="304.0" height="18" rx="4"/></g>
+<text class="t1 halo" x="640.0" y="649.0" font-size="11">158.3%</text>
+<text class="t1" x="320" y="676.0" font-size="11" text-anchor="end">ATP: no GDP imputation (6 small economies dropped)</text>
+<g><title>ATP: no GDP imputation (6 small economies dropped): 153.5%</title><rect class="s2" x="330" y="663" width="294.7" height="18" rx="4"/></g>
+<text class="t1 halo" x="630.7" y="676.0" font-size="11">153.5%</text>
+<text class="t1" x="320" y="703.0" font-size="11" text-anchor="end">ATP: PPP GDP, complete cases</text>
+<g><title>ATP: PPP GDP, complete cases: 149.7%</title><rect class="s2" x="330" y="690" width="287.4" height="18" rx="4"/></g>
+<text class="t1 halo" x="623.4" y="703.0" font-size="11">149.7%</text>
+<text class="t1" x="320" y="730.0" font-size="11" text-anchor="end">ATP: MER GDP, same PPP coverage</text>
+<g><title>ATP: MER GDP, same PPP coverage: 160.3%</title><rect class="s2" x="330" y="717" width="307.8" height="18" rx="4"/></g>
+<text class="t1 halo" x="643.8" y="730.0" font-size="11">160.3%</text>
+<text class="t1" x="320" y="757.0" font-size="11" text-anchor="end">ATP: EXIO3 concordance</text>
+<g><title>ATP: EXIO3 concordance: 159.8%</title><rect class="s2" x="330" y="744" width="306.8" height="18" rx="4"/></g>
+<text class="t1 halo" x="642.8" y="757.0" font-size="11">159.8%</text>
+<text class="t1" x="320" y="784.0" font-size="11" text-anchor="end">ATP: 2017 PPP comparison</text>
+<g><title>ATP: 2017 PPP comparison: 145.5%</title><rect class="s2" x="330" y="771" width="279.4" height="18" rx="4"/></g>
+<text class="t1 halo" x="615.4" y="784.0" font-size="11">145.5%</text>
+<text class="t1" x="320" y="811.0" font-size="11" text-anchor="end">ATP: inputs: network cost structure</text>
+<g><title>ATP: inputs: network cost structure: 294.8%</title><rect class="s2" x="330" y="798" width="480.0" height="18" rx="4"/></g>
+<text class="t1 halo" x="816.0" y="811.0" font-size="11">294.8% ▸</text>
+<text class="t1" x="320" y="838.0" font-size="11" text-anchor="end">ATP: inputs: network costs, high-income suppliers</text>
+<g><title>ATP: inputs: network costs, high-income suppliers: 1505.2%</title><rect class="s2" x="330" y="825" width="480.0" height="18" rx="4"/></g>
+<text class="t1 halo" x="816.0" y="838.0" font-size="11">1,505.2% ▸</text>
+<text class="t1" x="320" y="865.0" font-size="11" text-anchor="end">ATP: inputs: all purchased goods imported</text>
+<g><title>ATP: inputs: all purchased goods imported: 133.5%</title><rect class="s2" x="330" y="852" width="256.4" height="18" rx="4"/></g>
+<text class="t1 halo" x="592.4" y="865.0" font-size="11">133.5%</text>
+<text class="t1" x="320" y="892.0" font-size="11" text-anchor="end">ATP: inputs: all from UK (bound)</text>
+<g><title>ATP: inputs: all from UK (bound): 1539.4%</title><rect class="s2" x="330" y="879" width="480.0" height="18" rx="4"/></g>
+<text class="t1 halo" x="816.0" y="892.0" font-size="11">1,539.4% ▸</text>
+<text class="t1" x="320" y="919.0" font-size="11" text-anchor="end">ATP: inputs: full-supply-chain regional split</text>
+<g><title>ATP: inputs: full-supply-chain regional split: 106.1%</title><rect class="s2" x="330" y="906" width="203.6" height="18" rx="4"/></g>
+<text class="t1 halo" x="539.6" y="919.0" font-size="11">106.1%</text>
+<text class="t1" x="320" y="946.0" font-size="11" text-anchor="end">Legacy: published factor (PBAESA error)</text>
+<g><title>Legacy: published factor (PBAESA error): 30.8%</title><rect class="sg" x="330" y="933" width="59.1" height="18" rx="4"/></g>
+<text class="t1 halo" x="395.1" y="946.0" font-size="11">30.8%</text>
+<text class="t1" x="320" y="973.0" font-size="11" text-anchor="end">Legacy: ATP on 49 aggregated regions</text>
+<g><title>Legacy: ATP on 49 aggregated regions: 148.0%</title><rect class="sg" x="330" y="960" width="284.2" height="18" rx="4"/></g>
+<text class="t1 halo" x="620.2" y="973.0" font-size="11">148.0%</text>
+<text class="t2" x="20" y="1027" font-size="11">One assumption changed at a time. "inputs:" rows replace the EXIOBASE sector-average input origins (Hartmann Eqs. 8-9).</text>
+<text class="t2" x="20" y="1043" font-size="11">Combined extremes are in envelope_climate.csv and crossed_climate_extrema.csv. Legacy rows: traceability only.</text></svg>

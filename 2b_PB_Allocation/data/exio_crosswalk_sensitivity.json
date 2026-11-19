@@ -1,0 +1,62 @@
+{
+ "source": "https://github.com/IndEcol/country_converter/blob/f7f46c5cf41ad32c3207006715a1863a16b3d6f7/country_converter/country_data.tsv",
+ "description": "EXIO3 concordance diagnostic. Unlisted countries use the reference mapping. Confirm the release-specific MRIO aggregation before treating this as authoritative.",
+ "overrides": {
+  "ARM": {
+   "reference": "WE",
+   "alternative": "WA"
+  },
+  "AZE": {
+   "reference": "WE",
+   "alternative": "WA"
+  },
+  "DJI": {
+   "reference": "WM",
+   "alternative": "WF"
+  },
+  "DZA": {
+   "reference": "WM",
+   "alternative": "WF"
+  },
+  "GEO": {
+   "reference": "WE",
+   "alternative": "WA"
+  },
+  "GRL": {
+   "reference": "WE",
+   "alternative": "WL"
+  },
+  "KAZ": {
+   "reference": "WE",
+   "alternative": "WA"
+  },
+  "KGZ": {
+   "reference": "WE",
+   "alternative": "WA"
+  },
+  "LBY": {
+   "reference": "WM",
+   "alternative": "WF"
+  },
+  "MAR": {
+   "reference": "WM",
+   "alternative": "WF"
+  },
+  "TJK": {
+   "reference": "WE",
+   "alternative": "WA"
+  },
+  "TKM": {
+   "reference": "WE",
+   "alternative": "WA"
+  },
+  "TUN": {
+   "reference": "WM",
+   "alternative": "WF"
+  },
+  "UZB": {
+   "reference": "WE",
+   "alternative": "WA"
+  }
+ }
+}

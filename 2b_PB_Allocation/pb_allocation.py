@@ -197,8 +197,8 @@ def sector_factor(terms, weights):
 
 # --------------------------------------------------------------------------- network share (step 3)
 def ons_gross_operating_margin(sic="21.1", year=2022):
-    """(aGVA - employment costs) / turnover from ONS ABS. Includes depreciation, so it is an upper bound
-    on the profit missing from a full production cost."""
+    """(aGVA - employment costs) / turnover from ONS ABS. Gross surplus can include
+    depreciation already counted in SuperPro. Use this only as an illustrative uplift."""
     df = pd.read_excel(ONS_ABS, "Section C", header=None)
     row = df[(df[0].astype(str).str.strip() == sic) & (df[2].astype(str).str.strip() == str(year))]
     if len(row) != 1:
@@ -208,11 +208,14 @@ def ons_gross_operating_margin(sic="21.1", year=2022):
                 margin=(agva - employment) / turnover)
 
 
-def usd2019_to_eur2022(deflate=True):
+def usd2019_to_eur2022(deflate=True, *, pharma_index=None):
     """EUR2022 per USD2019 for UK production: USD->GBP (2019), UK GDP deflator 2019->2022, GBP->EUR (2022)."""
     c = _json(ECON_INPUTS)["currency_conversion"]
     usd_per_gbp = _positive(c["USD_per_GBP_2019"]["value"], "USD/GBP 2019")
     ratio = _positive(c["UK_GDP_deflator_2022"]["value"], "deflator") / _positive(c["UK_GDP_deflator_2019"]["value"], "deflator")
+    if pharma_index is not None:
+        ppi = c["pharma_output_price_indices"][pharma_index]
+        ratio = _positive(ppi["2022"], "2022 PPI") / _positive(ppi["2019"], "2019 PPI")
     gbp_per_eur = _positive(c["GBP_per_EUR_2022"]["value"], "GBP/EUR 2022")
     return (1 / usd_per_gbp) * (ratio if deflate else 1.0) / gbp_per_eur
 
@@ -223,10 +226,12 @@ def annual_mass_kg():
 
 
 VALUE_BASES = {
-    "cost": "SuperPro full unit production cost (USD2019 92.10/g), GDP-deflated. Lower bound of output at basic prices. PRIMARY.",
+    "cost": "SuperPro full unit production cost (USD2019 92.10/g), GDP-deflated. Zero-margin output-value proxy. REFERENCE.",
     "cost_no_inflation": "As 'cost' without 2019->2022 price inflation (stand-in for a flat pharma producer price index).",
-    "cost_plus_margin_SIC21.1": "Cost / (1 - ONS SIC 21.1 gross operating margin): upper bound for basic pharmaceutical products.",
-    "cost_plus_margin_SIC21": "Cost / (1 - ONS SIC 21 gross operating margin): upper bound for all pharmaceuticals.",
+    "cost_plus_margin_SIC21.1": "Cost / (1 - ONS SIC 21.1 gross operating margin): illustrative uplift for basic pharmaceutical products.",
+    "cost_ppi_C211": "SuperPro cost with ONS domestic basic pharmaceutical products price index.",
+    "cost_ppi_C212": "SuperPro cost with ONS domestic pharmaceutical preparations price index.",
+    "cost_plus_margin_SIC21": "Cost / (1 - ONS SIC 21 gross operating margin): illustrative uplift for all pharmaceuticals.",
 }
 
 
@@ -239,7 +244,9 @@ def network_value_eur_m(basis="cost"):
         return base * usd2019_to_eur2022()
     if basis == "cost_no_inflation":
         return base * usd2019_to_eur2022(deflate=False)
-    if basis.startswith("cost_plus_margin_SIC"):
+    if basis in ("cost_ppi_C211", "cost_ppi_C212"):
+        return base * usd2019_to_eur2022(pharma_index=basis.rsplit("_", 1)[1])
+    if basis in VALUE_BASES and basis.startswith("cost_plus_margin_SIC"):
         return base * usd2019_to_eur2022() / (1 - ons_gross_operating_margin(basis.split("SIC")[1])["margin"])
     raise KeyError(f"Unknown value basis {basis!r}; choose from {sorted(VALUE_BASES)}")
 
@@ -281,7 +288,23 @@ METHODS = {
 }
 
 
-def geographical_weights(method, atp_case="primary_2022_MER"):
+POPULATION_CASES = (
+    "hartmann_reference", "hartmann_normalised", "worldbank_hartmann", "worldbank_EXIO3",
+)
+
+
+def geographical_weights(method, atp_case="primary_2022_MER", *, population_case="hartmann_reference"):
+    if population_case not in POPULATION_CASES:
+        raise KeyError(population_case)
+    if population_case != "hartmann_reference":
+        if method != "total_gva":
+            raise ValueError("Population-weight sensitivities apply to Total GVA only")
+        if population_case == "hartmann_normalised":
+            weights = population_weights()
+            return {r: share / sum(weights.values()) for r, share in weights.items()}
+        case = {"worldbank_hartmann": "primary_2022_MER",
+                "worldbank_EXIO3": "sensitivity_2022_MER_EXIO3"}[population_case]
+        return _json(ATP_WEIGHTS)["cases"][case]["population_share_by_region"]
     if method in ("total_gva", "total_fce", "total_fce_corrected", "total_fce_corrected_f", "total_gva_published"):
         return population_weights()
     if method in ("ability_to_pay", "ability_to_pay_fce"):
@@ -317,26 +340,31 @@ class Allocation:
     network_share: float
     network_value_eur_m: float
     budgets: dict = field(repr=False)
+    population_case: str = "hartmann_reference"
 
     @property
     def sos_fraction(self):
         return self.sector_factor * self.network_share
 
 
-def allocate(method="total_gva", value_basis="cost", atp_case="primary_2022_MER", input_origin="sector_average"):
+def allocate(method="total_gva", value_basis="cost", atp_case="primary_2022_MER", input_origin="sector_average",
+             *, population_case="hartmann_reference"):
     """Budgets for one method. Defaults are the documented primary choices."""
     if method not in METHODS:
         raise KeyError(f"Unknown allocation method {method!r}; choose from {sorted(METHODS)}")
-    af = sector_factor(value_terms(method, input_origin), geographical_weights(method, atp_case))
-    s = network_share(value_basis)
+    weights = geographical_weights(method, atp_case, population_case=population_case)
+    af = sector_factor(value_terms(method, input_origin), weights)
+    value = network_value_eur_m(value_basis)
+    s = value / _positive(exiobase_terms()["target"]["gross_output"], "sector output")
     budgets = {c: sos * af * s for c, sos in SOS.items()}
     return Allocation(METHODS[method], value_basis, atp_case, input_origin, af, s,
-                      network_value_eur_m(value_basis), budgets)
+                      value, budgets, population_case=population_case)
 
 
-def budget_vector(method="total_gva", value_basis="cost", atp_case="primary_2022_MER", input_origin="sector_average"):
+def budget_vector(method="total_gva", value_basis="cost", atp_case="primary_2022_MER", input_origin="sector_average",
+                  *, population_case="hartmann_reference"):
     """MILP entry point: {PB category: allocated annual budget in native PBAESA units}."""
-    return dict(allocate(method, value_basis, atp_case, input_origin).budgets)
+    return dict(allocate(method, value_basis, atp_case, input_origin, population_case=population_case).budgets)
 
 
 def relative_importance(method_a="total_gva", method_b="ability_to_pay", **kw):

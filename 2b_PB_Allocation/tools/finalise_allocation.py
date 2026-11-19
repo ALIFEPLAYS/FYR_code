@@ -17,6 +17,7 @@ import hashlib
 import json
 import math
 import sys
+from itertools import product
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -27,6 +28,8 @@ OUT = ROOT / "results_allocation_final"
 VERIFY = ROOT / "data/total_gva_verification_2022.json"
 IMPACTS_SHA256 = "2a02c39fc43edd1ec200dc13bb49bdcb5b10493d8fabdfd6196409d85c8daf01"  # results_final/provenance.json
 MAIN = ("total_gva", "ability_to_pay", "total_fce", "total_fce_corrected", "total_fce_corrected_f")
+DECISION_METHODS = ("total_gva", "ability_to_pay")
+INVENTORY = ROOT / "data/climate_inventory_scenarios.json"
 AUDIT = ROOT / "data/audit_from_raw_2022.json"
 SHORT = {"Climate Change": "Climate change", "Ocean Acidification": "Ocean acidification",
          "Atmospheric Aerosol Loading": "Aerosol loading", "Phosphorus Cycle": "Phosphorus cycle",
@@ -87,20 +90,31 @@ def sensitivity_rows(impacts):
     def add(group, method, variant, note, **kw):
         a = pa.allocate(method, **kw)
         out.append(dict(group=group, method=method, variant=variant, value_basis=a.value_basis, atp_case=a.atp_case,
-                        input_origin=a.input_origin, sos_fraction=fmt(a.sos_fraction),
+                        input_origin=a.input_origin, population_case=a.population_case,
+                        sos_fraction=fmt(a.sos_fraction),
                         climate_pct=round(100 * climate / a.budgets["Climate Change"], 3), note=note))
 
     for m, g in (("total_gva", "Total GVA"), ("ability_to_pay", "Ability to pay")):
         add(g, m, "central", "SuperPro cost, 2022 weights")
-        add(g, m, "no 2019-2022 price inflation", "Flat pharma producer prices (upper utilisation bound)", value_basis="cost_no_inflation")
-        add(g, m, "cost + SIC 21.1 operating margin", "Upper bound on missing profit (basic pharmaceutical products)",
+        add(g, m, "no 2019-2022 price inflation", "Flat price scenario", value_basis="cost_no_inflation")
+        add(g, m, "cost + SIC 21.1 operating margin", "Illustrative gross margin uplift (basic pharmaceutical products)",
             value_basis="cost_plus_margin_SIC21.1")
-        add(g, m, "cost + SIC 21 operating margin", "Upper bound on missing profit (all pharmaceuticals)",
+        add(g, m, "cost + SIC 21 operating margin", "Illustrative gross margin uplift (all pharmaceuticals)",
             value_basis="cost_plus_margin_SIC21")
+        for series in ("C211", "C212"):
+            add(g, m, f"ONS {series} price index", "Domestic output price index proxy",
+                value_basis=f"cost_ppi_{series}")
     for case, label in (("validation_2017_MER", "2017 population and GDP"),
                         ("sensitivity_2022_MER_no_imputation", "no GDP imputation (6 small economies dropped)"),
-                        ("sensitivity_2022_PPP", "GDP at purchasing-power parity")):
+                        ("sensitivity_2022_PPP", "PPP GDP, complete cases"),
+                        ("sensitivity_2022_MER_matched_PPP", "MER GDP, same PPP coverage"),
+                        ("sensitivity_2022_MER_EXIO3", "EXIO3 concordance"),
+                        ("sensitivity_2017_PPP", "2017 PPP comparison")):
         add("Ability to pay", "ability_to_pay", label, "Data choice for Hjalsted Eq. 5", atp_case=case)
+    for case, label in (("hartmann_normalised", "Hartmann weights normalised"),
+                        ("worldbank_hartmann", "World Bank, Hartmann mapping"),
+                        ("worldbank_EXIO3", "World Bank, EXIO3 mapping")):
+        add("Total GVA", "total_gva", label, "Population-weight scenario", population_case=case)
     origin_labels = {"network_costs": "inputs: network cost structure",
                      "network_costs_high_income_suppliers": "inputs: network costs, high-income suppliers",
                      "network_costs_all_purchases_imported": "inputs: all purchased goods imported",
@@ -111,10 +125,10 @@ def sensitivity_rows(impacts):
             add(g, m, label, pa.INPUT_ORIGINS[origin], input_origin=origin)
     add("Legacy", "total_gva_published", "published factor (PBAESA error)", "Do not use")
     add("Legacy", "ability_to_pay_regional", "ATP on 49 aggregated regions", "Superseded")
-    add("Supporting", "total_fce", "total FCE, published", "Companion perspective")
-    add("Supporting", "total_fce_corrected", "total FCE, corrected reading", "Companion perspective")
-    add("Supporting", "total_fce_corrected_f", "total FCE, corrected reading with f by product", "Companion perspective")
-    add("Supporting", "ability_to_pay_fce", "ability to pay x total FCE (corrected)", "Companion perspective")
+    add("Supporting", "total_fce", "total FCE, published", "Unresolved supporting comparison")
+    add("Supporting", "total_fce_corrected", "total FCE, corrected reading", "Unresolved supporting comparison")
+    add("Supporting", "total_fce_corrected_f", "total FCE, corrected reading with f by product", "Unresolved supporting comparison")
+    add("Supporting", "ability_to_pay_fce", "ability to pay x total FCE (corrected)", "Unresolved supporting comparison")
     return out
 
 
@@ -130,6 +144,47 @@ def envelope_rows(impacts):
                       exceeded="YES" if u > 100 else "no",
                       extreme="min" if u == lo else ("max" if u == hi else "")) for b, o, u in combos]
     return rows
+
+
+def climate_inventory(impacts):
+    reference = impacts["Climate Change"]["value"]
+    contributions = json.loads(INVENTORY.read_text())["scenarios"]
+    scenarios = {name: math.fsum(terms.values()) for name, terms in contributions.items()}
+    if len(scenarios) != 9 or not math.isclose(scenarios["legacy_foam|batch_scaled"], reference, rel_tol=1e-9):
+        raise ValueError("Physical replay does not match the saved reference")
+    return {"reference": reference, **scenarios}
+
+
+def crossed_climate_rows(impacts):
+    """Discrete stress tests. Procurement and physical inventory are varied independently."""
+    inventory = climate_inventory(impacts)
+    weights = {
+        "total_gva": [{"population_case": case} for case in pa.POPULATION_CASES],
+        "ability_to_pay": [{"atp_case": case} for case in json.loads(pa.ATP_WEIGHTS.read_text())["cases"]],
+    }
+    rows = []
+    shares = {basis: pa.network_share(basis) for basis in pa.VALUE_BASES}
+    climate_sos = pa.SOS["Climate Change"]
+    for method, cases in weights.items():
+        for origin, case in product(pa.INPUT_ORIGINS, cases):
+            factor = pa.allocate(method, input_origin=origin, **case).sector_factor
+            for basis, share in shares.items():
+                budget = climate_sos * factor * share
+                for name, impact in inventory.items():
+                    rows.append(dict(method=method, value_basis=basis, input_origin=origin,
+                                     weight_case=next(iter(case.values())), inventory_case=name,
+                                     budget_W_m2=budget, impact_W_m2=impact, climate_pct=100 * impact / budget))
+    return rows
+
+
+def crossed_climate_extrema(rows):
+    summary = []
+    for method in DECISION_METHODS:
+        method_rows = [row for row in rows if row["method"] == method]
+        for pick in (min, max):
+            row = pick(method_rows, key=lambda row: row["climate_pct"])
+            summary.append(dict(extreme=pick.__name__, **row))
+    return summary
 
 
 def regional_rows():
@@ -154,10 +209,19 @@ def milp_record(impacts):
     rec = dict(
         description=("Annual PB budgets for the saved UK mAb network (4,003.65 kg/yr bulk drug substance), native "
                      "PBAESA control-variable units, 2022. Use as fixed parameters: never as decision variables."),
-        default_method="total_gva", value_basis="cost",
+        default_method="total_gva", value_basis="cost", status="exploratory fixed-budget scenarios",
+        reference=dict(
+            annual_mass_kg=pa.annual_mass_kg(),
+            product_gate="Bulk mAb drug substance",
+            numerator="Partial characterised two-stage inventory",
+            input_origin="sector_average",
+            population_case="hartmann_reference",
+            atp_case="primary_2022_MER",
+            output_value_note=pa.VALUE_BASES["cost"],
+        ),
         formula="budget_c = SOS_c x AF x (V_net / x_GB,Chemicals nec)",
         units={c: impacts[c]["unit"] for c in pa.CATEGORIES}, global_sos=pa.SOS, methods={})
-    for m in MAIN:
+    for m in DECISION_METHODS:
         a = pa.allocate(m)
         rec["methods"][m] = dict(label=a.method.label, role=a.method.role, geography=a.method.geography,
                                  value_perspective=a.method.value, sector_factor=a.sector_factor,
@@ -272,7 +336,7 @@ def chart_boundaries(path, rows):
     p.append(f'<circle class="s1" cx="26" cy="{ly - 4}" r="5"/><text class="t1" x="36" y="{ly}" font-size="12">Total GVA (primary)</text>')
     p.append(f'<path class="s2" d="M196 {ly - 10} l6 6 l-6 6 l-6 -6 z"/><text class="t1" x="208" y="{ly}" font-size="12">Ability to pay (alternative)</text>')
     p.append(f'<line class="l3" x1="398" y1="{ly - 4}" x2="418" y2="{ly - 4}" stroke-width="4" stroke-linecap="round"/>'
-             f'<text class="t1" x="426" y="{ly}" font-size="12">Total FCE, published–corrected (supporting)</text>')
+             f'<text class="t1" x="426" y="{ly}" font-size="12">Total FCE, unresolved historical variants</text>')
     axis_y = top + len(rows) * row_h
     p.append(f'<rect class="over" x="{X(100):.1f}" y="{top - 8}" width="{right - X(100):.1f}" height="{axis_y - top + 8}"/>')
     p.append(f'<text class="t2" x="{(X(100) + right) / 2:.1f}" y="{top - 14}" font-size="11" text-anchor="middle">budget exceeded</text>')
@@ -337,7 +401,7 @@ def chart_sensitivity(path, rows):
     p.append(f'<text class="t2" x="20" y="{axis_y + 40}" font-size="11">One assumption changed at a time. "inputs:" rows replace the '
              'EXIOBASE sector-average input origins (Hartmann Eqs. 8-9).</text>')
     p.append(f'<text class="t2" x="20" y="{axis_y + 56}" font-size="11">Combined extremes are in envelope_climate.csv '
-             '(total GVA 46-104%, ability to pay 84-1,720%). Legacy rows: traceability only.</text></svg>')
+             'and crossed_climate_extrema.csv. Legacy rows: traceability only.</text></svg>')
     Path(path).write_text("\n".join(p) + "\n", encoding="utf-8")
 
 
@@ -353,11 +417,14 @@ def main():
     write_csv(OUT / "sensitivity_climate.csv", sens)
     write_csv(OUT / "regional_contributions.csv", regional_rows())
     write_csv(OUT / "envelope_climate.csv", envelope_rows(impacts))
+    crossed = crossed_climate_rows(impacts)
+    write_csv(OUT / "crossed_climate_sensitivity.csv", crossed)
+    write_csv(OUT / "crossed_climate_extrema.csv", crossed_climate_extrema(crossed))
     (OUT / "milp_budgets.json").write_text(json.dumps(milp_record(impacts), indent=1) + "\n")
     chart_boundaries(OUT / "utilisation_by_boundary.svg", summary)
     chart_sensitivity(OUT / "climate_sensitivity.svg", sens)
     (OUT / "validation.json").write_text(json.dumps(dict(passed=True, checks=checks), indent=1) + "\n")
-    inputs = [pa.EXIO_TERMS, pa.ATP_WEIGHTS, pa.ECON_INPUTS, pa.ONS_ABS, pa.IMPACTS, pa.NETWORK_COSTS, pa.AUDIT_TERMS, AUDIT, VERIFY,
+    inputs = [pa.EXIO_TERMS, pa.ATP_WEIGHTS, pa.ECON_INPUTS, pa.ONS_ABS, pa.IMPACTS, pa.NETWORK_COSTS, pa.AUDIT_TERMS, AUDIT, VERIFY, INVENTORY, ROOT / "data/exio_crosswalk_sensitivity.json",
               ROOT / "pb_allocation.py", Path(__file__)]
     outputs = sorted(p for p in OUT.iterdir() if p.is_file() and p.name != "provenance.json")
     (OUT / "provenance.json").write_text(json.dumps(dict(
@@ -366,7 +433,7 @@ def main():
     print(f"{len(checks)} checks passed")
     for r in summary:
         print(f"  {SHORT[r['category']]:20s} GVA {r['total_gva_pct']:9.4f}%  ATP {r['ability_to_pay_pct']:9.4f}%  "
-              f"FCE {r['total_fce_pct']:.4g}-{r['total_fce_corrected_f_pct']:.4g}%  exceeded: {r['exceeded_under']}")
+              f"historical FCE {r['total_fce_pct']:.4g}-{r['total_fce_corrected_f_pct']:.4g}%  exceeded: {r['exceeded_under']}")
 
 
 if __name__ == "__main__":

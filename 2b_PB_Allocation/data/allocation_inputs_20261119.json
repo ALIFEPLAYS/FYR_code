@@ -7,9 +7,19 @@
   "illustrative": "Teaching or placeholder value with no economic basis. Historical comparison only."
  },
  "production": {
-  "annual_batches": {"value": 861, "unit": "batch/year", "status": "verified_model_output", "source": "05_Joint_MILP/results/comparison.csv, column batches (two_stage and joint cases)"},
-  "batch_size_kg": {"value": 4.65, "unit": "kg mAb/batch", "status": "verified_model_output", "source": "01_SuperPro/rawSP_reports/mab_fedbatch_1000_sut_ICR.xls, section 1 'Batch Size'"},
-  "product_form": "Bulk drug substance (purified mAb). SuperPro 'Filling' section has zero cost, so fill-finish, packaging and distribution are outside the inventory and outside the economic value."
+  "annual_batches": {
+   "value": 861,
+   "unit": "batch/year",
+   "status": "verified_model_output",
+   "source": "05_Joint_MILP/results/comparison.csv, column batches (two_stage and joint cases)"
+  },
+  "batch_size_kg": {
+   "value": 4.65,
+   "unit": "kg mAb/batch",
+   "status": "verified_model_output",
+   "source": "01_SuperPro/rawSP_reports/mab_fedbatch_1000_sut_ICR.xls, section 1 'Batch Size'"
+  },
+  "product_form": "Purified bulk mAb drug substance. Detailed ICR entries include filling labour, cartridges and 20-L bags despite the zero summary line. Retail fill-finish is outside the assessed gate. Reconcile bulk handling and packaging with the partial inventory."
  },
  "unit_value_scenarios_USD2019_per_g": {
   "inherited_selling_price": {
@@ -22,19 +32,55 @@
    "value": 92.09802,
    "status": "verified_model_output",
    "source": "01_SuperPro/rawSP_reports/mab_fedbatch_1000_sut_ICR.xls, 'SUMMARY PER COST ITEM (Entire Process)' TOTAL 92,098.02 $/kg MP (2019 prices) = 51,848,755 $/year / 562.97 kg MP/year (SuperPro 'Unit Production Ref. Rate'; 121 x 4.65 = 562.65 kg differs by 0.06% because the batch size is rounded).",
-   "interpretation": "Full production cost including depreciation, labour, materials, consumables, QC, utilities and waste; no profit. A going concern must sell at or above this, so it is the lowest defensible ex-works value (cost floor). Excludes fill-finish, R&D, royalties and transport."
+   "interpretation": "Full average production cost used as a zero-margin output-value proxy. Facility costs are 53.36% at 121 batches/year. Scaling the unit cost to 861 batches assumes unchanged unit economics. It does not establish a producer price or a price floor."
   }
  },
  "currency_conversion": {
   "formula": "EUR2022 = USD2019 / USD_per_GBP_2019 * (UK_GDP_deflator_2022 / UK_GDP_deflator_2019) / GBP_per_EUR_2022",
-  "USD_per_GBP_2019": {"value": 1.2766, "status": "verified_source", "source": "Bank of England XUAAUSS 2019 annual average, recorded in 08_Parameters/MILP_central_params.json currency_and_price_year_conversions.calculation_inputs"},
-  "UK_GDP_deflator_2019": {"value": 81.1, "status": "verified_source", "source": "ONS YBGB, Blue Book vintage released 30 October 2026"},
-  "UK_GDP_deflator_2022": {"value": 90.6, "status": "verified_source", "source": "ONS YBGB, same vintage as 2019 value"},
-  "GBP_per_EUR_2022": {"value": 0.85276, "status": "verified_source", "source": "ECB euro reference rate, 2022 annual average (Bundesbank compilation)"},
-  "caveat": "The GDP deflator is a general UK price index, not a pharmaceutical producer price index. The target unit matches EXIOBASE (million EUR, current 2022 basic prices)."
+  "USD_per_GBP_2019": {
+   "value": 1.2766,
+   "status": "verified_source",
+   "source": "Bank of England XUAAUSS 2019 annual average, recorded in 08_Parameters/MILP_central_params.json currency_and_price_year_conversions.calculation_inputs"
+  },
+  "UK_GDP_deflator_2019": {
+   "value": 81.1,
+   "status": "verified_source",
+   "source": "ONS YBGB, Blue Book vintage released 30 October 2026"
+  },
+  "UK_GDP_deflator_2022": {
+   "value": 90.6,
+   "status": "verified_source",
+   "source": "ONS YBGB, same vintage as 2019 value"
+  },
+  "GBP_per_EUR_2022": {
+   "value": 0.85276,
+   "status": "verified_source",
+   "source": "ECB euro reference rate, 2022 annual average (Bundesbank compilation)"
+  },
+  "caveat": "The GDP deflator is a general UK price index, not a pharmaceutical producer price index. The target unit matches EXIOBASE (million EUR, current 2022 basic prices).",
+  "pharma_output_price_indices": {
+   "C211": {
+    "2019": 107.7,
+    "2022": 110.2,
+    "source": "https://www.ons.gov.uk/economy/inflationandpriceindices/timeseries/g32a/ppi"
+   },
+   "C212": {
+    "2019": 109.9,
+    "2022": 107.2,
+    "source": "https://www.ons.gov.uk/economy/inflationandpriceindices/timeseries/g32b/ppi"
+   }
+  }
  },
- "population_weight_GB": {"value": 0.008525459, "status": "verified_source", "source": "vendor/pbaesa/pbaesa/allocation.py get_population_weights(), GB share of 2022 world population used inside the Hartmann factors"},
- "legacy_illustrative_share": {"value": 0.001, "status": "illustrative", "source": "Original screening (07_PB/results, 07_PB/review/nine_indicator_summary.csv). No economic derivation."},
+ "population_weight_GB": {
+  "value": 0.008525459,
+  "status": "verified_source",
+  "source": "vendor/pbaesa/pbaesa/allocation.py get_population_weights(), GB share of 2022 world population used inside the Hartmann factors"
+ },
+ "legacy_illustrative_share": {
+  "value": 0.001,
+  "status": "illustrative",
+  "source": "Original screening (07_PB/results, 07_PB/review/nine_indicator_summary.csv). No economic derivation."
+ },
  "retired_inherited_network_gva_USD2019_million": {
   "low": 610.94,
   "high": 678.65,

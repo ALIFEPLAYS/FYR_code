@@ -39,6 +39,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 RAW = ROOT / "data/worldbank"
 OUT = ROOT / "data/ability_to_pay_weights.json"
+CROSSWALK = ROOT / "data/exio_crosswalk_sensitivity.json"
 EXIO_REGIONS = json.loads((ROOT / "data/exiobase_alternatives_2022.json").read_text())["regions"]
 RoW = {"East Asia & Pacific": "WA", "South Asia": "WA", "Latin America & Caribbean": "WL",
        "North America": "WL", "Europe & Central Asia": "WE", "Sub-Saharan Africa": "WF",
@@ -134,13 +135,33 @@ def aggregate(table, weights):
 
 
 def build():
+    primary = country_table("2022")
+    ppp = country_table("2022", "NY.GDP.MKTP.PP.CD", False)
+    ppp_countries = {r["iso2"] for r in ppp}
+    overrides = json.loads(CROSSWALK.read_text())["overrides"]
+    concordance = []
+    for row in primary:
+        region = row["exio_region"]
+        if row["iso3"] in overrides:
+            override = overrides[row["iso3"]]
+            if override["reference"] != region:
+                raise ValueError(f"Stale crosswalk override for {row['iso3']}")
+            region = override["alternative"]
+        concordance.append(dict(row, exio_region=region))
+
     cases = {}
-    for name, year, ind, impute in (("primary_2022_MER", "2022", "NY.GDP.MKTP.CD", True),
-                                     ("validation_2017_MER", "2017", "NY.GDP.MKTP.CD", True),
-                                     ("sensitivity_2022_MER_no_imputation", "2022", "NY.GDP.MKTP.CD", False),
-                                     ("sensitivity_2022_PPP", "2022", "NY.GDP.MKTP.PP.CD", False),
-                                     ("sensitivity_2017_PPP", "2017", "NY.GDP.MKTP.PP.CD", False)):
-        table = country_table(year, ind, impute)
+    for name, year, ind, impute, table in (
+        ("primary_2022_MER", "2022", "NY.GDP.MKTP.CD", True, primary),
+        ("validation_2017_MER", "2017", "NY.GDP.MKTP.CD", True, country_table("2017")),
+        ("sensitivity_2022_MER_no_imputation", "2022", "NY.GDP.MKTP.CD", False,
+         country_table("2022", impute=False)),
+        ("sensitivity_2022_PPP", "2022", "NY.GDP.MKTP.PP.CD", False, ppp),
+        ("sensitivity_2017_PPP", "2017", "NY.GDP.MKTP.PP.CD", False,
+         country_table("2017", "NY.GDP.MKTP.PP.CD", False)),
+        ("sensitivity_2022_MER_matched_PPP", "2022", "NY.GDP.MKTP.CD", True,
+         [row for row in primary if row["iso2"] in ppp_countries]),
+        ("sensitivity_2022_MER_EXIO3", "2022", "NY.GDP.MKTP.CD", True, concordance),
+    ):
         alpha, w, popshare = hjalsted_weights(table)
         cases[name] = dict(
             year=int(year), gdp_indicator=ind, imputation=impute, n_countries=len(table), alpha=alpha,
@@ -149,7 +170,6 @@ def build():
             gap_filled_from_imf=[r["name"] for r in table if r["gdp_source"] == "IMF WEO NGDPD"
                                  or r["population_source"] == "IMF WEO LP"],
             UK=dict(population_share=popshare["GB"], atp_weight=w["GB"], ratio=w["GB"] / popshare["GB"]))
-    primary = country_table("2022")
     meta = countries()
     income = {r: (meta[r]["income"] if r in meta else "aggregate (treated as not high income)") for r in EXIO_REGIONS}
     record = dict(
@@ -165,6 +185,7 @@ def build():
                                                "population_source", "gdp_usd", "gdp_source")} for r in primary],
         source_sha256={p.name: sha256(p) for p in sorted(RAW.glob("*.json"))},
     )
+    record["source_sha256"][CROSSWALK.name] = sha256(CROSSWALK)
     OUT.write_text(json.dumps(record, indent=1) + "\n")
     return record
 

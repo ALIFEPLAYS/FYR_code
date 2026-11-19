@@ -1,0 +1,91 @@
+{
+ "description": "Attributed annual climate contributions in W/m\u00b2 from the independently replayed joint physical plan (861 batches, 3 sites, 8 lines). The branch two-stage reference has the same characterised climate subtotal. The same saved decisions are held fixed.",
+ "source_sha256": {
+  "07_PB/review/exploratory_readiness_20261116/decision_coefficients.json": "0cc6de86b79d68610f89006ad8f0702ee2863d0a55b9e8deff618bde53c5ee3e",
+  "05_Joint_MILP/results/site_decisions.csv": "d1597f803fd24f568be42c57bb1b4eaa75181c8bb793df91cd8cda4156a8dc0d",
+  "05_Joint_MILP/results/polymer_routing.csv": "5c4ed2d6222cb7c9e3e87f48b943a53172a23e5df4c9637af5ebee33a8389ff1"
+ },
+ "scenarios": {
+  "emulsion_SBR_sensitivity|batch_scaled": {
+   "B": 2.280217588247433e-07,
+   "E": 1.9965949415914134e-07,
+   "bio_q": 7.672313506436144e-11,
+   "f": 0.0,
+   "qDIR": 0.0,
+   "qREU": 3.6262907607591556e-10,
+   "x": 6.111560292475878e-07
+  },
+  "emulsion_SBR_sensitivity|annual_additional_per_site": {
+   "B": 2.280217588247433e-07,
+   "E": 8.570846452582061e-08,
+   "bio_q": 7.672313506436144e-11,
+   "f": 0.0,
+   "qDIR": 0.0,
+   "qREU": 3.6262907607591556e-10,
+   "x": 6.111560292475878e-07
+  },
+  "emulsion_SBR_sensitivity|annual_cell_culture_per_line_shared_buffer": {
+   "B": 2.280217588247433e-07,
+   "E": 1.6481390337333036e-07,
+   "bio_q": 7.672313506436144e-11,
+   "f": 0.0,
+   "qDIR": 0.0,
+   "qREU": 3.6262907607591556e-10,
+   "x": 6.111560292475878e-07
+  },
+  "legacy_foam|batch_scaled": {
+   "B": 2.2819457515806525e-07,
+   "E": 1.9965949415914134e-07,
+   "bio_q": 7.672313506436144e-11,
+   "f": 0.0,
+   "qDIR": 0.0,
+   "qREU": 3.6262907607591556e-10,
+   "x": 6.544934567938308e-07
+  },
+  "legacy_foam|annual_additional_per_site": {
+   "B": 2.2819457515806525e-07,
+   "E": 8.570846452582061e-08,
+   "bio_q": 7.672313506436144e-11,
+   "f": 0.0,
+   "qDIR": 0.0,
+   "qREU": 3.6262907607591556e-10,
+   "x": 6.544934567938308e-07
+  },
+  "legacy_foam|annual_cell_culture_per_line_shared_buffer": {
+   "B": 2.2819457515806525e-07,
+   "E": 1.6481390337333036e-07,
+   "bio_q": 7.672313506436144e-11,
+   "f": 0.0,
+   "qDIR": 0.0,
+   "qREU": 3.6262907607591556e-10,
+   "x": 6.544934567938308e-07
+  },
+  "solution_SBR_sensitivity|batch_scaled": {
+   "B": 2.2821922418880717e-07,
+   "E": 1.9965949415914134e-07,
+   "bio_q": 7.672313506436144e-11,
+   "f": 0.0,
+   "qDIR": 0.0,
+   "qREU": 3.6262907607591556e-10,
+   "x": 6.606747335477578e-07
+  },
+  "solution_SBR_sensitivity|annual_additional_per_site": {
+   "B": 2.2821922418880717e-07,
+   "E": 8.570846452582061e-08,
+   "bio_q": 7.672313506436144e-11,
+   "f": 0.0,
+   "qDIR": 0.0,
+   "qREU": 3.6262907607591556e-10,
+   "x": 6.606747335477578e-07
+  },
+  "solution_SBR_sensitivity|annual_cell_culture_per_line_shared_buffer": {
+   "B": 2.2821922418880717e-07,
+   "E": 1.6481390337333036e-07,
+   "bio_q": 7.672313506436144e-11,
+   "f": 0.0,
+   "qDIR": 0.0,
+   "qREU": 3.6262907607591556e-10,
+   "x": 6.606747335477578e-07
+  }
+ }
+}

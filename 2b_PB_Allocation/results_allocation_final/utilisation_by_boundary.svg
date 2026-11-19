@@ -7,7 +7,7 @@
 <text class="t2" x="20" y="50" font-size="12">Saved two-stage network, 2022, SuperPro cost valuation; incomplete characterised subtotal. Log scale; 100% = allocated budget.</text>
 <circle class="s1" cx="26" cy="70" r="5"/><text class="t1" x="36" y="74" font-size="12">Total GVA (primary)</text>
 <path class="s2" d="M196 64 l6 6 l-6 6 l-6 -6 z"/><text class="t1" x="208" y="74" font-size="12">Ability to pay (alternative)</text>
-<line class="l3" x1="398" y1="70" x2="418" y2="70" stroke-width="4" stroke-linecap="round"/><text class="t1" x="426" y="74" font-size="12">Total FCE, published–corrected (supporting)</text>
+<line class="l3" x1="398" y1="70" x2="418" y2="70" stroke-width="4" stroke-linecap="round"/><text class="t1" x="426" y="74" font-size="12">Total FCE, unresolved historical variants</text>
 <rect class="over" x="710.0" y="100" width="130.0" height="314"/>
 <text class="t2" x="775.0" y="94" font-size="11" text-anchor="middle">budget exceeded</text>
 <line class="grid" x1="190.0" y1="100" x2="190.0" y2="414"/><text class="t2" x="190.0" y="430" font-size="11" text-anchor="middle">0.01%</text>

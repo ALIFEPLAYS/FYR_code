@@ -1,0 +1,19 @@
+raw input 7987 6 1.0000889256846184 x,V,j 44744.2686398 16233.03905808301 4463
+Gtotal, intensity, m, T, pGB, GGB, alphaGB, AF, bugT, bugAF, fullAF, fullGB 44744.26641118016 0.9999999501920601 2.7563702798398917 44744.26863992894 0.008525459 2754749.2965853647 0.7445161375407777 0.0001972932187632148 94376.98792229164 0.0004161413565987851 0.00021962455209673652 0.6841029208852715
+all_inputs vs six intensity, alternative accounting 0.9999999999890249 4.979696479194008e-08
+FCE direct 0.00016002906085006347 own S 1.0000000000000018 c[j],Ljj 2.344545287727734 1.0224832696910218 formula FCE 0.00043526310550936836 code replay 0.0008533198626938272 double diagonal with corrected axis 0.0005952921663594319 single diagonal vendor axis 0.0006932908018437637
+sector FCE published workbook matching row
+Allocation Factors ('Country (c.f. ISO 3166-1 alpha-2) \n& Rest of World regions', 'Sector (c.f. EU’s NACE Rev.1 classification)', 'Allocation factors calculated \nvia direct final consumption expenditure', 'Allocation factors calculated \nvia total final consumption expenditure', 'Allocation factors calculated \nvia direct gross value added', 'Allocation factors calculated \nvia total gross value added')
+Allocation Factors ('AT', 'Activities auxiliary to financial intermediation (67)', 1.573430444442032e-06, 4.174211425520345e-06, 1.15810505512237e-06, 3.139292071459878e-06)
+Allocation Factors ('GB', 'Chemicals nec', 0.0001600290608500635, 0.000853319862693829, 5.02383680092526e-05, 0.0004161413565987638)
+FCE 0.00043526310550936836 net fraction 0.008456578146158699 budget 3.6808364658796924e-06 utilisation 29.41687001088049
+FCE sector weights normalised 0.0004352244028813795 net fraction 0.008456578146158699 budget 3.680509174081643e-06 utilisation 29.41948592618554
+GVA 0.0001972932187632148 net fraction 0.008456578146158699 budget 1.6684255221783096e-06 utilisation 64.89872422157757
+full GVA 0.00021962455209673652 net fraction 0.008456578146158699 budget 1.8572721876211547e-06 utilisation 58.29984886963605
+ATP FCE using branch weight 0.00044307679199260153 net fraction 0.008456578146158699 budget 3.746913516234738e-06 utilisation 28.89810169862169
+ATP full GVA using branch weight 0.00012073475223504396 net fraction 0.008456578146158699 budget 1.0210028672327578e-06 utilisation 106.05130634114799
+GB target allocation raw satellite detail {'Taxes less subsidies on products purchased: Total': np.float64(0.0), 'Other net taxes on production': np.float64(7.54254898301), "Compensation of employees; wages, salaries, & employers' social contributions: Low-skilled": np.float64(0.0), "Compensation of employees; wages, salaries, & employers' social contributions: Medium-skilled": np.float64(0.0), "Compensation of employees; wages, salaries, & employers' social contributions: High-skilled": np.float64(0.0), 'Operating surplus: Consumption of fixed capital': np.float64(16225.4965091), 'Operating surplus: Rents on land': np.float64(0.0), 'Operating surplus: Royalties on resources': np.float64(0.0), 'Operating surplus: Remaining net operating surplus': np.float64(0.0)}
+FCE raw regional column mass error, local negative cells, min FCE, total directly negative, minimum c 3.3306690738754696e-16 0 0.0 0 1.0
+FCE positive output / zero FCE 146
+largest zero-direct row ('CN', 'Distribution and trade of electricity') output 169096.531384 best-supported FCE 0.0014189046977185074
+normalised GVA AF 0.00019727567588867783
