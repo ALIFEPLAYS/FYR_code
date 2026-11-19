@@ -92,9 +92,24 @@
    "detail": "foreign share 0.0000"
   },
   {
+   "check": "input_shares_sum_to_one_full_supply_chain",
+   "passed": true,
+   "detail": "foreign share 0.3159"
+  },
+  {
    "check": "default_input_origin_is_hartmann_sector_average",
    "passed": true,
    "detail": "primary results use EXIOBASE sector-average input shares"
+  },
+  {
+   "check": "independent_raw_audit_agrees",
+   "passed": true,
+   "detail": "7 climate results recomputed from raw EXIOBASE/World Bank/SuperPro; max rel. deviation 3.1e-15"
+  },
+  {
+   "check": "sos_matches_pbaesa_code_and_cf_workbook",
+   "passed": true,
+   "detail": "nine SOS values (nitrogen from PBAESA code; eight also in the CF workbook)"
   },
   {
    "check": "impacts_unchanged",

@@ -18,41 +18,41 @@
 <line class="grid" x1="840.0" y1="100" x2="840.0" y2="414"/><text class="t2" x="840.0" y="430" font-size="11" text-anchor="middle">1000%</text>
 <line class="ref" x1="710.0" y1="100" x2="710.0" y2="414" stroke-width="2" stroke-dasharray="5 3"/>
 <text class="t1" x="178" y="129.0" font-size="12" text-anchor="end">Climate change</text>
-<g><title>Climate change, total FCE: 15–21.5%</title><line class="l3" x1="602.9" y1="125.0" x2="623.2" y2="125.0" stroke-width="4" stroke-linecap="round"/></g>
+<g><title>Climate change, total FCE: 15–23.2%</title><line class="l3" x1="602.9" y1="125.0" x2="627.6" y2="125.0" stroke-width="4" stroke-linecap="round"/></g>
 <g><title>Climate change, total GVA: 64.9%</title><circle class="s1 ring" cx="685.6" cy="125.0" r="6" stroke-width="2"/></g>
 <g><title>Climate change, ability to pay: 153%</title><path class="s2 ring" stroke-width="2" d="M734.2 118.0 l7 7 l-7 7 l-7 -7 z"/></g>
 <text class="t1" x="685.6" y="114.0" font-size="11" text-anchor="middle">64.9%</text>
 <text class="t1" x="744.2" y="129.0" font-size="11">153.5%</text>
 <text class="t1" x="178" y="163.0" font-size="12" text-anchor="end">Ocean acidification</text>
-<g><title>Ocean acidification, total FCE: 4.78–6.85%</title><line class="l3" x1="538.3" y1="159.0" x2="558.7" y2="159.0" stroke-width="4" stroke-linecap="round"/></g>
+<g><title>Ocean acidification, total FCE: 4.78–7.4%</title><line class="l3" x1="538.3" y1="159.0" x2="563.0" y2="159.0" stroke-width="4" stroke-linecap="round"/></g>
 <g><title>Ocean acidification, total GVA: 20.7%</title><circle class="s1 ring" cx="621.0" cy="159.0" r="6" stroke-width="2"/></g>
 <g><title>Ocean acidification, ability to pay: 48.9%</title><path class="s2 ring" stroke-width="2" d="M669.6 152.0 l7 7 l-7 7 l-7 -7 z"/></g>
 <text class="t1" x="178" y="197.0" font-size="12" text-anchor="end">Aerosol loading</text>
-<g><title>Aerosol loading, total FCE: 3.81–5.46%</title><line class="l3" x1="525.5" y1="193.0" x2="545.8" y2="193.0" stroke-width="4" stroke-linecap="round"/></g>
+<g><title>Aerosol loading, total FCE: 3.81–5.9%</title><line class="l3" x1="525.5" y1="193.0" x2="550.2" y2="193.0" stroke-width="4" stroke-linecap="round"/></g>
 <g><title>Aerosol loading, total GVA: 16.5%</title><circle class="s1 ring" cx="608.2" cy="193.0" r="6" stroke-width="2"/></g>
 <g><title>Aerosol loading, ability to pay: 38.9%</title><path class="s2 ring" stroke-width="2" d="M656.8 186.0 l7 7 l-7 7 l-7 -7 z"/></g>
 <text class="t1" x="178" y="231.0" font-size="12" text-anchor="end">Phosphorus cycle</text>
-<g><title>Phosphorus cycle, total FCE: 2.56–3.68%</title><line class="l3" x1="503.2" y1="227.0" x2="523.5" y2="227.0" stroke-width="4" stroke-linecap="round"/></g>
+<g><title>Phosphorus cycle, total FCE: 2.56–3.97%</title><line class="l3" x1="503.2" y1="227.0" x2="527.8" y2="227.0" stroke-width="4" stroke-linecap="round"/></g>
 <g><title>Phosphorus cycle, total GVA: 11.1%</title><circle class="s1 ring" cx="585.8" cy="227.0" r="6" stroke-width="2"/></g>
 <g><title>Phosphorus cycle, ability to pay: 26.2%</title><path class="s2 ring" stroke-width="2" d="M634.4 220.0 l7 7 l-7 7 l-7 -7 z"/></g>
 <text class="t1" x="178" y="265.0" font-size="12" text-anchor="end">Biosphere integrity</text>
-<g><title>Biosphere integrity, total FCE: 1.8–2.58%</title><line class="l3" x1="483.3" y1="261.0" x2="503.6" y2="261.0" stroke-width="4" stroke-linecap="round"/></g>
+<g><title>Biosphere integrity, total FCE: 1.8–2.79%</title><line class="l3" x1="483.3" y1="261.0" x2="508.0" y2="261.0" stroke-width="4" stroke-linecap="round"/></g>
 <g><title>Biosphere integrity, total GVA: 7.8%</title><circle class="s1 ring" cx="566.0" cy="261.0" r="6" stroke-width="2"/></g>
 <g><title>Biosphere integrity, ability to pay: 18.4%</title><path class="s2 ring" stroke-width="2" d="M614.6 254.0 l7 7 l-7 7 l-7 -7 z"/></g>
 <text class="t1" x="178" y="299.0" font-size="12" text-anchor="end">Freshwater use</text>
-<g><title>Freshwater use, total FCE: 0.478–0.686%</title><line class="l3" x1="408.4" y1="295.0" x2="428.7" y2="295.0" stroke-width="4" stroke-linecap="round"/></g>
+<g><title>Freshwater use, total FCE: 0.478–0.741%</title><line class="l3" x1="408.4" y1="295.0" x2="433.0" y2="295.0" stroke-width="4" stroke-linecap="round"/></g>
 <g><title>Freshwater use, total GVA: 2.07%</title><circle class="s1 ring" cx="491.0" cy="295.0" r="6" stroke-width="2"/></g>
 <g><title>Freshwater use, ability to pay: 4.89%</title><path class="s2 ring" stroke-width="2" d="M539.6 288.0 l7 7 l-7 7 l-7 -7 z"/></g>
 <text class="t1" x="178" y="333.0" font-size="12" text-anchor="end">Ozone depletion</text>
-<g><title>Ozone depletion, total FCE: 0.0438–0.0628%</title><line class="l3" x1="273.4" y1="329.0" x2="293.7" y2="329.0" stroke-width="4" stroke-linecap="round"/></g>
+<g><title>Ozone depletion, total FCE: 0.0438–0.0678%</title><line class="l3" x1="273.4" y1="329.0" x2="298.1" y2="329.0" stroke-width="4" stroke-linecap="round"/></g>
 <g><title>Ozone depletion, total GVA: 0.19%</title><circle class="s1 ring" cx="356.1" cy="329.0" r="6" stroke-width="2"/></g>
 <g><title>Ozone depletion, ability to pay: 0.448%</title><path class="s2 ring" stroke-width="2" d="M404.7 322.0 l7 7 l-7 7 l-7 -7 z"/></g>
 <text class="t1" x="178" y="367.0" font-size="12" text-anchor="end">Nitrogen cycle</text>
-<g><title>Nitrogen cycle, total FCE: 0.0273–0.0391%</title><line class="l3" x1="246.7" y1="363.0" x2="267.0" y2="363.0" stroke-width="4" stroke-linecap="round"/></g>
+<g><title>Nitrogen cycle, total FCE: 0.0273–0.0422%</title><line class="l3" x1="246.7" y1="363.0" x2="271.3" y2="363.0" stroke-width="4" stroke-linecap="round"/></g>
 <g><title>Nitrogen cycle, total GVA: 0.118%</title><circle class="s1 ring" cx="329.3" cy="363.0" r="6" stroke-width="2"/></g>
 <g><title>Nitrogen cycle, ability to pay: 0.279%</title><path class="s2 ring" stroke-width="2" d="M377.9 356.0 l7 7 l-7 7 l-7 -7 z"/></g>
 <text class="t1" x="178" y="401.0" font-size="12" text-anchor="end">Land-system change</text>
-<g><title>Land-system change, total FCE: 0.0247–0.0354%</title><line class="l3" x1="241.1" y1="397.0" x2="261.4" y2="397.0" stroke-width="4" stroke-linecap="round"/></g>
+<g><title>Land-system change, total FCE: 0.0247–0.0383%</title><line class="l3" x1="241.1" y1="397.0" x2="265.8" y2="397.0" stroke-width="4" stroke-linecap="round"/></g>
 <g><title>Land-system change, total GVA: 0.107%</title><circle class="s1 ring" cx="323.8" cy="397.0" r="6" stroke-width="2"/></g>
 <g><title>Land-system change, ability to pay: 0.253%</title><path class="s2 ring" stroke-width="2" d="M372.4 390.0 l7 7 l-7 7 l-7 -7 z"/></g>
 <text class="t2" x="20" y="458" font-size="11">Only climate change exceeds a budget (ability to pay). Both methods scale all nine budgets by one factor, so the ordering of boundaries is identical.</text></svg>

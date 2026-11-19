@@ -111,6 +111,7 @@ def ability_to_pay_weights_regional():
 
 # --------------------------------------------------------------------------- input origin (Eqs. 8-9)
 NETWORK_COSTS = DATA / "network_cost_structure.json"
+AUDIT_TERMS = DATA / "exiobase_audit_terms_2022.json"
 INPUT_ORIGINS = {
     "sector_average": "EXIOBASE first-tier input shares of GB Chemicals nec (Hartmann default). PRIMARY.",
     "network_costs": ("SuperPro cost structure: facility, labour, QC, utilities and waste are UK (70.2%); purchased "
@@ -121,6 +122,8 @@ INPUT_ORIGINS = {
     "network_costs_all_purchases_imported": ("SuperPro cost structure with all purchased goods imported in the "
                                              "sector's regional mix (largest foreign share; bound)."),
     "domestic_only": "All first-tier inputs from GB, i.e. only the GB term of Hartmann Eq. 1 (bound).",
+    "full_supply_chain": ("Regional origin of all value added embodied in the sector's output (v L), instead of "
+                          "first-tier inputs; tests Hartmann's Eqs. 8-9 simplification."),
 }
 
 
@@ -134,6 +137,9 @@ def input_shares(origin="sector_average"):
     foreign = {r: a for r, a in sector.items() if r != "GB"}
     if origin == "domestic_only":
         return {r: (1.0 if r == "GB" else 0.0) for r in regions}
+    if origin == "full_supply_chain":
+        shares = _json(AUDIT_TERMS)["full_supply_chain_value_added_share"]
+        return {r: shares[r] for r in regions}
     costs = _json(NETWORK_COSTS)
     goods = costs["purchased_goods_share"]
     # Sector intermediate-import ratio: foreign first-tier inputs / all intermediate inputs.
@@ -173,7 +179,10 @@ def total_fce_terms(variant="published"):
     """FCE^total_{j,r} / FCE_r by region (Hartmann Eqs. 3, 5; Oosterhoff 2023 scaling).
 
     "published": as PBAESA computes it; "corrected": the code-comment reading (sum over the final
-    demand of the products sector j supplies). Neither is confirmed by the authors; report both."""
+    demand of the products sector j supplies); "corrected_f": additionally indexes the Oosterhoff
+    scaling f by the final product. None is confirmed by the authors; report the range."""
+    if variant == "corrected_f":
+        return dict(_json(AUDIT_TERMS)["tfce_corr_FR_f_by_region"])
     t = exiobase_terms()["target"]
     key = {"published": "tfce_implemented_by_region", "corrected": "tfce_alternative_by_region"}[variant]
     return dict(zip(exiobase_terms()["regions"], t[key]))
@@ -259,6 +268,8 @@ METHODS = {
     "total_fce": Method("total_fce", "Total FCE (published)", "supporting", "equal per capita", "total FCE, published"),
     "total_fce_corrected": Method("total_fce_corrected", "Total FCE (corrected reading)", "supporting",
                                   "equal per capita", "total FCE, comment-consistent reading"),
+    "total_fce_corrected_f": Method("total_fce_corrected_f", "Total FCE (corrected reading, f by product)",
+                                    "supporting", "equal per capita", "total FCE, both index orientations corrected"),
     "ability_to_pay_fce": Method("ability_to_pay_fce", "Ability to pay x total FCE (corrected)", "supporting",
                                  "ability to pay, country level, 2022", "total FCE, comment-consistent reading"),
     "total_gva_published": Method("total_gva_published", "Total GVA, published factor", "legacy",
@@ -271,7 +282,7 @@ METHODS = {
 
 
 def geographical_weights(method, atp_case="primary_2022_MER"):
-    if method in ("total_gva", "total_fce", "total_fce_corrected", "total_gva_published"):
+    if method in ("total_gva", "total_fce", "total_fce_corrected", "total_fce_corrected_f", "total_gva_published"):
         return population_weights()
     if method in ("ability_to_pay", "ability_to_pay_fce"):
         return ability_to_pay_weights(atp_case)
@@ -291,6 +302,8 @@ def value_terms(method, input_origin="sector_average"):
         return total_fce_terms("published")
     if method in ("total_fce_corrected", "ability_to_pay_fce"):
         return total_fce_terms("corrected")
+    if method == "total_fce_corrected_f":
+        return total_fce_terms("corrected_f")
     raise KeyError(method)
 
 
@@ -330,6 +343,15 @@ def relative_importance(method_a="total_gva", method_b="ability_to_pay", **kw):
     """Budget ratio b/a per category. Identical ratios mean pure rescaling (no change in relative importance)."""
     a, b = budget_vector(method_a, **kw), budget_vector(method_b, **kw)
     return {c: b[c] / a[c] for c in CATEGORIES}
+
+
+def envelope(method="total_gva", category="Climate Change", case="two_stage"):
+    """Utilisation over every combination of value basis x input origin (assumptions compound
+    multiplicatively, so one-at-a-time ranges understate the spread). Returns (min, max) dicts."""
+    impact = load_impacts(case)[category]["value"]
+    rows = [dict(value_basis=b, input_origin=o, utilisation=impact / budget_vector(method, b, input_origin=o)[category])
+            for b in VALUE_BASES for o in INPUT_ORIGINS]
+    return min(rows, key=lambda r: r["utilisation"]), max(rows, key=lambda r: r["utilisation"])
 
 
 def regional_contributions(method="total_gva", atp_case="primary_2022_MER", input_origin="sector_average"):

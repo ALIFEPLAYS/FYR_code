@@ -1,0 +1,10 @@
+category,unit,annual_impact,total_gva_budget,total_gva_pct,ability_to_pay_budget,ability_to_pay_pct,total_fce_budget,total_fce_pct,total_fce_corrected_budget,total_fce_corrected_pct,exceeded_under
+Climate Change,Energy imbalance at top-of-atmosphere [W/m²],1.08279e-06,1.66843e-06,64.8987,7.05586e-07,153.4593,7.21617e-06,15.005,5.03413e-06,21.5089,ability_to_pay
+Ocean Acidification,Aragonite saturation state [Ωarag],2.37342e-07,1.14788e-06,20.6766,4.85443e-07,48.8918,4.96472e-06,4.7806,3.46348e-06,6.8527,none
+Atmospheric Aerosol Loading,Aerosol optical depth (AOD) [-],3.02289e-08,1.83527e-07,16.4711,7.76144e-08,38.9475,7.93778e-07,3.8082,5.53755e-07,5.4589,none
+Phosphorus Cycle,P-flow from freshwater systems into the ocean [Tg P/year],1.85023e-06,1.66843e-05,11.0897,7.05586e-06,26.2226,7.21617e-05,2.564,5.03413e-05,3.6754,none
+Change in Biosphere Integrity,Biodiversity Intactness Index [%],1.3012e-06,1.66843e-05,7.799,7.05586e-06,18.4414,7.21617e-05,1.8032,5.03413e-05,2.5848,none
+Freshwater Use,Consumptive bluewater use [km³/year],0.000138064,0.0066737,2.0688,0.00282234,4.8918,0.0288647,0.4783,0.0201365,0.6856,none
+Stratospheric Ozone Depletion,Stratospheric ozone concentration [DU],4.5843e-08,2.41922e-05,0.1895,1.0231e-05,0.4481,0.000104634,0.0438,7.2995e-05,0.0628,none
+Nitrogen Cycle,Tg N/year,1.21973e-07,0.000103442,0.1179,4.37463e-05,0.2788,0.000447402,0.0273,0.000312116,0.0391,none
+Land-system Change,Land available for anthropogenic occupation [millon km2],1.51864e-07,0.000141983,0.107,6.00454e-05,0.2529,0.000614096,0.0247,0.000428405,0.0354,none

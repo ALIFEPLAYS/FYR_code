@@ -26,7 +26,8 @@ import pb_allocation as pa  # noqa: E402
 OUT = ROOT / "results_allocation_final"
 VERIFY = ROOT / "data/total_gva_verification_2022.json"
 IMPACTS_SHA256 = "2a02c39fc43edd1ec200dc13bb49bdcb5b10493d8fabdfd6196409d85c8daf01"  # results_final/provenance.json
-MAIN = ("total_gva", "ability_to_pay", "total_fce", "total_fce_corrected")
+MAIN = ("total_gva", "ability_to_pay", "total_fce", "total_fce_corrected", "total_fce_corrected_f")
+AUDIT = ROOT / "data/audit_from_raw_2022.json"
 SHORT = {"Climate Change": "Climate change", "Ocean Acidification": "Ocean acidification",
          "Atmospheric Aerosol Loading": "Aerosol loading", "Phosphorus Cycle": "Phosphorus cycle",
          "Change in Biosphere Integrity": "Biosphere integrity", "Freshwater Use": "Freshwater use",
@@ -103,7 +104,8 @@ def sensitivity_rows(impacts):
     origin_labels = {"network_costs": "inputs: network cost structure",
                      "network_costs_high_income_suppliers": "inputs: network costs, high-income suppliers",
                      "network_costs_all_purchases_imported": "inputs: all purchased goods imported",
-                     "domestic_only": "inputs: all from UK (bound)"}
+                     "domestic_only": "inputs: all from UK (bound)",
+                     "full_supply_chain": "inputs: full-supply-chain regional split"}
     for m, g in (("total_gva", "Total GVA"), ("ability_to_pay", "Ability to pay")):
         for origin, label in origin_labels.items():
             add(g, m, label, pa.INPUT_ORIGINS[origin], input_origin=origin)
@@ -111,8 +113,23 @@ def sensitivity_rows(impacts):
     add("Legacy", "ability_to_pay_regional", "ATP on 49 aggregated regions", "Superseded")
     add("Supporting", "total_fce", "total FCE, published", "Companion perspective")
     add("Supporting", "total_fce_corrected", "total FCE, corrected reading", "Companion perspective")
+    add("Supporting", "total_fce_corrected_f", "total FCE, corrected reading with f by product", "Companion perspective")
     add("Supporting", "ability_to_pay_fce", "ability to pay x total FCE (corrected)", "Companion perspective")
     return out
+
+
+def envelope_rows(impacts):
+    """Climate utilisation for every value basis x input origin combination (assumptions compound)."""
+    climate = impacts["Climate Change"]["value"]
+    rows = []
+    for m in ("total_gva", "ability_to_pay"):
+        combos = [(b, o, 100 * climate / pa.budget_vector(m, b, input_origin=o)["Climate Change"])
+                  for b in pa.VALUE_BASES for o in pa.INPUT_ORIGINS]
+        lo, hi = min(c[2] for c in combos), max(c[2] for c in combos)
+        rows += [dict(method=m, value_basis=b, input_origin=o, climate_pct=round(u, 3),
+                      exceeded="YES" if u > 100 else "no",
+                      extreme="min" if u == lo else ("max" if u == hi else "")) for b, o, u in combos]
+    return rows
 
 
 def regional_rows():
@@ -140,7 +157,7 @@ def milp_record(impacts):
         default_method="total_gva", value_basis="cost",
         formula="budget_c = SOS_c x AF x (V_net / x_GB,Chemicals nec)",
         units={c: impacts[c]["unit"] for c in pa.CATEGORIES}, global_sos=pa.SOS, methods={})
-    for m in ("total_gva", "ability_to_pay", "total_fce", "total_fce_corrected"):
+    for m in MAIN:
         a = pa.allocate(m)
         rec["methods"][m] = dict(label=a.method.label, role=a.method.role, geography=a.method.geography,
                                  value_perspective=a.method.value, sector_factor=a.sector_factor,
@@ -207,6 +224,20 @@ def validate(impacts):
     check("default_input_origin_is_hartmann_sector_average",
           math.isclose(pa.allocate("total_gva", input_origin="sector_average").sector_factor, eq7, rel_tol=1e-15),
           "primary results use EXIOBASE sector-average input shares")
+    if AUDIT.exists():
+        aud = json.loads(AUDIT.read_text())["climate_utilisation_pct"]
+        climate = impacts["Climate Change"]["value"]
+        pairs = {"total_gva_eq7": "total_gva", "ability_to_pay_eq7": "ability_to_pay",
+                 "total_fce_published_formula": "total_fce", "total_fce_corr_FR": "total_fce_corrected",
+                 "total_fce_corr_FR_f": "total_fce_corrected_f", "ability_to_pay_fce_corr_FR": "ability_to_pay_fce",
+                 "total_gva_pbaesa_formula": "total_gva_published"}
+        worst = max(abs(100 * climate / pa.budget_vector(m)["Climate Change"] / aud[k] - 1) for k, m in pairs.items())
+        check("independent_raw_audit_agrees", worst < 1e-9,
+              f"7 climate results recomputed from raw EXIOBASE/World Bank/SuperPro; max rel. deviation {worst:.1e}")
+        sos = json.loads(AUDIT.read_text())["checks"]["sos_code_vs_workbook"]
+        check("sos_matches_pbaesa_code_and_cf_workbook",
+              all(math.isclose(pa.SOS[c], code) and (wbv is None or math.isclose(code, wbv)) for c, (code, wbv) in sos.items()),
+              "nine SOS values (nitrogen from PBAESA code; eight also in the CF workbook)")
     check("impacts_unchanged", sha256(pa.IMPACTS) == IMPACTS_SHA256, "results_final/annual_impacts.csv hash")
     failed = [c for c in checks if not c["passed"]]
     if failed:
@@ -254,7 +285,8 @@ def chart_boundaries(path, rows):
     for k, r in enumerate(rows):
         y = top + k * row_h + row_h / 2
         p.append(f'<text class="t1" x="{left - 12}" y="{y + 4:.1f}" font-size="12" text-anchor="end">{SHORT[r["category"]]}</text>')
-        f0, f1 = sorted((r["total_fce_pct"], r["total_fce_corrected_pct"]))
+        f0, f1 = min(r["total_fce_pct"], r["total_fce_corrected_pct"], r["total_fce_corrected_f_pct"]), \
+            max(r["total_fce_pct"], r["total_fce_corrected_pct"], r["total_fce_corrected_f_pct"])
         p.append(f'<g><title>{SHORT[r["category"]]}, total FCE: {f0:.3g}–{f1:.3g}%</title>'
                  f'<line class="l3" x1="{X(f0):.1f}" y1="{y:.1f}" x2="{X(f1):.1f}" y2="{y:.1f}" stroke-width="4" stroke-linecap="round"/></g>')
         g, a = r["total_gva_pct"], r["ability_to_pay_pct"]
@@ -274,7 +306,7 @@ def chart_sensitivity(path, rows):
     cls = {"Total GVA": "s1", "Ability to pay": "s2", "Legacy": "sg"}
     keep = [r for g in cls for r in rows if r["group"] == g]
     left, right, top, bar_h, gap, vmax = 330, 810, 96, 18, 9, 250.0
-    width, height = 900, top + len(keep) * (bar_h + gap) + 64
+    width, height = 900, top + len(keep) * (bar_h + gap) + 72
     X = lambda v: left + min(v, vmax) / vmax * (right - left)
     p = [f'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 {width} {height}" width="{width}" height="{height}" '
          'font-family="Helvetica, Arial, sans-serif" role="img" aria-labelledby="t d">', STYLE,
@@ -302,8 +334,10 @@ def chart_sensitivity(path, rows):
         tag = f"{v:,.1f}%" + (" ▸" if v > vmax else "")
         lx = X(100) + 6 if 85 < v < 100 else X(v) + 6   # keep labels clear of the 100% reference line
         p.append(f'<text class="t1 halo" x="{lx:.1f}" y="{y + bar_h / 2 + 4:.1f}" font-size="11">{tag}</text>')
-    p.append(f'<text class="t2" x="20" y="{axis_y + 44}" font-size="11">"inputs:" rows replace the EXIOBASE sector-average input '
-             'origins (Hartmann Eqs. 8-9). Legacy rows are shown for traceability only.</text></svg>')
+    p.append(f'<text class="t2" x="20" y="{axis_y + 40}" font-size="11">One assumption changed at a time. "inputs:" rows replace the '
+             'EXIOBASE sector-average input origins (Hartmann Eqs. 8-9).</text>')
+    p.append(f'<text class="t2" x="20" y="{axis_y + 56}" font-size="11">Combined extremes are in envelope_climate.csv '
+             '(total GVA 46-104%, ability to pay 84-1,720%). Legacy rows: traceability only.</text></svg>')
     Path(path).write_text("\n".join(p) + "\n", encoding="utf-8")
 
 
@@ -318,20 +352,21 @@ def main():
     write_csv(OUT / "budgets_long.csv", long_rows(impacts))
     write_csv(OUT / "sensitivity_climate.csv", sens)
     write_csv(OUT / "regional_contributions.csv", regional_rows())
+    write_csv(OUT / "envelope_climate.csv", envelope_rows(impacts))
     (OUT / "milp_budgets.json").write_text(json.dumps(milp_record(impacts), indent=1) + "\n")
     chart_boundaries(OUT / "utilisation_by_boundary.svg", summary)
     chart_sensitivity(OUT / "climate_sensitivity.svg", sens)
     (OUT / "validation.json").write_text(json.dumps(dict(passed=True, checks=checks), indent=1) + "\n")
-    inputs = [pa.EXIO_TERMS, pa.ATP_WEIGHTS, pa.ECON_INPUTS, pa.ONS_ABS, pa.IMPACTS, pa.NETWORK_COSTS, VERIFY,
+    inputs = [pa.EXIO_TERMS, pa.ATP_WEIGHTS, pa.ECON_INPUTS, pa.ONS_ABS, pa.IMPACTS, pa.NETWORK_COSTS, pa.AUDIT_TERMS, AUDIT, VERIFY,
               ROOT / "pb_allocation.py", Path(__file__)]
-    outputs = sorted(p for p in OUT.iterdir() if p.name != "provenance.json")
+    outputs = sorted(p for p in OUT.iterdir() if p.is_file() and p.name != "provenance.json")
     (OUT / "provenance.json").write_text(json.dumps(dict(
         inputs={str(p.resolve().relative_to(ROOT.parent)): sha256(p) for p in inputs},
         outputs={p.name: sha256(p) for p in outputs}), indent=1) + "\n")
     print(f"{len(checks)} checks passed")
     for r in summary:
         print(f"  {SHORT[r['category']]:20s} GVA {r['total_gva_pct']:9.4f}%  ATP {r['ability_to_pay_pct']:9.4f}%  "
-              f"FCE {r['total_fce_pct']:.4g}-{r['total_fce_corrected_pct']:.4g}%  exceeded: {r['exceeded_under']}")
+              f"FCE {r['total_fce_pct']:.4g}-{r['total_fce_corrected_f_pct']:.4g}%  exceeded: {r['exceeded_under']}")
 
 
 if __name__ == "__main__":

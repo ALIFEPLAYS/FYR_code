@@ -109,6 +109,27 @@
     "Land-system Change": 0.00042840486506470706
    },
    "epsilon_equivalent_vs_total_gva": 3.017296641471916
+  },
+  "total_fce_corrected_f": {
+   "label": "Total FCE (corrected reading, f by product)",
+   "role": "supporting",
+   "geography": "equal per capita",
+   "value_perspective": "total FCE, both index orientations corrected",
+   "sector_factor": 0.0005511610628168155,
+   "network_share": 0.0084565781461587,
+   "sos_fraction": 4.660936598830285e-06,
+   "budgets": {
+    "Climate Change": 4.660936598830285e-06,
+    "Change in Biosphere Integrity": 4.6609365988302856e-05,
+    "Ocean Acidification": 3.206724379995236e-06,
+    "Stratospheric Ozone Depletion": 6.758358068303914e-05,
+    "Phosphorus Cycle": 4.6609365988302856e-05,
+    "Nitrogen Cycle": 0.0002889780691274777,
+    "Freshwater Use": 0.01864374639532114,
+    "Atmospheric Aerosol Loading": 5.127030258713314e-07,
+    "Land-system Change": 0.0003966457045604573
+   },
+   "epsilon_equivalent_vs_total_gva": 2.7936138214578
   }
  },
  "relative_importance_ability_to_pay_over_total_gva": {
@@ -129,21 +150,25 @@
    "cost|network_costs_high_income_suppliers": 1.1601462582798898e-06,
    "cost|network_costs_all_purchases_imported": 1.750877704326927e-06,
    "cost|domestic_only": 1.1710292632977205e-06,
+   "cost|full_supply_chain": 1.857272187621159e-06,
    "cost_no_inflation|sector_average": 1.4934802411552012e-06,
    "cost_no_inflation|network_costs": 1.2563488075371557e-06,
    "cost_no_inflation|network_costs_high_income_suppliers": 1.0384973680629035e-06,
    "cost_no_inflation|network_costs_all_purchases_imported": 1.5672867750652732e-06,
    "cost_no_inflation|domestic_only": 1.0482392191329482e-06,
+   "cost_no_inflation|full_supply_chain": 1.6625251039301983e-06,
    "cost_plus_margin_SIC21.1|sector_average": 1.9538503842369177e-06,
    "cost_plus_margin_SIC21.1|network_costs": 1.6436224147454074e-06,
    "cost_plus_margin_SIC21.1|network_costs_high_income_suppliers": 1.3586175603162016e-06,
    "cost_plus_margin_SIC21.1|network_costs_all_purchases_imported": 2.050408022339881e-06,
    "cost_plus_margin_SIC21.1|domestic_only": 1.3713623686717932e-06,
+   "cost_plus_margin_SIC21.1|full_supply_chain": 2.1750038759166795e-06,
    "cost_plus_margin_SIC21|sector_average": 2.10216232536272e-06,
    "cost_plus_margin_SIC21|network_costs": 1.768385719436198e-06,
    "cost_plus_margin_SIC21|network_costs_high_income_suppliers": 1.4617468527347677e-06,
    "cost_plus_margin_SIC21|network_costs_all_purchases_imported": 2.206049414509175e-06,
-   "cost_plus_margin_SIC21|domestic_only": 1.4754590879116472e-06
+   "cost_plus_margin_SIC21|domestic_only": 1.4754590879116472e-06,
+   "cost_plus_margin_SIC21|full_supply_chain": 2.3401030305888167e-06
   },
   "ability_to_pay": {
    "cost|sector_average": 7.05585832835287e-07,
@@ -151,21 +176,25 @@
    "cost|network_costs_high_income_suppliers": 7.193509210212368e-08,
    "cost|network_costs_all_purchases_imported": 8.108896647223917e-07,
    "cost|domestic_only": 7.033603517644272e-08,
+   "cost|full_supply_chain": 1.0210028672327598e-06,
    "cost_no_inflation|sector_average": 6.316005633878782e-07,
    "cost_no_inflation|network_costs": 3.2874807397947425e-07,
    "cost_no_inflation|network_costs_high_income_suppliers": 6.439222924373322e-08,
    "cost_no_inflation|network_costs_all_purchases_imported": 7.258626027481893e-07,
    "cost_no_inflation|domestic_only": 6.296084384999452e-08,
+   "cost_no_inflation|full_supply_chain": 9.139440676884858e-07,
    "cost_plus_margin_SIC21.1|sector_average": 8.262934918409931e-07,
    "cost_plus_margin_SIC21.1|network_costs": 4.300857373011557e-07,
    "cost_plus_margin_SIC21.1|network_costs_high_income_suppliers": 8.424134339562748e-08,
    "cost_plus_margin_SIC21.1|network_costs_all_purchases_imported": 9.49612111497214e-07,
    "cost_plus_margin_SIC21.1|domestic_only": 8.236872879753664e-08,
+   "cost_plus_margin_SIC21.1|full_supply_chain": 1.1956702998915873e-06,
    "cost_plus_margin_SIC21|sector_average": 8.89015383293504e-07,
    "cost_plus_margin_SIC21|network_costs": 4.6273247988916003e-07,
    "cost_plus_margin_SIC21|network_costs_high_income_suppliers": 9.063589502703621e-08,
    "cost_plus_margin_SIC21|network_costs_all_purchases_imported": 1.0216948137905772e-06,
-   "cost_plus_margin_SIC21|domestic_only": 8.862113489504777e-08
+   "cost_plus_margin_SIC21|domestic_only": 8.862113489504777e-08,
+   "cost_plus_margin_SIC21|full_supply_chain": 1.2864306695463234e-06
   }
  },
  "sensitivity_note": "Each sensitivity is the global SOS vector times the listed fraction (key = value_basis|input_origin). Run MILP sensitivities by rescaling, not by letting the solver choose a variant.",

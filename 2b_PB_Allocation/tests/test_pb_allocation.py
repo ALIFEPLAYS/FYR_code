@@ -204,13 +204,30 @@ class InputOriginTests(unittest.TestCase):
         net = pa.input_shares("network_costs")
         self.assertAlmostEqual(net["CN"] / net["US"], sector["CN"] / sector["US"], places=12)
 
-    def test_conclusions_hold_across_input_origins(self):
+    def test_conclusions_hold_when_input_origin_alone_changes(self):
         imp = pa.load_impacts()["Climate Change"]["value"]
         for origin in pa.INPUT_ORIGINS:
             g = imp / pa.budget_vector("total_gva", input_origin=origin)["Climate Change"]
             a = imp / pa.budget_vector("ability_to_pay", input_origin=origin)["Climate Change"]
             self.assertLess(g, 1.0, origin)
             self.assertGreater(a, 1.0, origin)
+
+    def test_full_supply_chain_shares(self):
+        s = pa.input_shares("full_supply_chain")
+        self.assertAlmostEqual(sum(s.values()), 1.0, places=12)
+        self.assertAlmostEqual(s["GB"], 0.6841, places=4)
+
+    def test_combined_assumption_envelope(self):
+        """Assumptions compound: neither method's conclusion holds for every combination."""
+        g_lo, g_hi = pa.envelope("total_gva")
+        a_lo, a_hi = pa.envelope("ability_to_pay")
+        self.assertAlmostEqual(100 * g_lo["utilisation"], 46.271, places=2)
+        self.assertAlmostEqual(100 * g_hi["utilisation"], 104.265, places=2)
+        self.assertAlmostEqual(100 * a_lo["utilisation"], 84.170, places=2)
+        self.assertAlmostEqual(100 * a_hi["utilisation"], 1719.778, places=1)
+        self.assertEqual((g_hi["value_basis"], g_hi["input_origin"]),
+                         ("cost_no_inflation", "network_costs_high_income_suppliers"))
+        self.assertEqual((a_lo["value_basis"], a_lo["input_origin"]), ("cost_plus_margin_SIC21", "full_supply_chain"))
 
     def test_input_origin_rejected_for_fce(self):
         with self.assertRaises(ValueError):
@@ -233,7 +250,8 @@ class BudgetTests(unittest.TestCase):
 
     def test_reference_results(self):
         expected = {"total_gva": 64.8987, "ability_to_pay": 153.4593, "total_fce": 15.0051,
-                    "total_fce_corrected": 21.5093, "total_gva_published": 30.7687, "ability_to_pay_regional": 148.0237}
+                    "total_fce_corrected": 21.5093, "total_fce_corrected_f": 23.2311,
+                    "total_gva_published": 30.7687, "ability_to_pay_regional": 148.0237}
         for m, pct in expected.items():
             got = 100 * pa.utilisation(self.impacts, pa.budget_vector(m))["Climate Change"]
             self.assertAlmostEqual(got, pct, places=3, msg=m)
@@ -265,6 +283,39 @@ class BudgetTests(unittest.TestCase):
     def test_impacts_file_unchanged(self):
         digest = hashlib.sha256(pa.IMPACTS.read_bytes()).hexdigest()
         self.assertEqual(digest, "2a02c39fc43edd1ec200dc13bb49bdcb5b10493d8fabdfd6196409d85c8daf01")
+
+
+class RawAuditTests(unittest.TestCase):
+    """Compare with tools/audit_from_raw.py, which rebuilds every result from raw sources."""
+
+    def setUp(self):
+        path = ROOT / "data/audit_from_raw_2022.json"
+        if not path.exists():
+            self.skipTest("run tools/audit_from_raw.py with local EXIOBASE first")
+        self.audit = json.loads(path.read_text())
+
+    def test_all_central_results_reproduced_from_raw_sources(self):
+        imp = pa.load_impacts()
+        pairs = {"total_gva_eq7": "total_gva", "ability_to_pay_eq7": "ability_to_pay",
+                 "total_fce_published_formula": "total_fce", "total_fce_corr_FR": "total_fce_corrected",
+                 "total_fce_corr_FR_f": "total_fce_corrected_f", "ability_to_pay_fce_corr_FR": "ability_to_pay_fce",
+                 "total_gva_pbaesa_formula": "total_gva_published"}
+        for k, m in pairs.items():
+            mine = pa.utilisation(imp, pa.budget_vector(m))
+            for c, pct in self.audit["utilisation_pct"][k].items():
+                self.assertTrue(math.isclose(100 * mine[c], pct, rel_tol=1e-9), f"{m} {c}")
+
+    def test_published_factors_reproduced_by_pbaesa_formulas(self):
+        c = self.audit["checks"]
+        self.assertLess(abs(c["pbaesa_tgva_formula_vs_workbook"]), 1e-9)
+        self.assertLess(abs(c["pbaesa_tfce_formula_vs_workbook"]), 1e-9)
+        self.assertEqual(c["sectors_with_output_zero_direct_and_total_fce"], 146)
+
+    def test_sos_values(self):
+        for cat, (code, workbook) in self.audit["checks"]["sos_code_vs_workbook"].items():
+            self.assertEqual(pa.SOS[cat], code)
+            if workbook is not None:
+                self.assertEqual(code, workbook)
 
 
 class ExportTests(unittest.TestCase):

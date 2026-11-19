@@ -1,0 +1,105 @@
+{
+ "passed": true,
+ "checks": [
+  {
+   "check": "eq7_factor_two_independent_routes",
+   "passed": true,
+   "detail": "A-based extract 1.9729321876e-04 vs Z/solve-based 1.9729321876e-04"
+  },
+  {
+   "check": "pbaesa_formula_reproduces_published",
+   "passed": true,
+   "detail": "broadcasting formula 4.1614136523e-04 vs workbook 4.1614135660e-04"
+  },
+  {
+   "check": "published_factor_differs_from_eq7",
+   "passed": true,
+   "detail": "Eq.7 / published = 0.4741"
+  },
+  {
+   "check": "legacy_factor_matches_workbook",
+   "passed": true,
+   "detail": "4.1614135660e-04"
+  },
+  {
+   "check": "total_gva_equals_output_for_target",
+   "passed": true,
+   "detail": "(vL)_j = 0.999999950; m_j GVA_j = 44744.27 vs x_j 44744.27 M EUR"
+  },
+  {
+   "check": "hjalsted_alpha_2017_reproduced",
+   "passed": true,
+   "detail": "country-level MER alpha 2017 = 0.2341 vs published 0.243 (-3.7%)"
+  },
+  {
+   "check": "hjalsted_used_market_exchange_rates",
+   "passed": true,
+   "detail": "PPP alpha 2017 = 0.4309 is inconsistent with 0.243"
+  },
+  {
+   "check": "country_mapping_matches_pbaesa_population",
+   "passed": true,
+   "detail": "worst regional population-share deviation 5.9%, GB -0.69%"
+  },
+  {
+   "check": "population_weights_sum_to_one",
+   "passed": true,
+   "detail": "sum 1.000088926"
+  },
+  {
+   "check": "ability_to_pay_weights_sum_to_one",
+   "passed": true,
+   "detail": "sum 1.000000000"
+  },
+  {
+   "check": "switching_method_only_rescales",
+   "passed": true,
+   "detail": "budget ratio ability_to_pay/total_gva = 0.422905 for all nine indicators"
+  },
+  {
+   "check": "budget_equals_hand_arithmetic",
+   "passed": true,
+   "detail": "1.668426e-06 W/m2"
+  },
+  {
+   "check": "network_value_matches_previous_review",
+   "passed": true,
+   "detail": "378.383 M EUR2022"
+  },
+  {
+   "check": "input_shares_sum_to_one_sector_average",
+   "passed": true,
+   "detail": "foreign share 0.2555"
+  },
+  {
+   "check": "input_shares_sum_to_one_network_costs",
+   "passed": true,
+   "detail": "foreign share 0.1194"
+  },
+  {
+   "check": "input_shares_sum_to_one_network_costs_high_income_suppliers",
+   "passed": true,
+   "detail": "foreign share 0.1194"
+  },
+  {
+   "check": "input_shares_sum_to_one_network_costs_all_purchases_imported",
+   "passed": true,
+   "detail": "foreign share 0.2978"
+  },
+  {
+   "check": "input_shares_sum_to_one_domestic_only",
+   "passed": true,
+   "detail": "foreign share 0.0000"
+  },
+  {
+   "check": "default_input_origin_is_hartmann_sector_average",
+   "passed": true,
+   "detail": "primary results use EXIOBASE sector-average input shares"
+  },
+  {
+   "check": "impacts_unchanged",
+   "passed": true,
+   "detail": "results_final/annual_impacts.csv hash"
+  }
+ ]
+}
