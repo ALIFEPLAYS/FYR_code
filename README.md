@@ -11,6 +11,7 @@ The project has four main sections, shown in the same order on GitHub and in VS 
   lca_pipeline/          Life-cycle inventory and impact calculations
   parameters/            LCA settings
   outputs/               Local generated route factors (not uploaded)
+2b_PB_Allocation/        Planetary-boundary budgets: total GVA (primary) and ability to pay
 3_Sequential_Supply_Chain_MILP/
   mAb_SupplyChain_model/  Old first-stage manufacturing/supply-chain model
   MILP/                  Old second-stage IS model and numerical analyses
@@ -25,6 +26,7 @@ The project has four main sections, shown in the same order on GitHub and in VS 
 | --- | --- |
 | 1. SuperPro results | [Reports, extraction and data vintages](1_SuperPro_Results/README.md) |
 | 2. LCA | [Validate inputs and generate route factors](2_LCA/README.md) |
+| 2b. PB allocation | [Annual PB budgets for the network and their methodology](2b_PB_Allocation/README.md) |
 | 3. Old sequential supply chain + MILP | [Run the original two-stage workflow](3_Sequential_Supply_Chain_MILP/README.md) |
 | 4. Joint MILP | [Choose a joint-model variant](4_Joint_MILP/README.md) |
 

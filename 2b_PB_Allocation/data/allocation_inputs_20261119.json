@@ -1,0 +1,45 @@
+{
+ "description": "Economic inputs for the 19 November 2026 PB allocation review. Every value carries an evidence status. Values marked 'assumption' are scenario parameters, not verified data.",
+ "evidence_status_vocabulary": {
+  "verified_source": "Read from a cited external statistic or published dataset and re-checked.",
+  "verified_model_output": "Read from the project's own model output (SuperPro or MILP); verified as the model value, not as real-world data.",
+  "assumption": "User or inherited assumption without an external source. Must be reported as a scenario.",
+  "illustrative": "Teaching or placeholder value with no economic basis. Historical comparison only."
+ },
+ "production": {
+  "annual_batches": {"value": 861, "unit": "batch/year", "status": "verified_model_output", "source": "05_Joint_MILP/results/comparison.csv, column batches (two_stage and joint cases)"},
+  "batch_size_kg": {"value": 4.65, "unit": "kg mAb/batch", "status": "verified_model_output", "source": "01_SuperPro/rawSP_reports/mab_fedbatch_1000_sut_ICR.xls, section 1 'Batch Size'"},
+  "product_form": "Bulk drug substance (purified mAb). SuperPro 'Filling' section has zero cost, so fill-finish, packaging and distribution are outside the inventory and outside the economic value."
+ },
+ "unit_value_scenarios_USD2019_per_g": {
+  "inherited_selling_price": {
+   "value": 200.0,
+   "status": "assumption",
+   "source": "User-specified $200/g carried through the 14 November allocation review. No market, contract or literature source is recorded in the project.",
+   "interpretation": "Assumed ex-works value of bulk drug substance."
+  },
+  "superpro_unit_production_cost": {
+   "value": 92.09802,
+   "status": "verified_model_output",
+   "source": "01_SuperPro/rawSP_reports/mab_fedbatch_1000_sut_ICR.xls, 'SUMMARY PER COST ITEM (Entire Process)' TOTAL 92,098.02 $/kg MP (2019 prices) = 51,848,755 $/year / 562.97 kg MP/year (SuperPro 'Unit Production Ref. Rate'; 121 x 4.65 = 562.65 kg differs by 0.06% because the batch size is rounded).",
+   "interpretation": "Full production cost including depreciation, labour, materials, consumables, QC, utilities and waste; no profit. A going concern must sell at or above this, so it is the lowest defensible ex-works value (cost floor). Excludes fill-finish, R&D, royalties and transport."
+  }
+ },
+ "currency_conversion": {
+  "formula": "EUR2022 = USD2019 / USD_per_GBP_2019 * (UK_GDP_deflator_2022 / UK_GDP_deflator_2019) / GBP_per_EUR_2022",
+  "USD_per_GBP_2019": {"value": 1.2766, "status": "verified_source", "source": "Bank of England XUAAUSS 2019 annual average, recorded in 08_Parameters/MILP_central_params.json currency_and_price_year_conversions.calculation_inputs"},
+  "UK_GDP_deflator_2019": {"value": 81.1, "status": "verified_source", "source": "ONS YBGB, Blue Book vintage released 30 October 2026"},
+  "UK_GDP_deflator_2022": {"value": 90.6, "status": "verified_source", "source": "ONS YBGB, same vintage as 2019 value"},
+  "GBP_per_EUR_2022": {"value": 0.85276, "status": "verified_source", "source": "ECB euro reference rate, 2022 annual average (Bundesbank compilation)"},
+  "caveat": "The GDP deflator is a general UK price index, not a pharmaceutical producer price index. The target unit matches EXIOBASE (million EUR, current 2022 basic prices)."
+ },
+ "population_weight_GB": {"value": 0.008525459, "status": "verified_source", "source": "vendor/pbaesa/pbaesa/allocation.py get_population_weights(), GB share of 2022 world population used inside the Hartmann factors"},
+ "legacy_illustrative_share": {"value": 0.001, "status": "illustrative", "source": "Original screening (07_PB/results, 07_PB/review/nine_indicator_summary.csv). No economic derivation."},
+ "retired_inherited_network_gva_USD2019_million": {
+  "low": 610.94,
+  "high": 678.65,
+  "status": "assumption",
+  "source": "07_PB/review/preconstraint_audit_20261114/allocation_review.json; rounded user inputs, derivation not recorded.",
+  "why_retired": "Only used for the 'network direct GVA / sector direct GVA x total GVA factor' scenario, which is internally inconsistent: EXIOBASE total GVA of the sector equals its gross output, so the matched key is the output share. Kept for traceability only."
+ }
+}

@@ -1,0 +1,57 @@
+{
+ "description": "Independent recomputation of Hartmann total-GVA factors (solve-based, Z-based alpha).",
+ "target": {
+  "region": "GB",
+  "sector": "Chemicals nec",
+  "gross_output_eur_m": 44744.2686398,
+  "direct_gva_eur_m": 16233.03905808301,
+  "vL": 0.9999999501920582,
+  "m_eq7": 2.7563702798398864,
+  "m_pbaesa": 5.813883003867207,
+  "total_gva_eq7_eur_m": 44744.26641118007,
+  "total_gva_pbaesa_eur_m": 94376.98988090134,
+  "alpha_GB": 0.7445161375407203,
+  "af_published": 0.0004161413565987638,
+  "af_pbaesa_formula": 0.00041614136523496106,
+  "af_eq7": 0.00019729321876320324,
+  "af_eq7_over_published": 0.4741014456619603
+ },
+ "all_sectors": {
+  "n_positive_published": 6161,
+  "pbaesa_formula_vs_published_max_rel_error": 0.00010914476153289776,
+  "eq7_over_published_median": 1.7616583992536934,
+  "eq7_over_published_p05_p95": [
+   0.3289600751903851,
+   2130.020625601893
+  ],
+  "vL_min_max_over_producing_sectors": [
+   0.447048626906787,
+   3.9463994975625445
+  ],
+  "sum_af_eq7": 1.9737928761543515,
+  "sum_af_published": 8.861770742045648,
+  "world_output_over_world_gva": 2.0071505697819316
+ },
+ "local_data_integrity": {
+  "z_non_numeric_cells": [
+   {
+    "row": [
+     "AT",
+     "Cultivation of cereal grains nec"
+    ],
+    "col": [
+     "ES",
+     "Transport via pipelines"
+    ],
+    "replaced_with": 2.389167356385463e-13
+   }
+  ],
+  "z_vs_A_times_x_max_rel_deviation": 2.6274631467584464e-12
+ },
+ "source_sha256": {
+  "x.txt": "569fbfef627b42c504d586d9bb7f24319b5b38bac4c3028af31081ec93ea01c8",
+  "A.txt": "f847a530a3bbbcc85eb63c447829b3bde301b93d327b95e74770b77ea623b16d",
+  "Z.txt": "2f62d376ed1b7a7a938ee3057714e7e5a9b13290302708154b1c1a279dd77bf8",
+  "factor_inputs/F.txt": "069800d421c4c4c70c61e9e58e678e274be40a8c86a77c04682c2fbf1fca62e3"
+ }
+}

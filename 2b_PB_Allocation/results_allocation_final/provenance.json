@@ -1,0 +1,23 @@
+{
+ "inputs": {
+  "2b_PB_Allocation/data/exiobase_alternatives_2022.json": "20464b1dc8792bf17fe7eb2d6606fec6ba887d8c0d365e187b33bbd7347175be",
+  "2b_PB_Allocation/data/ability_to_pay_weights.json": "b10363236abf0b0f90ebbb56b4739687cb07969ba7ab74209df76004b672acc4",
+  "2b_PB_Allocation/data/allocation_inputs_20261119.json": "1deb466c8950bf3f3ac77ab96d6165f9054e74b47e582ea5b59adc25f344b8e2",
+  "2b_PB_Allocation/data/ons/abssectionsas.xlsx": "9e548c5c410b73e5a7aec1f97db8f92843430cb6ef5457b1459a0e0e9b13e710",
+  "2b_PB_Allocation/results_final/annual_impacts.csv": "2a02c39fc43edd1ec200dc13bb49bdcb5b10493d8fabdfd6196409d85c8daf01",
+  "2b_PB_Allocation/data/network_cost_structure.json": "db62420254b26600dd5884fef9033d904a5c946c687a5dfe226c08a74779d13e",
+  "2b_PB_Allocation/data/total_gva_verification_2022.json": "d285599fba97b2d87b476bacb0b61ac7b2aa5cb90a5ce9d898c92560baf62fcb",
+  "2b_PB_Allocation/pb_allocation.py": "e38bca38b9fed5f6780e5c37ca80de664e60ee1ab8d983babc9b8d1aeb2c8a71",
+  "2b_PB_Allocation/tools/finalise_allocation.py": "bd02ff0fc062c11d6cdd79a5f42f68eb2be60042169b30cf3f34076f94eaf872"
+ },
+ "outputs": {
+  "budgets_long.csv": "aa65ed1c5310495d618af89a9ee7dd30efdb94f8bf45c2ffb210a11a3fdec6c3",
+  "climate_sensitivity.svg": "93e2ffe6214acaf2428370e1ba506777f8e3b16ed5cf7b94d2bfa9f025eb67b8",
+  "milp_budgets.json": "116ca4598fd83b0d9ac62be1fe89786b1b035df689c6be442d0609ac52f52f6b",
+  "regional_contributions.csv": "11a028645cde5b5aa14bdbf0dba33fc0aac02e089e012d9bef2450e6b82b2913",
+  "sensitivity_climate.csv": "a253814e1ba3a93558e95968c7b3693ee891bbc5a43da4823743c71a8ea55a64",
+  "utilisation_by_boundary.svg": "116aade26a2c8f6262f01688df1d9e1d5eaf94a15bc866f9aad8e5aba56628aa",
+  "utilisation_summary.csv": "70b1fc198f85221298adb5d7ca93e869ffe6dced4adf955a346521c0475d7b4e",
+  "validation.json": "ea08bdfc6dc8bf94a029b0fc00fe478c02e25763399906dc18165f4cb3bfb8b7"
+ }
+}

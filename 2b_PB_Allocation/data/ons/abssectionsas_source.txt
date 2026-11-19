@@ -1,0 +1,2 @@
+https://www.ons.gov.uk/file?uri=%2Fbusinessindustryandtrade%2Fbusiness%2Fbusinessservices%2Fdatasets%2Fuknonfinancialbusinesseconomyannualbusinesssurveysectionsas%2Fcurrent%2Fabssectionsas.xlsx
+Retrieved 2026-11-11. ONS current workbook; 2022 row selected where available.

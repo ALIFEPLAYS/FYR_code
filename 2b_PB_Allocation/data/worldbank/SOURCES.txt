@@ -1,0 +1,15 @@
+Raw economic data for the ability-to-pay weights (tools/build_ability_to_pay_weights.py). Retrieved 19 November 2026.
+
+World Bank, World Development Indicators (CC BY 4.0), API v2, years 2017-2022, all economies:
+  SP.POP.TOTL_2017_2022.json        https://api.worldbank.org/v2/country/all/indicator/SP.POP.TOTL?date=2017:2022&format=json&per_page=20000
+  NY.GDP.MKTP.CD_2017_2022.json     https://api.worldbank.org/v2/country/all/indicator/NY.GDP.MKTP.CD?date=2017:2022&format=json&per_page=20000
+  NY.GDP.MKTP.PP.CD_2017_2022.json  https://api.worldbank.org/v2/country/all/indicator/NY.GDP.MKTP.PP.CD?date=2017:2022&format=json&per_page=20000
+  countries.json                    https://api.worldbank.org/v2/country?format=json&per_page=400   (regions, income groups)
+
+IMF World Economic Outlook DataMapper API (gap filling only; trimmed to the economies and years used):
+  imf_weo_NGDPD.json  GDP, current prices, billion USD   https://www.imf.org/external/datamapper/api/v1/NGDPD
+  imf_weo_LP.json     Population, million persons         https://www.imf.org/external/datamapper/api/v1/LP
+  Kept: Taiwan (TWN, not a World Bank economy), South Sudan (SSD), Yemen (YEM), Eritrea (ERI); 2017 and 2022.
+  SHA-256 of the full downloads before trimming:
+    NGDPD 7294ac0b3013e39b131f50f3aeb23eb31bfa30a3b77199538b1e05518ecb491c
+    LP    9ddc36efbd0d0e8166afa9d00e99526425b3c484daf83f5c230af38213410dd0

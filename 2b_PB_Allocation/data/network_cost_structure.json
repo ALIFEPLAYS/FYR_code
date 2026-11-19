@@ -1,0 +1,31 @@
+{
+ "description": "SuperPro entire-process annual cost by item, one 121-batch plant, USD2019/year.",
+ "source": "1_SuperPro_Results/rawSP_reports/mab_fedbatch_1000_sut_ICR.xls",
+ "source_sha256": "0abeda42cd701be608056b3a956989d173fe6de046114882724af57c3959d544",
+ "cost_usd2019_per_year": {
+  "Raw Materials": 3767171.0,
+  "Facility": 27666688.0,
+  "Labor": 6064825.0,
+  "Consumables": 11675193.0,
+  "Lab/QC/QA": 1516206.0,
+  "Utilities": 895208.0,
+  "Waste Trtmt/Disp": 263464.0,
+  "Transportation": 0.0,
+  "Miscellaneous": 0.0
+ },
+ "total_usd2019_per_year": 51848755.0,
+ "domestic_items": [
+  "Facility",
+  "Labor",
+  "Lab/QC/QA",
+  "Utilities",
+  "Waste Trtmt/Disp"
+ ],
+ "purchased_goods_items": [
+  "Raw Materials",
+  "Consumables"
+ ],
+ "domestic_share": 0.7021651918160812,
+ "purchased_goods_share": 0.2978348081839188,
+ "status": "verified_model_output (classification of items is an assumption)"
+}

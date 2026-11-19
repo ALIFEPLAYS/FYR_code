@@ -1,0 +1,83 @@
+LICENSE.txt
+============
+
+License for Derived Data Based on EXIOBASE 3.9.6  
+Version 2025 — Institute of Technical Thermodynamics, RWTH Aachen University
+
+This dataset is derived from EXIOBASE 3.9.6.  
+It is released under a dual license model: a non-commercial academic license and a separate commercial license.  
+For questions or commercial licensing, please contact: exiobase-support@googlegroups.com or the dataset authors.
+
+****************************************
+Non-commercial, academic use
+****************************************
+
+For non-commercial use, this dataset is released under a customized derivative of the 
+Creative Commons Attribution-NonCommercial-ShareAlike (CC-BY-NC-SA) license, incorporating 
+additional definitions listed in parts (a) and (b), and with database components governed 
+by specific licenses as detailed in part (c). 
+
+Other than as set out in these additional definitions, the terms of the CC-BY-NC-SA license 
+apply to the use of this dataset.  
+See https://creativecommons.org/licenses/by-nc-sa/4.0/ for details.
+
+(a) Non-commercial use
+-----------------------
+This license allows for free non-commercial use by the following types of institutions:
+    1. Universities and non-profit research institutes.
+    2. Environmental/social-focused NGOs.
+    3. (Inter)national environmental agencies.
+
+“Non-commercial use” means any use that is not intended to generate financial gain or 
+commercial advantage. Specifically, it excludes:
+    (i) Contracted or commissioned activities ("work-for-hire") by the entities listed above;
+    (ii) Any use intended to generate revenue, including but not limited to consultancy 
+         fees or licensing fees, except for grant funding; and
+    (iii) Any use by for-profit entities.
+
+(b) Derivative works and publication
+------------------------------------
+Derived results can be published under any license (e.g. CC-BY), provided they include 
+an attribution to EXIOBASE and this dataset. Such publication must not include the original 
+or derived coefficients (e.g. direct or full supply chain multipliers, scope 1, 2, 3 
+emission factors) or any raw data points from EXIOBASE or this dataset.
+
+Creating derivative works that compete with EXIOBASE (i.e., in the creation of other 
+input-output databases or databases of coefficients/multipliers) is not permitted without 
+prior written permission of the copyright holders.
+
+(c) Copyright Notice
+---------------------
+This dataset is managed by the Institute of Technical Thermodynamics, RWTH Aachen University.
+
+Copyright holders (2025):
+    - Derived dataset: © 2025 Institute of Technical Thermodynamics, RWTH Aachen University
+    - Source data (EXIOBASE 3.9.6): © 2024 EXIOBASE Consortium
+        * MSUT, IOTs, emission data: © 2024 XIO SA AS
+        * Material extensions: © 2024 Vienna University of Economics and Business (WU)
+        * Material extensions are released under a CC-BY-SA license instead of the 
+          license conditions above.
+
+****************************************
+Commercial use
+****************************************
+
+Commercial licenses — allowing for use in any case not covered by the non-commercial license —
+can be arranged upon request.
+
+For inquiries, please contact:
+    exiobase-support@googlegroups.com
+    or the dataset authors.
+
+Funding collected through licensing supports further development and updates of EXIOBASE 
+and derived datasets, improving their reliability and precision for the benefit of all users.
+
+****************************************
+Attribution
+****************************************
+
+When using this dataset, please cite both:
+    - EXIOBASE 3.9.6 (Zenodo DOI: https://doi.org/10.5281/zenodo.14614930)
+    - The derived dataset:
+      Institute of Technical Thermodynamics, RWTH Aachen University (2025). 
+      Derived dataset based on EXIOBASE 3.9.6.

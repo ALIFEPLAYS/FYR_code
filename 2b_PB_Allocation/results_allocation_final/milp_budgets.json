@@ -1,0 +1,173 @@
+{
+ "description": "Annual PB budgets for the saved UK mAb network (4,003.65 kg/yr bulk drug substance), native PBAESA control-variable units, 2022. Use as fixed parameters: never as decision variables.",
+ "default_method": "total_gva",
+ "value_basis": "cost",
+ "formula": "budget_c = SOS_c x AF x (V_net / x_GB,Chemicals nec)",
+ "units": {
+  "Climate Change": "Energy imbalance at top-of-atmosphere [W/m\u00b2]",
+  "Change in Biosphere Integrity": "Biodiversity Intactness Index [%]",
+  "Ocean Acidification": "Aragonite saturation state [\u03a9arag]",
+  "Stratospheric Ozone Depletion": "Stratospheric ozone concentration [DU]",
+  "Phosphorus Cycle": "P-flow from freshwater systems into the ocean [Tg P/year]",
+  "Nitrogen Cycle": "Tg N/year",
+  "Freshwater Use": "Consumptive bluewater use [km\u00b3/year]",
+  "Atmospheric Aerosol Loading": "Aerosol optical depth (AOD) [-]",
+  "Land-system Change": "Land available for anthropogenic occupation [millon km2]"
+ },
+ "global_sos": {
+  "Climate Change": 1.0,
+  "Change in Biosphere Integrity": 10.0,
+  "Ocean Acidification": 0.688,
+  "Stratospheric Ozone Depletion": 14.5,
+  "Phosphorus Cycle": 10.0,
+  "Nitrogen Cycle": 62.0,
+  "Freshwater Use": 4000.0,
+  "Atmospheric Aerosol Loading": 0.11,
+  "Land-system Change": 85.1
+ },
+ "methods": {
+  "total_gva": {
+   "label": "Total GVA (Hartmann Eq. 7)",
+   "role": "primary",
+   "geography": "equal per capita",
+   "value_perspective": "total GVA, Eq. 7",
+   "sector_factor": 0.00019729321876321525,
+   "network_share": 0.0084565781461587,
+   "sos_fraction": 1.6684255221783138e-06,
+   "budgets": {
+    "Climate Change": 1.6684255221783138e-06,
+    "Change in Biosphere Integrity": 1.668425522178314e-05,
+    "Ocean Acidification": 1.14787675925868e-06,
+    "Stratospheric Ozone Depletion": 2.419217007158555e-05,
+    "Phosphorus Cycle": 1.668425522178314e-05,
+    "Nitrogen Cycle": 0.00010344238237505545,
+    "Freshwater Use": 0.006673702088713256,
+    "Atmospheric Aerosol Loading": 1.8352680743961453e-07,
+    "Land-system Change": 0.0001419830119373745
+   },
+   "epsilon_equivalent_vs_total_gva": 1.0
+  },
+  "ability_to_pay": {
+   "label": "Ability to pay x total GVA",
+   "role": "alternative",
+   "geography": "ability to pay, country level, GDP at market exchange rates, 2022",
+   "value_perspective": "total GVA, Eq. 7",
+   "sector_factor": 8.343632857644565e-05,
+   "network_share": 0.0084565781461587,
+   "sos_fraction": 7.05585832835287e-07,
+   "budgets": {
+    "Climate Change": 7.05585832835287e-07,
+    "Change in Biosphere Integrity": 7.055858328352871e-06,
+    "Ocean Acidification": 4.854430529906774e-07,
+    "Stratospheric Ozone Depletion": 1.023099457611166e-05,
+    "Phosphorus Cycle": 7.055858328352871e-06,
+    "Nitrogen Cycle": 4.374632163578779e-05,
+    "Freshwater Use": 0.0028223433313411483,
+    "Atmospheric Aerosol Loading": 7.761444161188157e-08,
+    "Land-system Change": 6.004535437428292e-05
+   },
+   "epsilon_equivalent_vs_total_gva": 0.4229052022136815
+  },
+  "total_fce": {
+   "label": "Total FCE (published)",
+   "role": "supporting",
+   "geography": "equal per capita",
+   "value_perspective": "total FCE, published",
+   "sector_factor": 0.000853319862693831,
+   "network_share": 0.0084565781461587,
+   "sos_fraction": 7.216166102539795e-06,
+   "budgets": {
+    "Climate Change": 7.216166102539795e-06,
+    "Change in Biosphere Integrity": 7.216166102539795e-05,
+    "Ocean Acidification": 4.964722278547379e-06,
+    "Stratospheric Ozone Depletion": 0.00010463440848682702,
+    "Phosphorus Cycle": 7.216166102539795e-05,
+    "Nitrogen Cycle": 0.00044740229835746727,
+    "Freshwater Use": 0.02886466441015918,
+    "Atmospheric Aerosol Loading": 7.937782712793774e-07,
+    "Land-system Change": 0.0006140957353261365
+   },
+   "epsilon_equivalent_vs_total_gva": 4.3251352886991885
+  },
+  "total_fce_corrected": {
+   "label": "Total FCE (corrected reading)",
+   "role": "supporting",
+   "geography": "equal per capita",
+   "value_perspective": "total FCE, comment-consistent reading",
+   "sector_factor": 0.0005952921663594334,
+   "network_share": 0.0084565781461587,
+   "sos_fraction": 5.034134724614654e-06,
+   "budgets": {
+    "Climate Change": 5.034134724614654e-06,
+    "Change in Biosphere Integrity": 5.034134724614654e-05,
+    "Ocean Acidification": 3.4634846905348815e-06,
+    "Stratospheric Ozone Depletion": 7.299495350691248e-05,
+    "Phosphorus Cycle": 5.034134724614654e-05,
+    "Nitrogen Cycle": 0.0003121163529261085,
+    "Freshwater Use": 0.020136538898458615,
+    "Atmospheric Aerosol Loading": 5.53754819707612e-07,
+    "Land-system Change": 0.00042840486506470706
+   },
+   "epsilon_equivalent_vs_total_gva": 3.017296641471916
+  }
+ },
+ "relative_importance_ability_to_pay_over_total_gva": {
+  "Climate Change": 0.4229052022136815,
+  "Change in Biosphere Integrity": 0.42290520221368155,
+  "Ocean Acidification": 0.42290520221368144,
+  "Stratospheric Ozone Depletion": 0.4229052022136815,
+  "Phosphorus Cycle": 0.42290520221368155,
+  "Nitrogen Cycle": 0.42290520221368155,
+  "Freshwater Use": 0.42290520221368155,
+  "Atmospheric Aerosol Loading": 0.4229052022136815,
+  "Land-system Change": 0.42290520221368155
+ },
+ "sensitivity_sos_fractions": {
+  "total_gva": {
+   "cost|sector_average": 1.6684255221783138e-06,
+   "cost|network_costs": 1.4035166703189436e-06,
+   "cost|network_costs_high_income_suppliers": 1.1601462582798898e-06,
+   "cost|network_costs_all_purchases_imported": 1.750877704326927e-06,
+   "cost|domestic_only": 1.1710292632977205e-06,
+   "cost_no_inflation|sector_average": 1.4934802411552012e-06,
+   "cost_no_inflation|network_costs": 1.2563488075371557e-06,
+   "cost_no_inflation|network_costs_high_income_suppliers": 1.0384973680629035e-06,
+   "cost_no_inflation|network_costs_all_purchases_imported": 1.5672867750652732e-06,
+   "cost_no_inflation|domestic_only": 1.0482392191329482e-06,
+   "cost_plus_margin_SIC21.1|sector_average": 1.9538503842369177e-06,
+   "cost_plus_margin_SIC21.1|network_costs": 1.6436224147454074e-06,
+   "cost_plus_margin_SIC21.1|network_costs_high_income_suppliers": 1.3586175603162016e-06,
+   "cost_plus_margin_SIC21.1|network_costs_all_purchases_imported": 2.050408022339881e-06,
+   "cost_plus_margin_SIC21.1|domestic_only": 1.3713623686717932e-06,
+   "cost_plus_margin_SIC21|sector_average": 2.10216232536272e-06,
+   "cost_plus_margin_SIC21|network_costs": 1.768385719436198e-06,
+   "cost_plus_margin_SIC21|network_costs_high_income_suppliers": 1.4617468527347677e-06,
+   "cost_plus_margin_SIC21|network_costs_all_purchases_imported": 2.206049414509175e-06,
+   "cost_plus_margin_SIC21|domestic_only": 1.4754590879116472e-06
+  },
+  "ability_to_pay": {
+   "cost|sector_average": 7.05585832835287e-07,
+   "cost|network_costs": 3.672574044702882e-07,
+   "cost|network_costs_high_income_suppliers": 7.193509210212368e-08,
+   "cost|network_costs_all_purchases_imported": 8.108896647223917e-07,
+   "cost|domestic_only": 7.033603517644272e-08,
+   "cost_no_inflation|sector_average": 6.316005633878782e-07,
+   "cost_no_inflation|network_costs": 3.2874807397947425e-07,
+   "cost_no_inflation|network_costs_high_income_suppliers": 6.439222924373322e-08,
+   "cost_no_inflation|network_costs_all_purchases_imported": 7.258626027481893e-07,
+   "cost_no_inflation|domestic_only": 6.296084384999452e-08,
+   "cost_plus_margin_SIC21.1|sector_average": 8.262934918409931e-07,
+   "cost_plus_margin_SIC21.1|network_costs": 4.300857373011557e-07,
+   "cost_plus_margin_SIC21.1|network_costs_high_income_suppliers": 8.424134339562748e-08,
+   "cost_plus_margin_SIC21.1|network_costs_all_purchases_imported": 9.49612111497214e-07,
+   "cost_plus_margin_SIC21.1|domestic_only": 8.236872879753664e-08,
+   "cost_plus_margin_SIC21|sector_average": 8.89015383293504e-07,
+   "cost_plus_margin_SIC21|network_costs": 4.6273247988916003e-07,
+   "cost_plus_margin_SIC21|network_costs_high_income_suppliers": 9.063589502703621e-08,
+   "cost_plus_margin_SIC21|network_costs_all_purchases_imported": 1.0216948137905772e-06,
+   "cost_plus_margin_SIC21|domestic_only": 8.862113489504777e-08
+  }
+ },
+ "sensitivity_note": "Each sensitivity is the global SOS vector times the listed fraction (key = value_basis|input_origin). Run MILP sensitivities by rescaling, not by letting the solver choose a variant.",
+ "note": "All methods share one SOS fraction across the nine indicators, so the ratio budget_c(method)/budget_c(total_gva) is the same for every c: switching method only rescales."
+}

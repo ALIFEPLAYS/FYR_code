@@ -1,0 +1,67 @@
+# 2b. Planetary-boundary allocation (total GVA and ability to pay)
+
+This folder turns the global planetary-boundary (PB) safe operating space into **annual budgets for our UK mAb network**. It does this in two ways:
+
+| Method | Role | Basis | Climate utilisation |
+|---|---|---|---:|
+| `total_gva` | **Primary** | Hartmann et al. (2026), total gross value added, Eq. 7, recomputed to fix a PBAESA code error | **64.9%** (51.5–93.3%) |
+| `ability_to_pay` | **Alternative** | Hjalsted et al. (2021) Eq. 5, applied per country, inside the same Hartmann framework | **153.5%** (121.8–1,539%), **exceeded** |
+| `total_fce`, `total_fce_corrected` | Supporting | Hartmann total final consumption expenditure | 15.0–21.5% |
+
+No other PB indicator is exceeded under either method. The impacts used are an incomplete characterised subtotal, so "within budget" is conditional. Read [METHODOLOGY.md](METHODOLOGY.md) for equations, data sources, validation, sensitivity results and limitations.
+
+## Use in the joint MILP
+
+```python
+import sys; sys.path.insert(0, "2b_PB_Allocation")
+import pb_allocation as pa
+
+budgets = pa.budget_vector("total_gva")        # or "ability_to_pay"
+# {"Climate Change": 1.668e-06, "Ocean Acidification": 1.148e-06, ...}  native PBAESA units, per year
+```
+
+The same numbers are in [`results_allocation_final/milp_budgets.json`](results_allocation_final/milp_budgets.json). Rules:
+
+- Treat budgets as **fixed parameters**. Choose the method once per run; never let the solver choose it.
+- Switching method **only rescales** all nine budgets: ability to pay = 0.4229 × total GVA. ε-constraint and minimax designs therefore coincide up to relabelling; Ehrenstein transgression minimisation is inactive under total GVA (nothing exceeds 100%).
+- Divide each PB row by its budget (r_c = I_c/B_c); native budgets are about 10⁻⁶.
+- Sensitivity variants (value basis × input origin) are scalar SOS fractions under `sensitivity_sos_fractions`.
+
+The PB optimisation formulations themselves are **not** implemented here; see `4_Joint_MILP/with_PB/`.
+
+## Reproduce (from the repository root)
+
+```bash
+.venv/bin/python -B 2b_PB_Allocation/tools/finalise_allocation.py
+```
+
+```bash
+.venv/bin/python -B -m unittest discover -s 2b_PB_Allocation/tests -v
+```
+
+Both run from committed files only: no EXIOBASE, Brightway or ecoinvent needed. Expected output: "20 checks passed" and 29 passing tests.
+
+Optional rebuilds of the committed inputs:
+
+| Command | Needs | Rebuilds |
+|---|---|---|
+| `tools/build_ability_to_pay_weights.py` | `data/worldbank/` (committed) | `data/ability_to_pay_weights.json` |
+| `tools/extract_network_cost_structure.py` | `1_SuperPro_Results/rawSP_reports/mab_fedbatch_1000_sut_ICR.xls` | `data/network_cost_structure.json` |
+| `tools/verify_total_gva.py --exiobase <IOT_2022_ixi folder>` | EXIOBASE 3.9.6 2022 ixi (about 1.3 GB, not committed) | `data/total_gva_verification_2022.json` |
+
+## Contents
+
+| Path | What it is |
+|---|---|
+| `pb_allocation.py` | All allocation logic and the MILP entry point `budget_vector()` |
+| `tools/` | Results exporter and the three input builders above |
+| `tests/test_pb_allocation.py` | 29 tests: equations on synthetic economies, the vendored PBAESA function, Hjalsted α, data mapping, budgets, exports |
+| `results_allocation_final/` | Final budgets, utilisation tables, sensitivity, regional decomposition, two SVG charts, `validation.json`, `provenance.json` |
+| `results_final/annual_impacts.csv` | Reference annual PB impacts of the saved two-stage network (copied unchanged from Ahmed's PB assessment; hash-checked) |
+| `data/` | EXIOBASE-derived regional terms, ability-to-pay weights, economic inputs, SuperPro cost structure, ONS ABS workbook, World Bank/IMF downloads (see `data/worldbank/SOURCES.txt`) |
+| `data/Allocation Factors_2022.xlsx` | Hartmann et al. published allocation factors (CC BY-NC-SA, custom; see `allocation_LICENSE.txt`, non-commercial academic use) |
+| `vendor/pbaesa/` | `allocation.py` from PBAESA commit d932921 (MIT), kept so the tests can run the original code |
+
+## Relation to `2a_PB-LCA /`
+
+`2a_PB-LCA /FYR_Economic_Allocation.xlsx` reproduces the earlier 14 November allocation: the published total-GVA factor, a $200/g price and network-GVA shares. This folder supersedes those inputs. The published factor contains the PBAESA error, $200/g has no source, and network-GVA shares do not match total factors. See METHODOLOGY.md §4 and §9. Nothing in `2a_PB-LCA /` was changed.
