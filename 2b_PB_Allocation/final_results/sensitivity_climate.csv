@@ -1,0 +1,50 @@
+method,assumption,case,climate_pct
+total_gva,reference,reference,64.9
+total_gva,output value,ppi_C211,70.86
+total_gva,output value,ppi_C212,74.33
+total_gva,output value,no_inflation,72.5
+total_gva,output value,margin_SIC21.1,55.42
+total_gva,output value,margin_SIC21,51.51
+total_gva,input origin,full_supply_chain,58.3
+total_gva,input origin,network_costs,77.15
+total_gva,input origin,network_costs_high_income,93.33
+total_gva,input origin,all_purchases_imported,61.84
+total_gva,input origin,domestic_only,92.46
+total_gva,weights data,hartmann_normalised,64.9
+total_gva,weights data,worldbank,65.11
+total_gva,weights data,worldbank_EXIO3,66.45
+total_gva,inventory,emulsion_SBR_sensitivity|batch_scaled,62.29
+total_gva,inventory,emulsion_SBR_sensitivity|annual_additional_per_site,55.46
+total_gva,inventory,emulsion_SBR_sensitivity|annual_cell_culture_per_line_shared_buffer,60.2
+total_gva,inventory,legacy_foam|batch_scaled,64.9
+total_gva,inventory,legacy_foam|annual_additional_per_site,58.07
+total_gva,inventory,legacy_foam|annual_cell_culture_per_line_shared_buffer,62.81
+total_gva,inventory,solution_SBR_sensitivity|batch_scaled,65.27
+total_gva,inventory,solution_SBR_sensitivity|annual_additional_per_site,58.44
+total_gva,inventory,solution_SBR_sensitivity|annual_cell_culture_per_line_shared_buffer,63.18
+ability_to_pay,reference,reference,153.46
+ability_to_pay,output value,ppi_C211,167.55
+ability_to_pay,output value,ppi_C212,175.75
+ability_to_pay,output value,no_inflation,171.44
+ability_to_pay,output value,margin_SIC21.1,131.04
+ability_to_pay,output value,margin_SIC21,121.8
+ability_to_pay,input origin,full_supply_chain,106.05
+ability_to_pay,input origin,network_costs,294.83
+ability_to_pay,input origin,network_costs_high_income,1505.23
+ability_to_pay,input origin,all_purchases_imported,133.53
+ability_to_pay,input origin,domestic_only,1539.45
+ability_to_pay,weights data,validation_2017_MER,158.34
+ability_to_pay,weights data,sensitivity_2022_MER_no_imputation,153.48
+ability_to_pay,weights data,sensitivity_2022_PPP,149.7
+ability_to_pay,weights data,sensitivity_2017_PPP,145.52
+ability_to_pay,weights data,sensitivity_2022_MER_matched_PPP,160.31
+ability_to_pay,weights data,sensitivity_2022_MER_EXIO3,159.77
+ability_to_pay,inventory,emulsion_SBR_sensitivity|batch_scaled,147.29
+ability_to_pay,inventory,emulsion_SBR_sensitivity|annual_additional_per_site,131.14
+ability_to_pay,inventory,emulsion_SBR_sensitivity|annual_cell_culture_per_line_shared_buffer,142.35
+ability_to_pay,inventory,legacy_foam|batch_scaled,153.46
+ability_to_pay,inventory,legacy_foam|annual_additional_per_site,137.31
+ability_to_pay,inventory,legacy_foam|annual_cell_culture_per_line_shared_buffer,148.52
+ability_to_pay,inventory,solution_SBR_sensitivity|batch_scaled,154.34
+ability_to_pay,inventory,solution_SBR_sensitivity|annual_additional_per_site,138.19
+ability_to_pay,inventory,solution_SBR_sensitivity|annual_cell_culture_per_line_shared_buffer,149.4

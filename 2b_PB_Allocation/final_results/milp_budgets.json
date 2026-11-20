@@ -1,0 +1,70 @@
+{
+ "description": "Annual PB budgets for the saved UK mAb network (861 batches, 4,003.65 kg/yr bulk drug substance), 2022, native PBAESA units. Use as fixed parameters; choose one method per run.",
+ "reference_impacts": {
+  "Climate Change": 1.0827868784809166e-06,
+  "Ocean Acidification": 2.373420523224554e-07,
+  "Change in Biosphere Integrity": 1.3012011163993518e-06,
+  "Phosphorus Cycle": 1.850229021853358e-06,
+  "Nitrogen Cycle": 1.2197301289171814e-07,
+  "Atmospheric Aerosol Loading": 3.022891751400617e-08,
+  "Freshwater Use": 0.00013806410619022173,
+  "Stratospheric Ozone Depletion": 4.584296057523533e-08,
+  "Land-system Change": 1.518641482483184e-07
+ },
+ "units": {
+  "Climate Change": "Energy imbalance at top-of-atmosphere [W/m\u00b2]",
+  "Ocean Acidification": "Aragonite saturation state [\u03a9arag]",
+  "Change in Biosphere Integrity": "Biodiversity Intactness Index [%]",
+  "Phosphorus Cycle": "P-flow from freshwater systems into the ocean [Tg P/year]",
+  "Nitrogen Cycle": "Tg N/year",
+  "Atmospheric Aerosol Loading": "Aerosol optical depth (AOD) [-]",
+  "Freshwater Use": "Consumptive bluewater use [km\u00b3/year]",
+  "Stratospheric Ozone Depletion": "Stratospheric ozone concentration [DU]",
+  "Land-system Change": "Land available for anthropogenic occupation [millon km2]"
+ },
+ "global_sos": {
+  "Climate Change": 1.0,
+  "Ocean Acidification": 0.688,
+  "Change in Biosphere Integrity": 10.0,
+  "Phosphorus Cycle": 10.0,
+  "Nitrogen Cycle": 62.0,
+  "Atmospheric Aerosol Loading": 0.11,
+  "Freshwater Use": 4000.0,
+  "Stratospheric Ozone Depletion": 14.5,
+  "Land-system Change": 85.1
+ },
+ "methods": {
+  "total_gva": {
+   "label": "Total GVA",
+   "sos_fraction": 1.668425522178314e-06,
+   "budgets": {
+    "Climate Change": 1.668425522178314e-06,
+    "Ocean Acidification": 1.14787675925868e-06,
+    "Change in Biosphere Integrity": 1.668425522178314e-05,
+    "Phosphorus Cycle": 1.668425522178314e-05,
+    "Nitrogen Cycle": 0.00010344238237505546,
+    "Atmospheric Aerosol Loading": 1.8352680743961453e-07,
+    "Freshwater Use": 0.0066737020887132565,
+    "Stratospheric Ozone Depletion": 2.4192170071585553e-05,
+    "Land-system Change": 0.00014198301193737452
+   }
+  },
+  "ability_to_pay": {
+   "label": "Ability to Pay",
+   "sos_fraction": 7.05585832835287e-07,
+   "budgets": {
+    "Climate Change": 7.05585832835287e-07,
+    "Ocean Acidification": 4.854430529906774e-07,
+    "Change in Biosphere Integrity": 7.05585832835287e-06,
+    "Phosphorus Cycle": 7.05585832835287e-06,
+    "Nitrogen Cycle": 4.374632163578779e-05,
+    "Atmospheric Aerosol Loading": 7.761444161188156e-08,
+    "Freshwater Use": 0.002822343331341148,
+    "Stratospheric Ozone Depletion": 1.023099457611166e-05,
+    "Land-system Change": 6.0045354374282914e-05
+   }
+  }
+ },
+ "ability_to_pay_over_total_gva": 0.42290520221368144,
+ "note": "Both vectors are SOS x one scalar, so switching method rescales all nine budgets equally."
+}

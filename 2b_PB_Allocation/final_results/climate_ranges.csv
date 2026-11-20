@@ -1,0 +1,5 @@
+method,extreme,climate_pct,value_basis,input_origin,weight_case,inventory_case,combinations,exceeding_100pct
+total_gva,min,39.54,margin_SIC21,full_supply_chain,hartmann,emulsion_SBR_sensitivity|annual_additional_per_site,1296,90
+total_gva,max,108.22,ppi_C212,network_costs_high_income,worldbank_EXIO3,solution_SBR_sensitivity|batch_scaled,1296,90
+ability_to_pay,min,70.38,margin_SIC21,full_supply_chain,sensitivity_2017_PPP,emulsion_SBR_sensitivity|annual_additional_per_site,2268,2074
+ability_to_pay,max,1773.2,ppi_C212,domestic_only,sensitivity_2022_MER_EXIO3,solution_SBR_sensitivity|batch_scaled,2268,2074

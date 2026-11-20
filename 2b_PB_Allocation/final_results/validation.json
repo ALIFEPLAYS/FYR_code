@@ -1,0 +1,55 @@
+{
+ "passed": true,
+ "checks": [
+  {
+   "check": "pbaesa_error_reproduces_published_factor",
+   "passed": true,
+   "detail": "PBAESA formula 4.1614135660e-04 vs published 4.1614135660e-04"
+  },
+  {
+   "check": "eq7_factor_used",
+   "passed": true,
+   "detail": "Eq. 7 factor 1.9729321876e-04 (published / Eq. 7 = 2.109)"
+  },
+  {
+   "check": "total_gva_equals_gross_output",
+   "passed": true,
+   "detail": "g = 0.999999950"
+  },
+  {
+   "check": "input_origins_sum_to_one",
+   "passed": true,
+   "detail": "6 origin cases"
+  },
+  {
+   "check": "ability_to_pay_weights_sum_to_one",
+   "passed": true,
+   "detail": "7 data cases"
+  },
+  {
+   "check": "hjalsted_alpha_2017_reproduced",
+   "passed": true,
+   "detail": "alpha 2017 = 0.2341 vs 0.243"
+  },
+  {
+   "check": "climate_budget_hand_arithmetic",
+   "passed": true,
+   "detail": "1.668426e-06 W/m2"
+  },
+  {
+   "check": "switching_method_only_rescales",
+   "passed": true,
+   "detail": "ratio 0.422905 for all indicators"
+  },
+  {
+   "check": "impacts_unchanged",
+   "passed": true,
+   "detail": "data/annual_impacts.csv hash"
+  },
+  {
+   "check": "inventory_reference_case_matches_impacts",
+   "passed": true,
+   "detail": "1.0827868783e-06 W/m2"
+  }
+ ]
+}

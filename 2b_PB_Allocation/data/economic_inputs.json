@@ -1,0 +1,84 @@
+{
+ "description": "Economic inputs for the network share (step 3). All values sourced; see 'source'.",
+ "production": {
+  "annual_batches": {
+   "value": 861,
+   "source": "Saved joint/two-stage MILP plan (05_Joint_MILP results, comparison.csv)"
+  },
+  "batch_size_kg": {
+   "value": 4.65,
+   "source": "SuperPro mab_fedbatch_1000_sut_ICR.xls, 'Batch Size'"
+  },
+  "product": "Bulk drug substance (purified mAb) at the drug-substance gate; includes bulk filling (bags, cartridges), no finished-dose fill-finish."
+ },
+ "unit_production_cost_usd2019_per_g": {
+  "value": 92.09802,
+  "source": "SuperPro mab_fedbatch_1000_sut_ICR.xls, 'SUMMARY PER COST ITEM (Entire Process)': 92,098.02 $/kg MP (2019 prices), one 121-batch plant"
+ },
+ "currency": {
+  "USD_per_GBP_2019": {
+   "value": 1.2766,
+   "source": "Bank of England XUAAUSS, 2019 annual average"
+  },
+  "UK_GDP_deflator": {
+   "2019": 81.1,
+   "2022": 90.6,
+   "source": "ONS YBGB (Blue Book, 30 Oct 2026 vintage)"
+  },
+  "GBP_per_EUR_2022": {
+   "value": 0.85276,
+   "source": "ECB euro reference rate, 2022 annual average"
+  },
+  "pharma_output_price_index": {
+   "C211": {
+    "2019": 107.7,
+    "2022": 110.2,
+    "source": "https://www.ons.gov.uk/economy/inflationandpriceindices/timeseries/g32a/ppi"
+   },
+   "C212": {
+    "2019": 109.9,
+    "2022": 107.2,
+    "source": "https://www.ons.gov.uk/economy/inflationandpriceindices/timeseries/g32b/ppi"
+   }
+  }
+ },
+ "ons_abs_2022_gbp_m": {
+  "SIC 21.1": {
+   "turnover": 2834.0,
+   "agva": 971.0,
+   "employment_costs": 557.0
+  },
+  "SIC 21": {
+   "turnover": 27335.0,
+   "agva": 9791.0,
+   "employment_costs": 4151.0
+  },
+  "source": "ONS Annual Business Survey, sections A-S, Section C (abssectionsas.xlsx, retrieved 11 Nov 2026), 2022 rows"
+ },
+ "superpro_cost_structure_usd2019_per_year": {
+  "items": {
+   "Raw Materials": 3767171.0,
+   "Facility": 27666688.0,
+   "Labor": 6064825.0,
+   "Consumables": 11675193.0,
+   "Lab/QC/QA": 1516206.0,
+   "Utilities": 895208.0,
+   "Waste Trtmt/Disp": 263464.0,
+   "Transportation": 0.0,
+   "Miscellaneous": 0.0
+  },
+  "total": 51848755.0,
+  "domestic_items": [
+   "Facility",
+   "Labor",
+   "Lab/QC/QA",
+   "Utilities",
+   "Waste Trtmt/Disp"
+  ],
+  "purchased_goods_items": [
+   "Raw Materials",
+   "Consumables"
+  ],
+  "source": "SuperPro ICR, 'SUMMARY PER COST ITEM (Entire Process)'; domestic vs purchased classification is an assumption"
+ }
+}

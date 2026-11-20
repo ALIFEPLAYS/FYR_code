@@ -1,0 +1,110 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 869" width="900" height="869" font-family="Helvetica, Arial, sans-serif" role="img" aria-labelledby="t d">
+<style>.bg{fill:#fcfcfb}.t1{fill:#0b0b0b}.t2{fill:#52514e}.grid{stroke:#e4e3df}.ref{stroke:#0b0b0b}.over{fill:#f3f2ef}.s1{fill:#2a78d6}.s2{fill:#eb6834}.ring{stroke:#fcfcfb}.halo{stroke:#fcfcfb;stroke-width:4px;paint-order:stroke;stroke-linejoin:round}@media (prefers-color-scheme: dark){.bg{fill:#1a1a19}.t1{fill:#f0efec}.t2{fill:#c3c2b7}.grid{stroke:#34332f}.ref{stroke:#f0efec}.over{fill:#24231f}.s1{fill:#3987e5}.s2{fill:#d95926}.ring{stroke:#1a1a19}.halo{stroke:#1a1a19}}</style>
+<rect class="bg" width="900" height="869"/>
+<title id="t">Climate utilisation, one assumption changed at a time</title>
+<desc id="d">Bar length is climate utilisation, linear from zero, capped at 250%. Values in sensitivity_climate.csv.</desc>
+<text class="t1" x="20" y="30" font-size="17" font-weight="600">Climate utilisation: one assumption changed at a time</text>
+<text class="t2" x="20" y="50" font-size="12">Linear scale from 0, bars capped at 250% (value printed); 100% = allocated budget.</text>
+<rect class="s1" x="20" y="64" width="12" height="12" rx="2"/><text class="t1" x="38" y="74" font-size="12">Total GVA</text>
+<rect class="s2" x="190" y="64" width="12" height="12" rx="2"/><text class="t1" x="208" y="74" font-size="12">Ability to Pay</text>
+<line class="grid" x1="330.0" y1="90" x2="330.0" y2="809"/><text class="t2" x="330.0" y="825" font-size="11" text-anchor="middle">0%</text>
+<line class="grid" x1="426.0" y1="90" x2="426.0" y2="809"/><text class="t2" x="426.0" y="825" font-size="11" text-anchor="middle">50%</text>
+<line class="grid" x1="522.0" y1="90" x2="522.0" y2="809"/><text class="t2" x="522.0" y="825" font-size="11" text-anchor="middle">100%</text>
+<line class="grid" x1="618.0" y1="90" x2="618.0" y2="809"/><text class="t2" x="618.0" y="825" font-size="11" text-anchor="middle">150%</text>
+<line class="grid" x1="714.0" y1="90" x2="714.0" y2="809"/><text class="t2" x="714.0" y="825" font-size="11" text-anchor="middle">200%</text>
+<line class="grid" x1="810.0" y1="90" x2="810.0" y2="809"/><text class="t2" x="810.0" y="825" font-size="11" text-anchor="middle">250%</text>
+<line class="ref" x1="522.0" y1="86" x2="522.0" y2="809" stroke-width="2" stroke-dasharray="5 3"/>
+<text class="t1" x="320" y="108.0" font-size="11" text-anchor="end">Total GVA: reference</text>
+<g><title>Total GVA: reference: 64.9%</title><rect class="s1" x="330" y="96" width="124.6" height="16" rx="4"/></g>
+<text class="t1 halo" x="460.6" y="108.0" font-size="11">64.9%</text>
+<text class="t1" x="320" y="131.0" font-size="11" text-anchor="end">Total GVA: value: basic-pharma price index</text>
+<g><title>Total GVA: value: basic-pharma price index: 70.9%</title><rect class="s1" x="330" y="119" width="136.1" height="16" rx="4"/></g>
+<text class="t1 halo" x="472.1" y="131.0" font-size="11">70.9%</text>
+<text class="t1" x="320" y="154.0" font-size="11" text-anchor="end">Total GVA: value: pharma-preparations price index</text>
+<g><title>Total GVA: value: pharma-preparations price index: 74.3%</title><rect class="s1" x="330" y="142" width="142.7" height="16" rx="4"/></g>
+<text class="t1 halo" x="478.7" y="154.0" font-size="11">74.3%</text>
+<text class="t1" x="320" y="177.0" font-size="11" text-anchor="end">Total GVA: value: no 2019-22 inflation</text>
+<g><title>Total GVA: value: no 2019-22 inflation: 72.5%</title><rect class="s1" x="330" y="165" width="139.2" height="16" rx="4"/></g>
+<text class="t1 halo" x="475.2" y="177.0" font-size="11">72.5%</text>
+<text class="t1" x="320" y="200.0" font-size="11" text-anchor="end">Total GVA: value: + basic-pharma margin</text>
+<g><title>Total GVA: value: + basic-pharma margin: 55.4%</title><rect class="s1" x="330" y="188" width="106.4" height="16" rx="4"/></g>
+<text class="t1 halo" x="442.4" y="200.0" font-size="11">55.4%</text>
+<text class="t1" x="320" y="223.0" font-size="11" text-anchor="end">Total GVA: value: + pharma margin</text>
+<g><title>Total GVA: value: + pharma margin: 51.5%</title><rect class="s1" x="330" y="211" width="98.9" height="16" rx="4"/></g>
+<text class="t1 halo" x="434.9" y="223.0" font-size="11">51.5%</text>
+<text class="t1" x="320" y="246.0" font-size="11" text-anchor="end">Total GVA: origin: full supply chain</text>
+<g><title>Total GVA: origin: full supply chain: 58.3%</title><rect class="s1" x="330" y="234" width="111.9" height="16" rx="4"/></g>
+<text class="t1 halo" x="447.9" y="246.0" font-size="11">58.3%</text>
+<text class="t1" x="320" y="269.0" font-size="11" text-anchor="end">Total GVA: origin: network cost structure</text>
+<g><title>Total GVA: origin: network cost structure: 77.2%</title><rect class="s1" x="330" y="257" width="148.1" height="16" rx="4"/></g>
+<text class="t1 halo" x="484.1" y="269.0" font-size="11">77.2%</text>
+<text class="t1" x="320" y="292.0" font-size="11" text-anchor="end">Total GVA: origin: high-income suppliers</text>
+<g><title>Total GVA: origin: high-income suppliers: 93.3%</title><rect class="s1" x="330" y="280" width="179.2" height="16" rx="4"/></g>
+<text class="t1 halo" x="528.0" y="292.0" font-size="11">93.3%</text>
+<text class="t1" x="320" y="315.0" font-size="11" text-anchor="end">Total GVA: origin: all purchases imported</text>
+<g><title>Total GVA: origin: all purchases imported: 61.8%</title><rect class="s1" x="330" y="303" width="118.7" height="16" rx="4"/></g>
+<text class="t1 halo" x="454.7" y="315.0" font-size="11">61.8%</text>
+<text class="t1" x="320" y="338.0" font-size="11" text-anchor="end">Total GVA: origin: all UK (bound)</text>
+<g><title>Total GVA: origin: all UK (bound): 92.5%</title><rect class="s1" x="330" y="326" width="177.5" height="16" rx="4"/></g>
+<text class="t1 halo" x="528.0" y="338.0" font-size="11">92.5%</text>
+<text class="t1" x="320" y="361.0" font-size="11" text-anchor="end">Total GVA: weights: normalised population</text>
+<g><title>Total GVA: weights: normalised population: 64.9%</title><rect class="s1" x="330" y="349" width="124.6" height="16" rx="4"/></g>
+<text class="t1 halo" x="460.6" y="361.0" font-size="11">64.9%</text>
+<text class="t1" x="320" y="384.0" font-size="11" text-anchor="end">Total GVA: weights: World Bank population</text>
+<g><title>Total GVA: weights: World Bank population: 65.1%</title><rect class="s1" x="330" y="372" width="125.0" height="16" rx="4"/></g>
+<text class="t1 halo" x="461.0" y="384.0" font-size="11">65.1%</text>
+<text class="t1" x="320" y="407.0" font-size="11" text-anchor="end">Total GVA: weights: World Bank, EXIO3 mapping</text>
+<g><title>Total GVA: weights: World Bank, EXIO3 mapping: 66.5%</title><rect class="s1" x="330" y="395" width="127.6" height="16" rx="4"/></g>
+<text class="t1 halo" x="463.6" y="407.0" font-size="11">66.5%</text>
+<text class="t1" x="320" y="430.0" font-size="11" text-anchor="end">Ability to Pay: reference</text>
+<g><title>Ability to Pay: reference: 153.5%</title><rect class="s2" x="330" y="418" width="294.6" height="16" rx="4"/></g>
+<text class="t1 halo" x="630.6" y="430.0" font-size="11">153.5%</text>
+<text class="t1" x="320" y="453.0" font-size="11" text-anchor="end">Ability to Pay: value: basic-pharma price index</text>
+<g><title>Ability to Pay: value: basic-pharma price index: 167.6%</title><rect class="s2" x="330" y="441" width="321.7" height="16" rx="4"/></g>
+<text class="t1 halo" x="657.7" y="453.0" font-size="11">167.6%</text>
+<text class="t1" x="320" y="476.0" font-size="11" text-anchor="end">Ability to Pay: value: pharma-preparations price index</text>
+<g><title>Ability to Pay: value: pharma-preparations price index: 175.8%</title><rect class="s2" x="330" y="464" width="337.4" height="16" rx="4"/></g>
+<text class="t1 halo" x="673.4" y="476.0" font-size="11">175.8%</text>
+<text class="t1" x="320" y="499.0" font-size="11" text-anchor="end">Ability to Pay: value: no 2019-22 inflation</text>
+<g><title>Ability to Pay: value: no 2019-22 inflation: 171.4%</title><rect class="s2" x="330" y="487" width="329.2" height="16" rx="4"/></g>
+<text class="t1 halo" x="665.2" y="499.0" font-size="11">171.4%</text>
+<text class="t1" x="320" y="522.0" font-size="11" text-anchor="end">Ability to Pay: value: + basic-pharma margin</text>
+<g><title>Ability to Pay: value: + basic-pharma margin: 131.0%</title><rect class="s2" x="330" y="510" width="251.6" height="16" rx="4"/></g>
+<text class="t1 halo" x="587.6" y="522.0" font-size="11">131.0%</text>
+<text class="t1" x="320" y="545.0" font-size="11" text-anchor="end">Ability to Pay: value: + pharma margin</text>
+<g><title>Ability to Pay: value: + pharma margin: 121.8%</title><rect class="s2" x="330" y="533" width="233.9" height="16" rx="4"/></g>
+<text class="t1 halo" x="569.9" y="545.0" font-size="11">121.8%</text>
+<text class="t1" x="320" y="568.0" font-size="11" text-anchor="end">Ability to Pay: origin: full supply chain</text>
+<g><title>Ability to Pay: origin: full supply chain: 106.0%</title><rect class="s2" x="330" y="556" width="203.6" height="16" rx="4"/></g>
+<text class="t1 halo" x="539.6" y="568.0" font-size="11">106.0%</text>
+<text class="t1" x="320" y="591.0" font-size="11" text-anchor="end">Ability to Pay: origin: network cost structure</text>
+<g><title>Ability to Pay: origin: network cost structure: 294.8%</title><rect class="s2" x="330" y="579" width="480.0" height="16" rx="4"/></g>
+<text class="t1 halo" x="816.0" y="591.0" font-size="11">294.8% ▸</text>
+<text class="t1" x="320" y="614.0" font-size="11" text-anchor="end">Ability to Pay: origin: high-income suppliers</text>
+<g><title>Ability to Pay: origin: high-income suppliers: 1505.2%</title><rect class="s2" x="330" y="602" width="480.0" height="16" rx="4"/></g>
+<text class="t1 halo" x="816.0" y="614.0" font-size="11">1,505.2% ▸</text>
+<text class="t1" x="320" y="637.0" font-size="11" text-anchor="end">Ability to Pay: origin: all purchases imported</text>
+<g><title>Ability to Pay: origin: all purchases imported: 133.5%</title><rect class="s2" x="330" y="625" width="256.4" height="16" rx="4"/></g>
+<text class="t1 halo" x="592.4" y="637.0" font-size="11">133.5%</text>
+<text class="t1" x="320" y="660.0" font-size="11" text-anchor="end">Ability to Pay: origin: all UK (bound)</text>
+<g><title>Ability to Pay: origin: all UK (bound): 1539.5%</title><rect class="s2" x="330" y="648" width="480.0" height="16" rx="4"/></g>
+<text class="t1 halo" x="816.0" y="660.0" font-size="11">1,539.5% ▸</text>
+<text class="t1" x="320" y="683.0" font-size="11" text-anchor="end">Ability to Pay: data: 2017</text>
+<g><title>Ability to Pay: data: 2017: 158.3%</title><rect class="s2" x="330" y="671" width="304.0" height="16" rx="4"/></g>
+<text class="t1 halo" x="640.0" y="683.0" font-size="11">158.3%</text>
+<text class="t1" x="320" y="706.0" font-size="11" text-anchor="end">Ability to Pay: data: no GDP imputation</text>
+<g><title>Ability to Pay: data: no GDP imputation: 153.5%</title><rect class="s2" x="330" y="694" width="294.7" height="16" rx="4"/></g>
+<text class="t1 halo" x="630.7" y="706.0" font-size="11">153.5%</text>
+<text class="t1" x="320" y="729.0" font-size="11" text-anchor="end">Ability to Pay: data: PPP GDP</text>
+<g><title>Ability to Pay: data: PPP GDP: 149.7%</title><rect class="s2" x="330" y="717" width="287.4" height="16" rx="4"/></g>
+<text class="t1 halo" x="623.4" y="729.0" font-size="11">149.7%</text>
+<text class="t1" x="320" y="752.0" font-size="11" text-anchor="end">Ability to Pay: data: 2017 PPP GDP</text>
+<g><title>Ability to Pay: data: 2017 PPP GDP: 145.5%</title><rect class="s2" x="330" y="740" width="279.4" height="16" rx="4"/></g>
+<text class="t1 halo" x="615.4" y="752.0" font-size="11">145.5%</text>
+<text class="t1" x="320" y="775.0" font-size="11" text-anchor="end">Ability to Pay: data: MER, PPP coverage</text>
+<g><title>Ability to Pay: data: MER, PPP coverage: 160.3%</title><rect class="s2" x="330" y="763" width="307.8" height="16" rx="4"/></g>
+<text class="t1 halo" x="643.8" y="775.0" font-size="11">160.3%</text>
+<text class="t1" x="320" y="798.0" font-size="11" text-anchor="end">Ability to Pay: data: EXIO3 country mapping</text>
+<g><title>Ability to Pay: data: EXIO3 country mapping: 159.8%</title><rect class="s2" x="330" y="786" width="306.8" height="16" rx="4"/></g>
+<text class="t1 halo" x="642.8" y="798.0" font-size="11">159.8%</text>
+<text class="t2" x="20" y="849" font-size="11">Combined extremes (all assumptions together): see climate_ranges.csv.</text></svg>

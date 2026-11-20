@@ -1,0 +1,19 @@
+method,indicator,unit,global_sos,budget,annual_impact,utilisation_pct,exceeded
+total_gva,Climate Change,Energy imbalance at top-of-atmosphere [W/m²],1.0,1.66843e-06,1.08279e-06,64.899,no
+total_gva,Ocean Acidification,Aragonite saturation state [Ωarag],0.688,1.14788e-06,2.37342e-07,20.677,no
+total_gva,Change in Biosphere Integrity,Biodiversity Intactness Index [%],10.0,1.66843e-05,1.3012e-06,7.799,no
+total_gva,Phosphorus Cycle,P-flow from freshwater systems into the ocean [Tg P/year],10.0,1.66843e-05,1.85023e-06,11.09,no
+total_gva,Nitrogen Cycle,Tg N/year,62.0,0.000103442,1.21973e-07,0.118,no
+total_gva,Atmospheric Aerosol Loading,Aerosol optical depth (AOD) [-],0.11,1.83527e-07,3.02289e-08,16.471,no
+total_gva,Freshwater Use,Consumptive bluewater use [km³/year],4000.0,0.0066737,0.000138064,2.069,no
+total_gva,Stratospheric Ozone Depletion,Stratospheric ozone concentration [DU],14.5,2.41922e-05,4.5843e-08,0.189,no
+total_gva,Land-system Change,Land available for anthropogenic occupation [millon km2],85.1,0.000141983,1.51864e-07,0.107,no
+ability_to_pay,Climate Change,Energy imbalance at top-of-atmosphere [W/m²],1.0,7.05586e-07,1.08279e-06,153.459,YES
+ability_to_pay,Ocean Acidification,Aragonite saturation state [Ωarag],0.688,4.85443e-07,2.37342e-07,48.892,no
+ability_to_pay,Change in Biosphere Integrity,Biodiversity Intactness Index [%],10.0,7.05586e-06,1.3012e-06,18.441,no
+ability_to_pay,Phosphorus Cycle,P-flow from freshwater systems into the ocean [Tg P/year],10.0,7.05586e-06,1.85023e-06,26.223,no
+ability_to_pay,Nitrogen Cycle,Tg N/year,62.0,4.37463e-05,1.21973e-07,0.279,no
+ability_to_pay,Atmospheric Aerosol Loading,Aerosol optical depth (AOD) [-],0.11,7.76144e-08,3.02289e-08,38.948,no
+ability_to_pay,Freshwater Use,Consumptive bluewater use [km³/year],4000.0,0.00282234,0.000138064,4.892,no
+ability_to_pay,Stratospheric Ozone Depletion,Stratospheric ozone concentration [DU],14.5,1.0231e-05,4.5843e-08,0.448,no
+ability_to_pay,Land-system Change,Land available for anthropogenic occupation [millon km2],85.1,6.00454e-05,1.51864e-07,0.253,no
