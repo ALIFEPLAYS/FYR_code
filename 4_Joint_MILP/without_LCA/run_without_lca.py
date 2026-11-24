@@ -1,4 +1,4 @@
-"""Run Alfie's unchanged economic-only model using the shared project inputs."""
+"""Run the joint cost model with shared inputs and integrated PB reporting when available."""
 import importlib.util
 import json
 import os
@@ -31,8 +31,16 @@ def load_model_module():
         # Regenerated 23 Nov 2026 from extract_manufacturing_footprint_and_costs.ipynb; byte-identical to itemised_costs_20261024.csv. Original 20261026 file not found.
         'itemised_costs': SUPERPRO_DIR / 'data/processed/itemised_costs_regenerated_20261123.csv',
     }
+    # The collaboration repository also runs independently without the outer PB pipeline.
+    configured = os.environ.get("IS_PB_LCIA_DIR")
+    pb_dir = Path(configured) if configured else ROOT.parent / "07_PB/lcia"
+    if configured or (pb_dir / "joint_pb.py").is_file():
+        sys.path.insert(0, str(pb_dir.resolve()))
+        import joint_pb
+        module.PB_ACCOUNTING = joint_pb
+
     # Record the Python environment in solver_status.json after every solve.
-    # testjoint.py stays unchanged; this wraps its solve function only.
+    # Keep the solver implementation in the model module.
     solve = module.solve_joint_model
 
     def solve_and_record_environment(model, output_dir=module.RESULT_DIR, gams_executable=None):

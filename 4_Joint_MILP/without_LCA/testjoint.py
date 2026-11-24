@@ -27,6 +27,7 @@ PROJECT_ROOT = CODE_DIR.parent
 REPO_ROOT = PROJECT_ROOT.parent
 PARAMETER_DIR = REPO_ROOT / 'parameters'
 RESULT_DIR = PROJECT_ROOT / 'results' / 'testjoint' / 'joint_cost'
+PB_ACCOUNTING = None  # Installed by the integrated launcher when the PB pipeline is available.
 GAMS_SOLVER = os.environ.get('IS_GAMS_SOLVER', 'cplex').strip().lower()
 MIP_REL_GAP = 1e-9
 INPUT_FILES = {
@@ -190,7 +191,7 @@ def load_joint_inputs():
 
     return SimpleNamespace(
         sites=sites, site_location=site_location, polymers=list(polymer_kg),
-        routes=list(pathways), eligible=eligible, modes=modes,
+        routes=list(pathways), pathways=pathways, eligible=eligible, modes=modes,
         polymer_kg=polymer_kg, recovery_yield=yields, residual_fraction=residual,
         route_cost=net_route_cost, payload=payload, transport_cost=transport_cost,
         distance=distance, electricity=electricity, electricity_cost=electricity_cost,
@@ -1142,7 +1143,7 @@ def extract_first_mab_results(model):
 
 
 
-def build_joint_model(data=None, supply_data=None):
+def build_joint_model(data=None, supply_data=None, pb_caps=None):
     """Attach the IS block to the supply-chain model, with one objective."""
     data = load_joint_inputs() if data is None else data
     supply_data = build_first_mab_input_data() if supply_data is None else supply_data
@@ -1232,7 +1233,9 @@ def build_joint_model(data=None, supply_data=None):
     # electricity, wastewater/fresh water/discharge and fixed biomass collection.
     model.is_plastics_cost = pyo.Expression(expr=sum(data.route_cost[p, r] * is_block.x[j, p, r, l]
         for j in data.sites for p, r in data.eligible for l in data.modes))
-    model.is_transport_cost = pyo.Expression(expr=sum(2.0 * data.distance[j, r] * data.transport_cost[l] * is_block.n[j, r, l]
+    model.vehicle_km = pyo.Expression(model.JOINT_SITES, is_block.ROUTES, is_block.MODES,
+        rule=lambda m, j, r, l: 2.0 * data.distance[j, r] * is_block.n[j, r, l])
+    model.is_transport_cost = pyo.Expression(expr=sum(model.vehicle_km[j, r, l] * data.transport_cost[l]
         for j in data.sites for r in is_block.ROUTES for l in data.modes))
     model.is_electricity_cost = pyo.Expression(expr=sum(data.electricity_cost[e] * is_block.E[j, e]
         for j in data.sites for e in is_block.SOURCES))
@@ -1260,6 +1263,10 @@ def build_joint_model(data=None, supply_data=None):
         data.grid_tiebreak_gbp_per_kwh * sum(is_block.E[j, 'grid'] for j in data.sites))
     model.joint_objective = pyo.Objective(expr=model.total_cost_gbp + model.shortage_penalty_gbp
         + model.tiebreak_penalty_gbp, sense=pyo.minimize)
+    if PB_ACCOUNTING is not None:
+        PB_ACCOUNTING.attach(model, data, INPUT_FILES["lca"], INPUT_FILES["params"], pb_caps)
+    elif pb_caps is not None:
+        raise ValueError("PB budgets require the integrated run_without_lca.py launcher and PB factors.")
     return model, data
 
 
@@ -1270,9 +1277,16 @@ def export_gams(model, output_dir=RESULT_DIR):
     path = output_dir / 'joint_supply_chain_is.gms'
     # The writer translates all active linear equations into one self-contained
     # .gms input. Its symbol map links returned GAMS levels to Pyomo variables.
+    options = [f'option optcr={MIP_REL_GAP};', 'option optca=0;']
+    if GAMS_SOLVER == 'cplex' and hasattr(model, 'pb') and len(model.pb.caps):
+        # On capped cases the default integer tolerance can admit fractional
+        # activations whose repriced incumbent fails the existing optimality check.
+        options.extend(['$ifthen not exist cplex.o81', '$onecho > cplex.o81',
+                        'epint 1e-9', 'eprhs 1e-9', '$offecho', '$endif',
+                        'GAMS_MODEL.optfile = 81;'])
     filename, smap_id = model.write(str(path), format='gams', io_options={
         'solver': GAMS_SOLVER, 'mtype': 'mip', 'symbolic_solver_labels': True,
-        'add_options': [f'option optcr={MIP_REL_GAP};', 'option optca=0;'],
+        'add_options': options,
         'put_results': 'joint_solution', 'put_results_format': 'dat',
     })
     symbol_map = model.solutions.symbol_map[smap_id]
@@ -1390,7 +1404,8 @@ def write_joint_results(model, data, output_dir=RESULT_DIR):
                   for j in data.sites for p, r in data.eligible for l in data.modes]).to_csv(
                       output_dir / 'joint_plastic_routing.csv', index=False)
     pd.DataFrame([{'site': j, 'route': r, 'mode': l,
-                   'journeys': pyo.value(block.n[j, r, l])}
+                   'journeys': pyo.value(block.n[j, r, l]),
+                   'vehicle_km_per_year': pyo.value(model.vehicle_km[j, r, l])}
                   for j in data.sites for r in block.ROUTES for l in data.modes]).to_csv(
                       output_dir / 'joint_waste_transport.csv', index=False)
     pd.DataFrame([{'site': j, 'batches': pyo.value(model.site_batches[j]),
@@ -1404,6 +1419,8 @@ def write_joint_results(model, data, output_dir=RESULT_DIR):
                    'kg_per_year': pyo.value(block.bio_q[j, r])}
                   for j in data.sites for r in data.biomass_routes]).to_csv(
                       output_dir / 'joint_biomass.csv', index=False)
+    if hasattr(model, 'pb'):
+        PB_ACCOUNTING.impact_table(model).to_csv(output_dir / 'joint_pb_impacts.csv', index=False)
     # Monetary outputs: retain the original total, electricity deduction and
     # adjusted supply cost so the accounting can be checked from the CSV.
     costs = {name: pyo.value(getattr(model, name)) for name in [
@@ -1446,8 +1463,12 @@ def main():
     parser.add_argument('--export-only', action='store_true', help='Write the one GAMS input without solving.')
     parser.add_argument('--output-dir', type=Path, default=RESULT_DIR)
     parser.add_argument('--gams-executable', help='Path to gams.exe if it is not on PATH.')
+    parser.add_argument('--pb-caps', type=Path, help='JSON object of positive annual budgets keyed by PB category.')
     args = parser.parse_args()
-    model, data = build_joint_model()
+    caps = json.loads(args.pb_caps.read_text()) if args.pb_caps is not None else None
+    if args.pb_caps is not None and not isinstance(caps, dict):
+        parser.error('--pb-caps must contain a JSON object.')
+    model, data = build_joint_model(pb_caps=caps)
     if args.export_only:
         path, _ = export_gams(model, args.output_dir)
         print(f'GAMS input: {path}')
