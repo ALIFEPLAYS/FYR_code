@@ -1282,7 +1282,7 @@ def export_gams(model, output_dir=RESULT_DIR):
         # On capped cases the default integer tolerance can admit fractional
         # activations whose repriced incumbent fails the existing optimality check.
         options.extend(['$ifthen not exist cplex.o81', '$onecho > cplex.o81',
-                        'epint 1e-9', 'eprhs 1e-9', '$offecho', '$endif',
+                        'epint 1e-9', 'eprhs 1e-8', '$offecho', '$endif',
                         'GAMS_MODEL.optfile = 81;'])
     filename, smap_id = model.write(str(path), format='gams', io_options={
         'solver': GAMS_SOLVER, 'mtype': 'mip', 'symbolic_solver_labels': True,

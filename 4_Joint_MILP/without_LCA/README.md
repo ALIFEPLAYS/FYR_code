@@ -25,6 +25,6 @@ Solving uses GAMS with CPLEX by default. Set `IS_GAMS_SOLVER` or pass `--gams-ex
 PB-enabled runs write `joint_pb_impacts.csv` and vehicle-km for every site, route and mode in
 `joint_waste_transport.csv`. Use `--pb-caps budgets.json` for optional annual limits, with
 exact category names and native units from the PB workbook. Each cap is scaled by its budget.
-For capped CPLEX solves the export supplies `epint` and `eprhs` of 1e-9 through `cplex.o81`
-in the run directory. This prevents tolerance-scale activation and flow errors from affecting the
-existing optimality check. Use a separate output directory for sensitivity runs.
+For capped CPLEX solves the export supplies `epint` of 1e-9 and `eprhs` of 1e-8 through `cplex.o81`
+in the run directory. The existing feasibility, objective reconciliation and gap checks still run. The
+large shortage-penalty coefficient makes very close cost rankings sensitive to numerical tolerances. Use a separate output directory for sensitivity runs.
