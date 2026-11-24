@@ -17,7 +17,7 @@ No other boundary is exceeded under either method (ocean acidification is next: 
 |---|---|
 | [`final_results/budgets.csv`](final_results/budgets.csv) | Budget, impact and % used for all nine boundaries, both methods |
 | [`final_results/milp_budgets.json`](final_results/milp_budgets.json) | Budget vectors for the joint MILP |
-| [`final_results/FYR_PB_budgets.xlsx`](final_results/FYR_PB_budgets.xlsx) | Same budgets as a workbook (also copied to `2a_PB-LCA /FYR_Economic_Allocation.xlsx` for the economic-only joint model) |
+| [`final_results/FYR_PB_budgets.xlsx`](final_results/FYR_PB_budgets.xlsx) | Same budgets as a workbook (also copied to `2a_PB-LCA/FYR_Economic_Allocation.xlsx` for the economic-only joint model) |
 | [`final_results/sensitivity_climate.csv`](final_results/sensitivity_climate.csv), [`climate_sensitivity.svg`](final_results/climate_sensitivity.svg) | Climate result with one assumption changed at a time |
 | [`final_results/climate_ranges.csv`](final_results/climate_ranges.csv) | Extremes with all assumptions combined: Total GVA 39.5–108.2%, Ability to Pay 70.4–1,773% |
 | [`final_results/regional_contributions.csv`](final_results/regional_contributions.csv) | Which regions each budget comes from |

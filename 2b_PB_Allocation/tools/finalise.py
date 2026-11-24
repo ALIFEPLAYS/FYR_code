@@ -4,7 +4,7 @@ Run from the repository root (reads committed data only):
     python -B 2b_PB_Allocation/tools/finalise.py
 
 Writes 2b_PB_Allocation/final_results/ and refreshes the budget workbook read by the economic-only joint model
-('2a_PB-LCA /FYR_Economic_Allocation.xlsx', sheet 'PB budgets', header row 7, columns A-G).
+('2a_PB-LCA/FYR_Economic_Allocation.xlsx', sheet 'PB budgets', header row 7, columns A-G).
 """
 import csv
 import hashlib
@@ -20,7 +20,7 @@ sys.path.insert(0, str(ROOT))
 import pb_allocation as pa  # noqa: E402
 
 OUT = ROOT / "final_results"
-ALFIE_WORKBOOK = ROOT.parent / "2a_PB-LCA " / "FYR_Economic_Allocation.xlsx"
+ALFIE_WORKBOOK = ROOT.parent / "2a_PB-LCA" / "FYR_Economic_Allocation.xlsx"
 IMPACTS_SHA256 = "2a02c39fc43edd1ec200dc13bb49bdcb5b10493d8fabdfd6196409d85c8daf01"
 LABEL = {"total_gva": "Total GVA", "ability_to_pay": "Ability to Pay"}
 SHORT = {"Climate Change": "Climate change", "Ocean Acidification": "Ocean acidification",

@@ -1,9 +1,13 @@
-# Joint MILP with planetary boundaries — planned
+# Status quo PB-constrained joint MILP
 
-This folder reserves a place for a joint MILP with planetary-boundary (PB) constraints. No PB-enabled joint model was present in the supplied source files, so this section has no runner or claimed results yet.
+Run from the repository root:
 
-A future implementation needs explicit boundary indicators, units, allocated annual budgets, scope and allocation assumptions, and their mapping to the model's environmental quantities. The existing with-LCA model can provide a starting point once those modelling choices are specified. Do not treat its carbon valuation or the sequential model's policy-cap scenarios as an implemented PB formulation.
+```sh
+python 4_Joint_MILP/with_PB/jointMILP_PBconstrained.py
+```
 
-Shared data should continue to come from sections 1–3; variant-specific budgets, runner and results can live here when implemented.
+Install the dependencies in `4_Joint_MILP/without_LCA/requirements.txt` and make GAMS/CPLEX available. Supply the matching local route-factor workbook at `2_LCA/outputs/master_lca_route_factor_database_ecoinvent_3_12.xlsx` or set `IS_LCA_ROUTE_FACTOR_FILE` to its path.
 
-**Budgets are ready** in [`2b_PB_Allocation`](../../2b_PB_Allocation/README.md): `pb_allocation.budget_vector("total_gva")` (primary) or `budget_vector("ability_to_pay")` (alternative), also in `2b_PB_Allocation/final_results/milp_budgets.json`. The PB optimisation formulations are not implemented yet.
+The model minimises the joint cost objective, including the existing shortage penalty, subject to nine annual impact limits from D23:D31 of `4_Joint_MILP/without_LCA/Planetary_Boundary_impacts.xlsx`. The terminal summary reports impacts, limits, cost and unmet demand. Use `--output-dir PATH` to retain solver files and full reports.
+
+Other allocation methods are documented in [2b_PB_Allocation](../../2b_PB_Allocation/README.md).
