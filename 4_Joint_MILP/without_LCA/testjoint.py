@@ -173,7 +173,9 @@ def load_joint_inputs():
         distance[j, 'mechanical_recycling_tpe_tubing'] = float(recycling['tpe_tubing']['distance_km'])
     renewable = params['industrial_renewable_electricity_cost']
     electricity_cost = {'grid': grid_cost, 'wind': float(renewable.get('central_value', renewable.get('value')))}
-    wwt = params['onsite_wastewater_treatment_facility']
+    # Negligible tie-break penalty on grid electricity so wind is selected when grid and wind are equally priced. Not a real cost; excluded from reported costs.
+    grid_tiebreak_gbp_per_kwh = 1e-4
+    wwt =params['onsite_wastewater_treatment_facility']
 
     # Replace the embedded manufacturing electricity bill with the optimised
     # electricity purchases below. Retain other manufacturing utility services.
@@ -192,6 +194,7 @@ def load_joint_inputs():
         polymer_kg=polymer_kg, recovery_yield=yields, residual_fraction=residual,
         route_cost=net_route_cost, payload=payload, transport_cost=transport_cost,
         distance=distance, electricity=electricity, electricity_cost=electricity_cost,
+        grid_tiebreak_gbp_per_kwh=grid_tiebreak_gbp_per_kwh,
         wastewater=wastewater, utility_water=utility_water, recovery=eta,
         biomass=biomass, biomass_routes=['ad_gas_supply', 'ad_external_steam'],
         biomass_collection=float(params['external_biomass_ad_collection']['annual_collection_cost_gbp_per_active_site_year']),
@@ -1113,9 +1116,11 @@ def extract_first_mab_results(model):
     for j in ["j1", "j2", "j3"]:
         for a in ["L"]:
             site_open = pyo.value(model.Y_ja[1, j, a])
-            usp_lines = sum(pyo.value(model.Z_u[1, j, a, u]) for u in [1, 2, 3, 4])
-            dsp_lines = sum(pyo.value(model.Z_d[1, j, a, d]) for d in [1, 2, 3, 4])
-            ff_lines = sum(pyo.value(model.Z_g[1, j, a, g]) for g in [1, 2, 3, 4])
+            # Count lines used for the product (M_*), which carry facility and
+            # capital cost; Z_* activation binaries are uncosted and may stay on.
+            usp_lines = sum(pyo.value(model.M_u[1, j, a, u, "mAb"]) for u in [1, 2, 3, 4])
+            dsp_lines = sum(pyo.value(model.M_d[1, j, a, d, "mAb"]) for d in [1, 2, 3, 4])
+            ff_lines = sum(pyo.value(model.M_g[1, j, a, g, "mAb"]) for g in [1, 2, 3, 4])
             batches = sum(
                 pyo.value(model.B_g[1, j, a, g, "mAb", "S1"])
                 for g in [1, 2, 3, 4]
@@ -1250,7 +1255,11 @@ def build_joint_model(data=None, supply_data=None):
     model.total_cost_gbp = pyo.Expression(expr=model.supply_cost_gbp + model.is_cost_gbp)
     model.shortage_penalty_gbp = pyo.Expression(expr=
         data.usd_to_gbp * 1e12 * sum(model.Slack[key] for key in model.Slack))
-    model.joint_objective = pyo.Objective(expr=model.total_cost_gbp + model.shortage_penalty_gbp, sense=pyo.minimize)
+    # Solver-only tie-break (see grid_tiebreak_gbp_per_kwh); kept out of total_cost_gbp.
+    model.tiebreak_penalty_gbp = pyo.Expression(expr=
+        data.grid_tiebreak_gbp_per_kwh * sum(is_block.E[j, 'grid'] for j in data.sites))
+    model.joint_objective = pyo.Objective(expr=model.total_cost_gbp + model.shortage_penalty_gbp
+        + model.tiebreak_penalty_gbp, sense=pyo.minimize)
     return model, data
 
 
@@ -1273,26 +1282,48 @@ def export_gams(model, output_dir=RESULT_DIR):
     return Path(filename), symbol_map
 
 
-def validate_solution(model, tolerance=1e-5):
-    """Check active constraints, variable bounds and integrality after loading GAMS results."""
+def validate_solution(model, tolerance=1e-5, relative_tolerance=1e-6):
+    """Check active constraints, variable bounds and integrality after loading GAMS results.
+
+    Constraint violations are judged relative to each constraint's magnitude
+    (sum of |coefficient x level| over its terms, plus |constant| and |bounds|),
+    with `tolerance` as an absolute floor. Integer levels are rounded on loading,
+    so solver-tolerance residues on large cost coefficients (e.g. a binary at
+    1 - 6e-7 multiplied by GBP 17m) are accepted when relatively negligible.
+    Variable bounds and integrality keep the absolute tolerance.
+    """
+    from pyomo.repn import generate_standard_repn
     max_violation = 0.0
     for con in model.component_data_objects(pyo.Constraint, active=True):
         body = pyo.value(con.body)
+        violation = 0.0
         if con.has_lb():
-            max_violation = max(max_violation, pyo.value(con.lower) - body)
+            violation = max(violation, pyo.value(con.lower) - body)
         if con.has_ub():
-            max_violation = max(max_violation, body - pyo.value(con.upper))
+            violation = max(violation, body - pyo.value(con.upper))
+        if violation <= tolerance:
+            continue
+        repn = generate_standard_repn(con.body, compute_values=True)
+        magnitude = abs(pyo.value(repn.constant)) + sum(
+            abs(pyo.value(coef) * var.value) for coef, var in zip(repn.linear_coefs, repn.linear_vars))
+        magnitude += max(abs(pyo.value(con.lower)) if con.has_lb() else 0.0,
+                         abs(pyo.value(con.upper)) if con.has_ub() else 0.0)
+        allowed = max(tolerance, relative_tolerance * magnitude)
+        require(violation <= allowed,
+                f'Constraint {con.name} violated by {violation} (allowed {allowed}, magnitude {magnitude}).')
+        max_violation = max(max_violation, violation)
+    var_violation = 0.0
     for var in model.component_data_objects(pyo.Var, active=True):
         if var.value is None:  # unused reporting variables are absent from the solver
             continue
         if var.has_lb():
-            max_violation = max(max_violation, pyo.value(var.lb) - var.value)
+            var_violation = max(var_violation, pyo.value(var.lb) - var.value)
         if var.has_ub():
-            max_violation = max(max_violation, var.value - pyo.value(var.ub))
+            var_violation = max(var_violation, var.value - pyo.value(var.ub))
         if var.is_integer():
-            max_violation = max(max_violation, abs(var.value - round(var.value)))
-    require(max_violation <= tolerance, f'Joint solution violates constraints/bounds by {max_violation}.')
-    return max_violation
+            var_violation = max(var_violation, abs(var.value - round(var.value)))
+    require(var_violation <= tolerance, f'Joint solution violates variable bounds/integrality by {var_violation}.')
+    return max(max_violation, var_violation)
 
 
 def solve_joint_model(model, output_dir=RESULT_DIR, gams_executable=None):
@@ -1378,7 +1409,8 @@ def write_joint_results(model, data, output_dir=RESULT_DIR):
     costs = {name: pyo.value(getattr(model, name)) for name in [
         'supply_original_cost_gbp', 'embedded_electricity_deduction_gbp', 'supply_cost_gbp',
         'is_plastics_cost', 'is_transport_cost', 'is_electricity_cost',
-        'is_water_cost', 'is_biomass_cost', 'is_cost_gbp', 'total_cost_gbp', 'shortage_penalty_gbp']}
+        'is_water_cost', 'is_biomass_cost', 'is_cost_gbp', 'total_cost_gbp', 'shortage_penalty_gbp',
+        'tiebreak_penalty_gbp']}
     pd.DataFrame([{'metric': key, 'GBP_per_year': value} for key, value in costs.items()]).to_csv(
         output_dir / 'joint_cost_summary.csv', index=False)
     # Attribute costs within the single joint solve. Electricity is assigned
@@ -1403,6 +1435,8 @@ def write_joint_results(model, data, output_dir=RESULT_DIR):
     if costs['shortage_penalty_gbp'] != 0:
         print(f'Additional unmet-demand penalty: {costs["shortage_penalty_gbp"]:,.2f} GBP/year')
         print(f'Joint objective including penalty: {pyo.value(model.joint_objective):,.2f} GBP/year')
+    print(f'Grid tie-break penalty (solver only, not a cost): {costs["tiebreak_penalty_gbp"]:,.6f} GBP/year')
+    print(f'Joint objective including tie-break: {pyo.value(model.joint_objective):,.2f} GBP/year')
     print(f'Results: {output_dir}')
 
 
